@@ -1,0 +1,2078 @@
+<!DOCTYPE html>
+<html lang="en">
+    <%- include('./template/header.ejs') -%>
+<body>
+   <!--Sub-Header Tabs Here-->
+    <section class="main__tab__slide">
+        <ul class="nav nav-tabs" id="myTabmain" role="tablist">
+            <li class="nav-item" role="presentation">
+              <button class="nav-link main-nav-button active" id="main-tab-home" type="button" role="tab"  aria-selected="true">
+                <span class="icons"><i class="icon-home"></i></span>
+                <span>Home</span>
+              </button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link main-nav-button " id="main-tab-live" type="button" role="tab"  aria-selected="false">
+                <span class="icons"><i class="icon-live"></i></span>
+                <span>Live</span>
+              </button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link main-nav-button " id="main-tab-today" type="button" role="tab"  aria-selected="false">
+                <span class="icons"><i class="icon-calender"></i></span>
+                <span>Today</span>
+              </button>
+            </li>
+
+            <li class="nav-item" role="presentation">
+                <button class="nav-link main-nav-button " id="main-tab-league" type="button" role="tab"  aria-selected="false">
+                  <span class="icons"><img src="/assets/img/sports/league.png" class="tab-png-item" width="20"/></span>
+                  <span>League</span>
+                </button>
+              </li>
+
+            <li class="nav-item" role="presentation">
+                <button class="nav-link main-nav-button " id="main-tab-result" type="button" role="tab"  aria-selected="false">
+                  <span class="icons"><img src="/assets/img/sports/result.png" class="tab-png-item" width="20"/></span>
+                  <span>Match Result</span>
+                </button>
+            </li>
+
+            <li class="nav-item" role="presentation">
+                <button class="nav-link main-nav-button " id="main-tab-history" type="button" role="tab"  aria-selected="false">
+                  <span class="icons"><img src="/assets/img/sports/history.png" class="tab-png-item" width="20"/></span>
+                  <span>Betting History</span>
+                </button>
+            </li>
+
+            <li class="nav-item">
+                <div class="search-button">
+                    <button class="nav-link" id="search">
+                        <span class="icons"><i class="icon-search"></i></span>
+                        <span>Search</span>
+                    </button>
+                    <div class="search-popup">
+                      <div class="search-bg"></div>
+                      <div class="search-form">
+                        <form action="#">
+                          <div class="form">
+                            <input type="text" id="searchs" placeholder="Search Your Game">
+                          </div>
+                        </form>
+                      </div>
+                    </div>
+                </div>
+             </li>                             
+          </ul>  
+    </section>
+     <!--Sub-Header Tabs Here-->
+    
+    <!--Global Main Body-->
+    <section class="main__body__area"> 
+        <div class="container-fluid p-0">
+            <div class="row g-0">
+                <div class="col-xxl-10 col-xl-9 col-lg-9">
+                    <div class="left__site__section">
+                        <div class="tab-content" id="myTabContentmain">
+                           <!--Global Main Body-->
+                                <div class="popular__events__body">
+                                    <div class="container-fluid p-0">
+                                        <div class="row g-0">
+                                            <div class="col-xxl-2 col-xl-3 col-lg-3">
+                                                <div class="popular__events__left display991 leftscroll-side">
+                                                    <div class="popular__events__head">
+                                                        <h5>
+                                                            Popular events
+                                                        </h5>
+                                                        <ul>
+                                                            <li class="hand">
+                                                                <span><img src="assets/img/leftmenu/cup.png" alt="img"></span>
+                                                                <span>World Cup 2022</span>
+                                                            </li>
+                                                            <li class="hand">
+                                                                <span><img src="assets/img/leftmenu/europ.png" alt="img"></span>
+                                                                <span>Europa league 24/25</span>
+                                                            </li>
+
+                                                        </ul>
+                                                    </div>
+                                                    <div class="star__wrap" >
+                                                        <span class="hand"><img src="assets/img/leftmenu/start.png" alt="img"></span>
+                                                        <span class="hand">Favorites</span>
+                                                    </div>
+                                                    <div class="prematch__wrap">
+                                                        <div class="nav" id="nav-tabpre" role="tablist">
+                                                            <button class="nav-link active" id="nav-home-tabpre" data-bs-toggle="tab" data-bs-target="#nav-homepre" type="button" role="tab" aria-controls="nav-homepre" aria-selected="true">Live</button>
+                                                            <button class="nav-link " id="nav-profile-tabpre" data-bs-toggle="tab" data-bs-target="#nav-profilepre" type="button" role="tab" aria-controls="nav-profilepre" aria-selected="false">Prematch</button>
+                                                        </div>
+                                                        <div class="tab-content" id="nav-tabContentpre">
+                                                            <div class="tab-pane fade text-white show active" id="nav-homepre" role="tabpanel" aria-labelledby="nav-home-tabpre" tabindex="0">
+                                                                <div class="prematch__scopre this____parent__remove sidebar-livematch">
+                                                                    <div class="accordion" id="accordion_live">
+                                                                      
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="tab-pane fade text-white " id="nav-profilepre" role="tabpanel" aria-labelledby="nav-profile-tabpre" tabindex="0">
+                                                                <div class="prematch__scopre this____parent__remove sidebar-livematch">
+                                                                    <div class="accordion" id="accordion_prematch">
+                                                                      
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-xxl-10 col-xl-9 col-lg-9">
+                                                <!--Home Page Tabs Here-->
+                                                <div class="tab-pane text-white fade show active" id="main_contents" role="tabpanel" tabindex="0">
+                                                    <!--Match Fixing Slider-->
+                                                    <div class="match__fixing__wrap top__bottom__space left__right__space owl-theme owl-carousel" id="topMatches">
+                                                        <a href="#0" class="match__fixing__items">
+                                                            <div class="match__head">
+                                                                <div class="match__head__left">
+                                                                    <span class="icons">
+                                                                        <i class="icon-football"></i>
+                                                                    </span>
+                                                                    <span>
+                                                                        World Cup 2022
+                                                                    </span>
+                                                                </div>
+                                                                <span class="today">
+                                                                    Today / 22:00
+                                                                </span>
+                                                            </div>
+                                                            <div class="match__vs">
+                                                                <div class="match__vs__left">
+                                                                    <span>
+                                                                        Argentina
+                                                                    </span>
+                                                                    <span class="flag">
+                                                                        <img src="assets/img/matchfixing/arjentina.png" alt="flag">
+                                                                    </span>
+                                                                </div>
+                                                                <span class="vs">
+                                                                    Vs
+                                                                </span>
+                                                                <div class="match__vs__left">
+                                                                    <span class="flag">
+                                                                        <img src="assets/img/matchfixing/france.png" alt="flag">
+                                                                    </span>
+                                                                    <span>
+                                                                        France
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+                                                            <div class="match__result">
+                                                                <span class="matchborder"></span>
+                                                                <span class="match__text">
+                                                                    Match Reult
+                                                                </span>
+                                                            </div>
+                                                            <ul class="match__point">
+                                                                <li>
+                                                                    <span>1</span>
+                                                                    <span>8.55</span>
+                                                                </li>
+                                                                <li>
+                                                                    <span>X</span>
+                                                                    <span>6.50</span>
+                                                                </li>
+                                                                <li>
+                                                                    <span>2</span>
+                                                                    <span>3.20</span>
+                                                                </li>
+                                                            </ul>
+                                                        </a>
+                                                        <a href="#0" class="match__fixing__items">
+                                                            <div class="match__head">
+                                                                <div class="match__head__left">
+                                                                    <span class="icons">
+                                                                        <i class="icon-football"></i>
+                                                                    </span>
+                                                                    <span>
+                                                                        World Cup 2022
+                                                                    </span>
+                                                                </div>
+                                                                <span class="today">
+                                                                    Today / 2:00
+                                                                </span>
+                                                            </div>
+                                                            <div class="match__vs">
+                                                                <div class="match__vs__left">
+                                                                    <span>
+                                                                        Poland
+                                                                    </span>
+                                                                    <span class="flag">
+                                                                        <img src="assets/img/matchfixing/poland.png" alt="flag">
+                                                                    </span>
+                                                                </div>
+                                                                <span class="vs">
+                                                                    Vs
+                                                                </span>
+                                                                <div class="match__vs__left">
+                                                                    <span class="flag">
+                                                                        <img src="assets/img/matchfixing/denmark.png" alt="flag">
+                                                                    </span>
+                                                                    <span>
+                                                                        Denmark
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+                                                            <div class="match__result">
+                                                                <span class="matchborder"></span>
+                                                                <span class="match__text">
+                                                                    Match Reult
+                                                                </span>
+                                                            </div>
+                                                            <ul class="match__point">
+                                                                <li>
+                                                                    <span>1</span>
+                                                                    <span>3.55</span>
+                                                                </li>
+                                                                <li>
+                                                                    <span>X</span>
+                                                                    <span>4.50</span>
+                                                                </li>
+                                                                <li>
+                                                                    <span>2</span>
+                                                                    <span>2.20</span>
+                                                                </li>
+                                                            </ul>
+                                                        </a>
+                                                        <a href="#0" class="match__fixing__items">
+                                                            <div class="match__head">
+                                                                <div class="match__head__left">
+                                                                    <span class="icons">
+                                                                        <i class="icon-football"></i>
+                                                                    </span>
+                                                                    <span>
+                                                                        World Cup 2022
+                                                                    </span>
+                                                                </div>
+                                                                <span class="today">
+                                                                    Today / 22:00
+                                                                </span>
+                                                            </div>
+                                                            <div class="match__vs">
+                                                                <div class="match__vs__left">
+                                                                    <span>
+                                                                        Mexico
+                                                                    </span>
+                                                                    <span class="flag">
+                                                                        <img src="assets/img/matchfixing/maxico.png" alt="flag">
+                                                                    </span>
+                                                                </div>
+                                                                <span class="vs">
+                                                                    Vs
+                                                                </span>
+                                                                <div class="match__vs__left">
+                                                                    <span class="flag">
+                                                                        <img src="assets/img/matchfixing/poland.png" alt="flag">
+                                                                    </span>
+                                                                    <span>
+                                                                        Poland
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+                                                            <div class="match__result">
+                                                                <span class="matchborder"></span>
+                                                                <span class="match__text">
+                                                                    Match Reult
+                                                                </span>
+                                                            </div>
+                                                            <ul class="match__point">
+                                                                <li>
+                                                                    <span>1</span>
+                                                                    <span>8.55</span>
+                                                                </li>
+                                                                <li>
+                                                                    <span>X</span>
+                                                                    <span>9.50</span>
+                                                                </li>
+                                                                <li>
+                                                                    <span>2</span>
+                                                                    <span>5.20</span>
+                                                                </li>
+                                                            </ul>
+                                                        </a>
+                                                        <a href="#0" class="match__fixing__items">
+                                                            <div class="match__head">
+                                                                <div class="match__head__left">
+                                                                    <span class="icons">
+                                                                        <i class="icon-football"></i>
+                                                                    </span>
+                                                                    <span>
+                                                                        WEFA
+                                                                    </span>
+                                                                </div>
+                                                                <span class="today">
+                                                                    Tomorrow / 01:00
+                                                                </span>
+                                                            </div>
+                                                            <div class="match__vs">
+                                                                <div class="match__vs__left">
+                                                                    <span>
+                                                                        Farense
+                                                                    </span>
+                                                                    <span class="flag">
+                                                                        <img src="assets/img/matchfixing/farense.png" alt="flag">
+                                                                    </span>
+                                                                </div>
+                                                                <span class="vs">
+                                                                    Vs
+                                                                </span>
+                                                                <div class="match__vs__left">
+                                                                    <span class="flag">
+                                                                        <img src="assets/img/matchfixing/tenerif.png" alt="flag">
+                                                                    </span>
+                                                                    <span>
+                                                                        Tenerife
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+                                                            <div class="match__result">
+                                                                <span class="matchborder"></span>
+                                                                <span class="match__text">
+                                                                    Match Reult
+                                                                </span>
+                                                            </div>
+                                                            <ul class="match__point">
+                                                                <li>
+                                                                    <span>1</span>
+                                                                    <span>1.55</span>
+                                                                </li>
+                                                                <li>
+                                                                    <span>X</span>
+                                                                    <span>8.50</span>
+                                                                </li>
+                                                                <li>
+                                                                    <span>2</span>
+                                                                    <span>3.20</span>
+                                                                </li>
+                                                            </ul>
+                                                        </a>
+                                                        <a href="#0" class="match__fixing__items">
+                                                            <div class="match__head">
+                                                                <div class="match__head__left">
+                                                                    <span class="icons">
+                                                                        <i class="icon-football"></i>
+                                                                    </span>
+                                                                    <span>
+                                                                        EFL Trophy
+                                                                    </span>
+                                                                </div>
+                                                                <span class="today">
+                                                                    Tomorrow / 01:00
+                                                                </span>
+                                                            </div>
+                                                            <div class="match__vs">
+                                                                <div class="match__vs__left">
+                                                                    <span>
+                                                                        Tenerife
+                                                                    </span>
+                                                                    <span class="flag">
+                                                                        <img src="assets/img/matchfixing/tenerif.png" alt="flag">
+                                                                    </span>
+                                                                </div>
+                                                                <span class="vs">
+                                                                    Vs
+                                                                </span>
+                                                                <div class="match__vs__left">
+                                                                    <span class="flag">
+                                                                        <img src="assets/img/matchfixing/oviedo.png" alt="flag">
+                                                                    </span>
+                                                                    <span>
+                                                                        Real Oviedo
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+                                                            <div class="match__result">
+                                                                <span class="matchborder"></span>
+                                                                <span class="match__text">
+                                                                    Match Reult
+                                                                </span>
+                                                            </div>
+                                                            <ul class="match__point">
+                                                                <li>
+                                                                    <span>1</span>
+                                                                    <span>3.55</span>
+                                                                </li>
+                                                                <li>
+                                                                    <span>X</span>
+                                                                    <span>9.50</span>
+                                                                </li>
+                                                                <li>
+                                                                    <span>2</span>
+                                                                    <span>6.20</span>
+                                                                </li>
+                                                            </ul>
+                                                        </a>
+                                                        <a href="#0" class="match__fixing__items">
+                                                            <div class="match__head">
+                                                                <div class="match__head__left">
+                                                                    <span class="icons">
+                                                                        <i class="icon-football"></i>
+                                                                    </span>
+                                                                    <span>
+                                                                        World Cup 2022
+                                                                    </span>
+                                                                </div>
+                                                                <span class="today">
+                                                                    Today / 22:00
+                                                                </span>
+                                                            </div>
+                                                            <div class="match__vs">
+                                                                <div class="match__vs__left">
+                                                                    <span>
+                                                                        Australia
+                                                                    </span>
+                                                                    <span class="flag">
+                                                                        <img src="assets/img/matchfixing/aus.png" alt="flag">
+                                                                    </span>
+                                                                </div>
+                                                                <span class="vs">
+                                                                    Vs
+                                                                </span>
+                                                                <div class="match__vs__left">
+                                                                    <span class="flag">
+                                                                        <img src="assets/img/matchfixing/tunisia.png" alt="flag">
+                                                                    </span>
+                                                                    <span>
+                                                                        Tunisia
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+                                                            <div class="match__result">
+                                                                <span class="matchborder"></span>
+                                                                <span class="match__text">
+                                                                    Match Reult
+                                                                </span>
+                                                            </div>
+                                                            <ul class="match__point">
+                                                                <li>
+                                                                    <span>1</span>
+                                                                    <span>3.55</span>
+                                                                </li>
+                                                                <li>
+                                                                    <span>X</span>
+                                                                    <span>4.50</span>
+                                                                </li>
+                                                                <li>
+                                                                    <span>2</span>
+                                                                    <span>2.20</span>
+                                                                </li>
+                                                            </ul>
+                                                        </a>
+                                                    </div>
+                                                    <div class="main__body__wrap left__right__space">
+                                                        <!--Live__heightlight Here-->
+                                                        <div class="live__heightlight mb__30">
+                                                            <div class="section__title">
+                                                                <h4>
+                                                                    Live Highlights
+                                                                </h4>
+                                                            </div>
+                                                            <div class="heightlight__tab">
+                                                                <div class="nav b__bottom" id="nav-tabheight" role="tablist">
+                                                                    <button class="nav-link active" id="lightlighttab" data-bs-toggle="tab" data-bs-target="#height1" type="button" role="tab" aria-selected="true">
+                                                                    <span class="icons">
+                                                                        <i class="icon-football"></i>
+                                                                    </span>
+                                                                    <span>
+                                                                        Football
+                                                                    </span>
+                                                                    </button>
+                                                                    <button class="nav-link " id="lightlighttab2tennis" data-bs-toggle="tab" data-bs-target="#height2tennis" type="button" role="tab" aria-selected="false">
+                                                                        <span class="icons">
+                                                                            <i class="icon-tennis"></i>
+                                                                        </span>
+                                                                        <span>
+                                                                            Tennis
+                                                                        </span>
+                                                                    </button>
+                                                                    <button class="nav-link " id="lightlighttab3basket" data-bs-toggle="tab" data-bs-target="#basketbtab" type="button" role="tab" aria-selected="false">
+                                                                        <span class="icons">
+                                                                            <i class="icon-basketball"></i>
+                                                                        </span>
+                                                                        <span>
+                                                                            Basketball
+                                                                        </span>
+                                                                    </button>
+                                                                    <button class="nav-link " id="lightlighttabvolly" data-bs-toggle="tab" data-bs-target="#vollyballs" type="button" role="tab" aria-selected="false">
+                                                                        <span class="icons">
+                                                                            <i class="icon-volly"></i>
+                                                                        </span>
+                                                                        <span>
+                                                                            Volleyball
+                                                                        </span>
+                                                                    </button>
+                                                                    <button class="nav-link " id="lightlighttab5cricket" data-bs-toggle="tab" data-bs-target="#crickettab" type="button" role="tab" aria-selected="false">
+                                                                        <span class="icons">
+                                                                            <i class="icon-cricket"></i>
+                                                                        </span>
+                                                                        <span>
+                                                                            Cricket
+                                                                        </span>
+                                                                    </button>
+                                                                    <button class="nav-link " id="lightlighttab6ttenis" data-bs-toggle="tab" data-bs-target="#tabletennis" type="button" role="tab" aria-selected="false">
+                                                                        <span class="icons">
+                                                                            <i class="icon-ttennis"></i>
+                                                                        </span>
+                                                                        <span>
+                                                                            Table Tennis
+                                                                        </span>
+                                                                    </button>
+                                                                    <button class="nav-link " id="lightlight7baseball" data-bs-toggle="tab" data-bs-target="#tablebaseball" type="button" role="tab" aria-selected="false">
+                                                                        <span class="icons">
+                                                                            <i class="icon-baseball"></i>
+                                                                        </span>
+                                                                        <span>
+                                                                            Base Ball
+                                                                        </span>
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                            <div class="height__table">
+                                                                <div class="tab-content" id="nav-tabContentheight">
+                                                                    <!--Football-->
+                                                                    <div class="tab-pane fade text-white show active" id="height1" role="tabpanel" aria-labelledby="nav-home-tabpre" tabindex="0">
+                                                                        <div class="main__table">
+                                                                            <div class="table__wrap" id="live_data_view">                                                                                                                                                                
+                                                                                
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="live__heightlight mb__30">
+                                                            <div class="section__title">
+                                                                <h4>
+                                                                    Next To Go
+                                                                </h4>
+                                                            </div>
+                                                            <div class="heightlight__tab nexttogo__tab">
+                                                                <div class="nav pt-20" id="nav-tabheightnextgo" role="tablist">
+                                                                    <button class="nav-link active" id="nextgofootball" data-bs-toggle="tab" data-bs-target="#nextgofootballtab" type="button" role="tab" aria-selected="true">
+                                                                    <span class="icons">
+                                                                        <i class="icon-football"></i>
+                                                                    </span>
+                                                                    <span>
+                                                                        Football
+                                                                    </span>
+                                                                    </button>
+                                                                    <button class="nav-link " id="nextgotennis" data-bs-toggle="tab" data-bs-target="#nextgotennistab" type="button" role="tab" aria-selected="false">
+                                                                        <span class="icons">
+                                                                            <i class="icon-tennis"></i>
+                                                                        </span>
+                                                                        <span>
+                                                                            Tennis
+                                                                        </span>
+                                                                    </button>
+                                                                    <button class="nav-link " id="nextgobasketball" data-bs-toggle="tab" data-bs-target="#nextgobasketballtab" type="button" role="tab" aria-selected="false">
+                                                                        <span class="icons">
+                                                                            <i class="icon-basketball"></i>
+                                                                        </span>
+                                                                        <span>
+                                                                            Basketball
+                                                                        </span>
+                                                                    </button>
+                                                                    <button class="nav-link " id="nextgovolleyball" data-bs-toggle="tab" data-bs-target="#nextgovolleyballtab" type="button" role="tab" aria-selected="false">
+                                                                        <span class="icons">
+                                                                            <i class="icon-volly"></i>
+                                                                        </span>
+                                                                        <span>
+                                                                            Volleyball
+                                                                        </span>
+                                                                    </button>
+                                                                    <button class="nav-link " id="nextgocricket" data-bs-toggle="tab" data-bs-target="#nextgocrickettab" type="button" role="tab" aria-selected="false">
+                                                                        <span class="icons">
+                                                                            <i class="icon-criket"></i>
+                                                                        </span>
+                                                                        <span>
+                                                                            Cricket
+                                                                        </span>
+                                                                    </button>
+                                                                    <button class="nav-link " id="nextgottennis" data-bs-toggle="tab" data-bs-target="#nextgottennistab" type="button" role="tab" aria-selected="false">
+                                                                        <span class="icons">
+                                                                            <i class="icon-ttennis"></i>
+                                                                        </span>
+                                                                        <span>
+                                                                            Table Tennis
+                                                                        </span>
+                                                                    </button>
+                                                                    <button class="nav-link " id="nextgobaseball" data-bs-toggle="tab" data-bs-target="#nextgobaseballtab" type="button" role="tab" aria-selected="false">
+                                                                        <span class="icons">
+                                                                            <i class="icon-baseball"></i>
+                                                                        </span>
+                                                                        <span>
+                                                                            Base Ball
+                                                                        </span>
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                            <div class="height__table">
+                                                                <div class="tab-content" id="nav-tabContentheightnext">
+                                                                    <div class="tab-pane fade text-white show active" id="nextgofootballtab" role="tabpanel" aria-labelledby="nav-home-tabpre" tabindex="0">
+                                                                        <div class="main__table">
+                                                                            <div class="table__wrap" id="prematch_data_view">
+                                                                                
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>                                                                    
+                                                                </div>
+                                                            </div>
+                                                        </div>                                                      
+                                                    </div>   
+                                                 
+                                                    <footer class="footer__section main__footer__section media991__pb60 pt-60">
+                                                        <div class="container-fluid p-0">
+                                                            
+                                                            <!--Footer Top-->
+                                                        <div class="footer__top pb-60">
+                                                            <div class="row g-5">
+                                                                <div class="col-xxl-2 col-xl-4 col-lg-4 col-md-4 col-sm-4 wow fadeInUp" data-wow-delay="0.9s">
+                                                                    <div class="widget__items">
+                                                                        <div class="footer-head">
+                                                                            <h3 class="title">
+                                                                                General Info
+                                                                            </h3>
+                                                                        </div>
+                                                                        <div class="content-area">
+                                                                            <ul class="quick-link">
+                                                                                <li>
+                                                                                    <a href="#0">
+                                                                                        <img src="assets/img/footer/rightarrow.png" alt="angle"> About Us
+                                                                                    </a>
+                                                                                </li>
+                                                                                <li>
+                                                                                    <a href="#0">
+                                                                                    <img src="assets/img/footer/rightarrow.png" alt="angle"> Contact Us
+                                                                                    </a>
+                                                                                </li>
+                                                                                <li>
+                                                                                    <a href="#0">
+                                                                                    <img src="assets/img/footer/rightarrow.png" alt="angle"> Faq
+                                                                                    </a>
+                                                                                </li>
+                                                                                <li>
+                                                                                    <a href="sportsbetting.html">
+                                                                                    <img src="assets/img/footer/rightarrow.png" alt="angle"> Sports
+                                                                                    </a>
+                                                                                </li>
+                                                                                <li>
+                                                                                    <a href="#0">
+                                                                                    <img src="assets/img/footer/rightarrow.png" alt="angle"> Sportsbook
+                                                                                    </a>
+                                                                                </li>
+                                                                                <li>
+                                                                                    <a href="livecasino.html">
+                                                                                    <img src="assets/img/footer/rightarrow.png" alt="angle"> Live Betting
+                                                                                    </a>
+                                                                                </li>
+                                                                                <li>
+                                                                                    <a href="#0">
+                                                                                    <img src="assets/img/footer/rightarrow.png" alt="angle"> Virtuals
+                                                                                    </a>
+                                                                                </li>
+                                                                            </ul>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-xxl-2 col-xl-4 col-lg-4 col-md-4 col-sm-4 wow fadeInUp" data-wow-delay="0.7s">
+                                                                    <div class="widget__items">
+                                                                        <div class="footer-head">
+                                                                            <h3 class="title">
+                                                                                Casino
+                                                                            </h3>
+                                                                        </div>
+                                                                        <div class="content-area">
+                                                                            <ul class="quick-link">
+                                                                                <li>
+                                                                                    <a href="casino.html">
+                                                                                        <img src="assets/img/footer/rightarrow.png" alt="angle"> Top
+                                                                                    </a>
+                                                                                </li>
+                                                                                <li>
+                                                                                    <a href="casino.html">
+                                                                                    <img src="assets/img/footer/rightarrow.png" alt="angle"> New
+                                                                                    </a>
+                                                                                </li>
+                                                                                <li>
+                                                                                    <a href="#0">
+                                                                                    <img src="assets/img/footer/rightarrow.png" alt="angle"> Popular
+                                                                                    </a>
+                                                                                </li>
+                                                                                <li>
+                                                                                    <a href="#0">
+                                                                                    <img src="assets/img/footer/rightarrow.png" alt="angle"> Slots
+                                                                                    </a>
+                                                                                </li>
+                                                                                <li>
+                                                                                    <a href="#0">
+                                                                                    <img src="assets/img/footer/rightarrow.png" alt="angle"> Table Games
+                                                                                    </a>
+                                                                                </li>
+                                                                                <li>
+                                                                                    <a href="#0">
+                                                                                    <img src="assets/img/footer/rightarrow.png" alt="angle"> Jackpots
+                                                                                    </a>
+                                                                                </li>
+                                                                                <li>
+                                                                                    <a href="#0">
+                                                                                    <img src="assets/img/footer/rightarrow.png" alt="angle"> Live Casino
+                                                                                    </a>
+                                                                                </li>
+                                                                                <li>
+                                                                                    <a href="#0">
+                                                                                    <img src="assets/img/footer/rightarrow.png" alt="angle"> All Games
+                                                                                    </a>
+                                                                                </li>
+                                                                            </ul>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-xxl-2 col-xl-4 col-lg-4 col-md-4 col-sm-4 wow fadeInUp" data-wow-delay="0.5s">
+                                                                    <div class="widget__items">
+                                                                        <div class="footer-head">
+                                                                            <h3 class="title">
+                                                                                Live Casino
+                                                                            </h3>
+                                                                        </div>
+                                                                        <div class="content-area">
+                                                                        <ul class="quick-link">
+                                                                            <li>
+                                                                                <a href="#0">
+                                                                                    <img src="assets/img/footer/rightarrow.png" alt="angle"> Top Reted
+                                                                                </a>
+                                                                            </li>
+                                                                            <li>
+                                                                                <a href="#0">
+                                                                                <img src="assets/img/footer/rightarrow.png" alt="angle"> Club Royale
+                                                                                </a>
+                                                                            </li>
+                                                                            <li>
+                                                                                <a href="#0">
+                                                                                <img src="assets/img/footer/rightarrow.png" alt="angle"> Roulette
+                                                                                </a>
+                                                                            </li>
+                                                                            <li>
+                                                                                <a href="#0">
+                                                                                <img src="assets/img/footer/rightarrow.png" alt="angle"> Blackjack
+                                                                                </a>
+                                                                            </li>
+                                                                            <li>
+                                                                                <a href="#0">
+                                                                                <img src="assets/img/footer/rightarrow.png" alt="angle"> Games Shows
+                                                                                </a>
+                                                                            </li>
+                                                                            <li>
+                                                                                <a href="#0">
+                                                                                <img src="assets/img/footer/rightarrow.png" alt="angle"> Baccarat & Dice
+                                                                                </a>
+                                                                            </li>
+                                                                            <li>
+                                                                                <a href="#0">
+                                                                                <img src="assets/img/footer/rightarrow.png" alt="angle"> Poker
+                                                                                </a>
+                                                                            </li>
+                                                                            <li>
+                                                                                <a href="livecasino.html">
+                                                                                <img src="assets/img/footer/rightarrow.png" alt="angle"> All Live Casino
+                                                                                </a>
+                                                                            </li>
+                                                                        </ul>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-xxl-3 col-xl-4 col-lg-6 col-md-4 col-sm-4 wow fadeInUp" data-wow-delay="0.2s">
+                                                                    <div class="widget__items">
+                                                                        <div class="footer-head">
+                                                                        <h3 class="title">
+                                                                            Promotions
+                                                                        </h3>
+                                                                        </div>
+                                                                        <div class="content-area">
+                                                                            <ul class="quick-link">
+                                                                                <li>
+                                                                                    <a href="promotions.html">
+                                                                                        <img src="assets/img/footer/rightarrow.png" alt="angle"> Casino Promotions
+                                                                                    </a>
+                                                                                </li>
+                                                                                <li>
+                                                                                    <a href="sportsbetting.html">
+                                                                                    <img src="assets/img/footer/rightarrow.png" alt="angle"> Sport Promotions
+                                                                                    </a>
+                                                                                </li>
+                                                                                <li>
+                                                                                    <a href="#0">
+                                                                                    <img src="assets/img/footer/rightarrow.png" alt="angle"> Tournaments
+                                                                                    </a>
+                                                                                </li>
+                                                                                <li>
+                                                                                    <a href="#0">
+                                                                                    <img src="assets/img/footer/rightarrow.png" alt="angle"> Achevements
+                                                                                    </a>
+                                                                                </li>
+                                                                                <li>
+                                                                                    <a href="bonuses.html">
+                                                                                    <img src="assets/img/footer/rightarrow.png" alt="angle"> Bonus Shop
+                                                                                    </a>
+                                                                                </li>
+                                                                            </ul>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-xxl-3 col-xl-4 col-lg-6 col-md-4 col-sm-4 wow fadeInUp" data-wow-delay="0.2s">
+                                                                    <div class="widget__items">
+                                                                        <div class="footer-head">
+                                                                        <h3 class="title">
+                                                                            Help
+                                                                        </h3>
+                                                                        </div>
+                                                                        <div class="content-area">
+                                                                            <ul class="quick-link">
+                                                                                <li>
+                                                                                    <a href="#0">
+                                                                                        <img src="assets/img/footer/rightarrow.png" alt="angle"> Help
+                                                                                    </a>
+                                                                                </li>
+                                                                                <li>
+                                                                                    <a href="betslipcheck.html">
+                                                                                    <img src="assets/img/footer/rightarrow.png" alt="angle"> Bet Slip Check
+                                                                                    </a>
+                                                                                </li>
+                                                                                <li>
+                                                                                    <a href="deposit.html">
+                                                                                    <img src="assets/img/footer/rightarrow.png" alt="angle"> Deposites / Withdrwals
+                                                                                    </a>
+                                                                                </li>
+                                                                                <li>
+                                                                                    <a href="sportsbetting.html">
+                                                                                    <img src="assets/img/footer/rightarrow.png" alt="angle"> Sports Results
+                                                                                    </a>
+                                                                                </li>
+                                                                                <li>
+                                                                                    <a href="sportsbetting.html">
+                                                                                    <img src="assets/img/footer/rightarrow.png" alt="angle"> Sports Stats
+                                                                                    </a>
+                                                                                </li>
+                                                                            </ul>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <!--Footer Top-->
+
+                                                            <!--Footer Sponor Here-->
+                                                            <div class="footer__sponsor owl-theme owl-carousel">
+                                                                <div class="footer__sponsor__items">
+                                                                    <a href="#0">
+                                                                        <img src="assets/img/sponsor/s1.png" alt="simg">
+                                                                    </a>
+                                                                </div>
+                                                                <div class="footer__sponsor__items">
+                                                                    <a href="#0">
+                                                                        <img src="assets/img/sponsor/s12.png" alt="simg">
+                                                                    </a>
+                                                                </div>
+                                                                <div class="footer__sponsor__items">
+                                                                    <a href="#0">
+                                                                        <img src="assets/img/sponsor/s3.png" alt="simg">
+                                                                    </a>
+                                                                </div>
+                                                                <div class="footer__sponsor__items">
+                                                                    <a href="#0">
+                                                                        <img src="assets/img/sponsor/s4.png" alt="simg">
+                                                                    </a>
+                                                                </div>
+                                                                <div class="footer__sponsor__items">
+                                                                    <a href="#0">
+                                                                        <img src="assets/img/sponsor/s5.png" alt="simg">
+                                                                    </a>
+                                                                </div>
+                                                                <div class="footer__sponsor__items">
+                                                                    <a href="#0">
+                                                                        <img src="assets/img/sponsor/s6.png" alt="simg">
+                                                                    </a>
+                                                                </div>
+                                                                <div class="footer__sponsor__items">
+                                                                    <a href="#0">
+                                                                        <img src="assets/img/sponsor/s7.png" alt="simg">
+                                                                    </a>
+                                                                </div>
+                                                                <div class="footer__sponsor__items">
+                                                                    <a href="#0">
+                                                                        <img src="assets/img/sponsor/s8.png" alt="simg">
+                                                                    </a>
+                                                                </div>
+                                                                <div class="footer__sponsor__items">
+                                                                    <a href="#0">
+                                                                        <img src="assets/img/sponsor/s9.png" alt="simg">
+                                                                    </a>
+                                                                </div>
+                                                                <div class="footer__sponsor__items">
+                                                                    <a href="#0">
+                                                                        <img src="assets/img/sponsor/s10.png" alt="simg">
+                                                                    </a>
+                                                                </div>
+                                                            </div>
+                                                            <!--Footer Sponor End-->
+
+                                                            <!--Footer bottom-->
+                                                            <div class="footer__bottom">
+                                                                <p>
+                                                                    Copyright &copy; 2024 <a href="index.html" class="text--base">SportOdds</a> - All Right Reserved
+                                                                </p>
+                                                                <ul class="bottom__ling">
+                                                                    <li>
+                                                                        <a href="#0">
+                                                                            Affiliate program
+                                                                        </a>
+                                                                    </li>
+                                                                    <li>
+                                                                        <a href="#0">
+                                                                            Terms & conditions
+                                                                        </a>
+                                                                    </li>
+                                                                    <li>
+                                                                        <a href="#0">
+                                                                            Bonus terms & conditions
+                                                                        </a>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+                                                            <!--Footer bottom-->
+                                                        </div>
+                                                    </footer>
+                                                </div>                                                                               
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            <!--Global Main Body-->
+                        </div> 
+                    </div>
+                </div>
+                <div class="col-xxl-2 col-xl-3 col-lg-3">
+                    <div class="right__site__section display991">
+                        <div class="betslip__wrap">
+                            <h5 class="betslip__title">
+                                Betslip
+                            </h5>
+                            <div class="nav" id="nav-taboo" role="tablist">
+                                <button class="nav-link " id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="true">Single</button>
+                                <button class="nav-link active" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">Multiple</button>
+                                <button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#nav-contact" type="button" role="tab"  aria-selected="false">System</button>
+                            </div>
+                            <div class="tab-content" id="nav-tabContent">
+                                <div class="tab-pane fade text-white " id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab" tabindex="0">
+                                    <div class="multiple__components">
+                                        <div class="multiple__items">
+                                            <div class="multiple__head">
+                                                <div class="multiple__left">
+                                                    <span class="icons">
+                                                        <i class="icon-football"></i>
+                                                    </span>
+                                                    <span>
+                                                        Real Kashmir vs Trau FC
+                                                    </span>
+                                                </div>
+                                                <a href="#0" class="cros">
+                                                    <i class="icon-cross"></i>
+                                                </a>
+                                            </div>
+                                            <div class="multiple__point">
+                                                <span class="pbox">
+                                                    50.2
+                                                </span>
+                                                <span class="rightname">
+                                                    <span class="fc">
+                                                        Trau FC
+                                                    </span>
+                                                    <span class="point">
+                                                        1x2
+                                                    </span>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="total__odds">
+                                            <div class="total__head">
+                                                <h6 class="odd">
+                                                    Total Odds
+                                                </h6>
+                                                <span>
+                                                    25
+                                                </span>
+                                            </div>
+                                            <div class="wrapper">
+                                                <div class="result">
+                                                    <span>Stake amount, $</span>
+                                                    <span class="result">0.00 $</span>
+                                                </div>
+                                                <div class="buttons">
+                                                  <button type="button">5</button>
+                                                  <button type="button">10</button>
+                                                  <button type="button">50</button>
+                                                </div>
+                                              </div>
+                                        </div>
+                                        <div class="possible__pay">
+                                            <span>Possible Payout</span>
+                                            <span>0.00$</span>
+                                        </div>
+                                        <a href="signin.html" class="cmn--btn2">
+                                            <span>Sign In & Bet</span>
+                                        </a>
+                                    </div>
+                                    <div class="setting__area">
+                                        <div class="tab-content" id="nav-tabContentsetting">
+                                            <div class="tab-pane fade text-white" id="nav-homesett" role="tabpanel" aria-labelledby="nav-home-tabsetting" tabindex="0">
+                                               <div class="sign__bets__wrap">
+                                                    <h5 class="betslip__title">
+                                                        Betslip
+                                                    </h5>
+                                                    <div class="sign__boxes">
+                                                        <div class="content">
+                                                            <h6>
+                                                                Erase Betslip
+                                                            </h6>
+                                                            <p>
+                                                                Are you sure you want to erase Betslip?
+                                                            </p>
+                                                            <div class="btn__grp">
+                                                                <a href="#0" class="cmn--btn">
+                                                                    <span>No</span>
+                                                                </a>
+                                                                <a href="#0" class="cmn--btn2">
+                                                                    <span>Accept</span>
+                                                                </a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                               </div>
+                                            </div>
+                                            <div class="tab-pane fade text-white" id="nav-homeett2" role="tabpanel" aria-labelledby="nav-home-tabsetting2" tabindex="0">
+                                                <div class="sign__bets__wrap">
+                                                    <h5 class="betslip__title">
+                                                        Betslip
+                                                    </h5>
+                                                    <div class="setting__boxes">
+                                                       <div class="setting__boxes__head">
+                                                            <span>Accept Changes automatically?</span>
+                                                            <a href="#0">
+                                                                <i class="icon-cross"></i>
+                                                            </a>
+                                                       </div>
+                                                       <div class="check__wrap">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" id="check1a">
+                                                                <label class="form-check-label" for="check1a">
+                                                                    Accept any odds changes
+                                                                </label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" id="check2o">
+                                                                <label class="form-check-label" for="check2o">
+                                                                    Only accept increased odds
+                                                                </label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" id="check3">
+                                                                <label class="form-check-label" for="check3">
+                                                                    Always ask
+                                                                </label>
+                                                            </div>
+                                                       </div>
+                                                    </div>
+                                               </div>
+                                            </div>
+                                        </div>
+                                        <div class="nav" id="nav-tabseting" role="tablist">
+                                            <button class="nav-link" id="nav-home-tabsetting" data-bs-toggle="tab" data-bs-target="#nav-homesett" type="button" role="tab" aria-controls="nav-home" aria-selected="true">
+                                                <span class="icons"><i class="icon-trush"></i></span>
+                                                <span class="text">
+                                                    Sign IN & Bet
+                                                </span>
+                                            </button>
+                                            <button class="nav-link" id="nav-home-tabsetting2" data-bs-toggle="tab" data-bs-target="#nav-homeett2" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">
+                                                <span class="icons"><i class="icon-setting"></i></span>
+                                                <span class="text">
+                                                    Settings
+                                                </span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade text-white show active" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab" tabindex="0">
+                                    <div class="multiple__components">
+                                        <div class="multiple__items">
+                                            <div class="multiple__head">
+                                                <div class="multiple__left">
+                                                    <span class="icons">
+                                                        <i class="icon-football"></i>
+                                                    </span>
+                                                    <span>
+                                                        Real Kashmir vs Trau FC
+                                                    </span>
+                                                </div>
+                                                <a href="#0" class="cros">
+                                                    <i class="icon-cross"></i>
+                                                </a>
+                                            </div>
+                                            <div class="multiple__point">
+                                                <span class="pbox">
+                                                    50.2
+                                                </span>
+                                                <span class="rightname">
+                                                    <span class="fc">
+                                                        Trau FC
+                                                    </span>
+                                                    <span class="point">
+                                                        1x2
+                                                    </span>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="multiple__items">
+                                            <div class="multiple__head">
+                                                <div class="multiple__left">
+                                                    <span class="icons">
+                                                        <i class="icon-football"></i>
+                                                    </span>
+                                                    <span>
+                                                        Stodder, Timo vs Kopriva, Vit
+                                                    </span>
+                                                </div>
+                                                <a href="#0" class="cros">
+                                                    <i class="icon-cross"></i>
+                                                </a>
+                                            </div>
+                                            <div class="multiple__point">
+                                                <span class="pbox">
+                                                   3.66
+                                                </span>
+                                                <span class="rightname">
+                                                    <span class="fc">
+                                                        Stodder, Timo
+                                                    </span>
+                                                    <span class="point">
+                                                       Winner
+                                                    </span>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="total__odds">
+                                            <div class="total__head">
+                                                <h6 class="odd">
+                                                    Total Odds
+                                                </h6>
+                                                <span>
+                                                    25
+                                                </span>
+                                            </div>
+                                            <div class="wrapper">
+                                                <div class="result">
+                                                    <span>Stake amount, $</span>
+                                                    <span class="result">0.00 $</span>
+                                                </div>
+                                                <div class="buttons">
+                                                  <button type="button">5</button>
+                                                  <button type="button">10</button>
+                                                  <button type="button">50</button>
+                                                </div>
+                                              </div>
+                                        </div>
+                                        <a href="signin.html" class="cmn--btn2">
+                                            <span>Sign In & Bet</span>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade text-white" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab" tabindex="0">
+                                    <div class="multiple__components">
+                                        <div class="multiple__items">
+                                            <div class="multiple__head">
+                                                <div class="multiple__left">
+                                                    <span class="icons">
+                                                        <i class="icon-football"></i>
+                                                    </span>
+                                                    <span>
+                                                        Real Kashmir vs Trau FC
+                                                    </span>
+                                                </div>
+                                                <a href="#0" class="cros">
+                                                    <i class="icon-cross"></i>
+                                                </a>
+                                            </div>
+                                            <div class="multiple__point">
+                                                <span class="pbox">
+                                                    50.2
+                                                </span>
+                                                <span class="rightname">
+                                                    <span class="fc">
+                                                        Trau FC
+                                                    </span>
+                                                    <span class="point">
+                                                        1x2
+                                                    </span>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="multiple__items">
+                                            <div class="multiple__head">
+                                                <div class="multiple__left">
+                                                    <span class="icons">
+                                                        <i class="icon-football"></i>
+                                                    </span>
+                                                    <span>
+                                                        Stodder, Timo vs Kopriva, Vit
+                                                    </span>
+                                                </div>
+                                                <a href="#0" class="cros">
+                                                    <i class="icon-cross"></i>
+                                                </a>
+                                            </div>
+                                            <div class="multiple__point">
+                                                <span class="pbox">
+                                                   3.66
+                                                </span>
+                                                <span class="rightname">
+                                                    <span class="fc">
+                                                        Stodder, Timo
+                                                    </span>
+                                                    <span class="point">
+                                                       Winner
+                                                    </span>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="total__odds">
+                                            <div class="total__head">
+                                                <h6 class="odd">
+                                                    Total Odds
+                                                </h6>
+                                                <span>
+                                                    25
+                                                </span>
+                                            </div>
+                                            <div class="wrapper">
+                                                <div class="result">
+                                                    <span>Stake amount, $</span>
+                                                    <span class="result">0.00 $</span>
+                                                </div>
+                                                <div class="buttons">
+                                                  <button type="button">5</button>
+                                                  <button type="button">10</button>
+                                                  <button type="button">50</button>
+                                                </div>
+                                              </div>
+                                        </div>
+                                        <a href="signin.html" class="cmn--btn2">
+                                            <span>Sign In & Bet</span>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--footer Bottom Menu-->
+        <ul class="footer__menu d-lg-none">
+            <li>
+                <a href="sportsbetting.html" class="d-grid justify-content-center">
+                   <span><i class="fas fa-table-tennis"></i></span>
+                    <span class="texta">Sports</span>
+                </a>
+            </li>
+            <li>
+                <a href="#0" class="d-grid justify-content-center" data-bs-toggle="modal" data-bs-target="#eventsp">
+                   <span><i class="fa-solid fa-gift"></i></span>
+                    <span class="texta">Events</span>
+                </a>
+            </li>
+            <li class="header-bartwo d-lg-none">
+                <span class="bars"><i class="fas fa-bars"></i></span>
+                <span class="cros"> <i class="fa-solid fa-xmark"></i></span>
+            </li> 
+            <li>
+                <a href="#0" class="d-grid justify-content-center" data-bs-toggle="modal" data-bs-target="#betsp">
+                   <span> <i class="fas fa-ticket-alt"></i></span>
+                    <span class="texta">My Bet</span>
+                </a>
+            </li>
+            <li>
+                <a href="dashboard.html" class="d-grid justify-content-center">
+                   <span> <i class="far fa-user-circle"></i></span>
+                    <span class="texta"> Account</span>
+                </a>
+            </li>
+        </ul>
+        <!--footer Bottom Menu-->
+    </section>
+    <!--Global Main Body-->
+
+    <!--Mian Body Area Start-->
+    <!--Mian Body Area Start-->
+
+    <!--MyBets Start-->
+    <div class="modal mybets__modal" id="betsp" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog  modal-lg modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="right__site__section">
+                    <div class="betslip__wrap">
+                        <h5 class="betslip__title">
+                            Betslip
+                        </h5>
+                        <div class="nav" id="nav-tabr" role="tablist">
+                            <button class="nav-link " id="nav-home-tabr" data-bs-toggle="tab" data-bs-target="#nav-homer" type="button" role="tab"  aria-selected="true">Single</button>
+                            <button class="nav-link active" id="nav-profile-tabr" data-bs-toggle="tab" data-bs-target="#nav-profiler" type="button" role="tab"  aria-selected="false">Multiple</button>
+                            <button class="nav-link" id="nav-contact-tabr" data-bs-toggle="tab" data-bs-target="#nav-contactr" type="button" role="tab"  aria-selected="false">System</button>
+                        </div>
+                        <div class="tab-content" id="nav-tabContentr">
+                            <div class="tab-pane fade text-white " id="nav-homer" role="tabpanel" aria-labelledby="nav-home-tabr" tabindex="0">
+                                <div class="multiple__components">
+                                    <div class="multiple__items">
+                                        <div class="multiple__head">
+                                            <div class="multiple__left">
+                                                <span class="icons">
+                                                    <i class="icon-football"></i>
+                                                </span>
+                                                <span>
+                                                    Real Kashmir vs Trau FC
+                                                </span>
+                                            </div>
+                                            <a href="#0" class="cros">
+                                                <i class="icon-cross"></i>
+                                            </a>
+                                        </div>
+                                        <div class="multiple__point">
+                                            <span class="pbox">
+                                                50.2
+                                            </span>
+                                            <span class="rightname">
+                                                <span class="fc">
+                                                    Trau FC
+                                                </span>
+                                                <span class="point">
+                                                    1x2
+                                                </span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="total__odds">
+                                        <div class="total__head">
+                                            <h6 class="odd">
+                                                Total Odds
+                                            </h6>
+                                            <span>
+                                                25
+                                            </span>
+                                        </div>
+                                        <div class="wrapper">
+                                            <div class="result">
+                                                <span>Stake amount, $</span>
+                                                <span class="result">0.00 $</span>
+                                            </div>
+                                            <div class="buttons">
+                                              <button type="button">5</button>
+                                              <button type="button">10</button>
+                                              <button type="button">50</button>
+                                            </div>
+                                          </div>
+                                    </div>
+                                    <div class="possible__pay">
+                                        <span>Possible Payout</span>
+                                        <span>0.00$</span>
+                                    </div>
+                                    <a href="signin.html" class="cmn--btn2">
+                                        <span>Sign In & Bet</span>
+                                    </a>
+                                </div>
+                                <div class="setting__area">
+                                    <div class="tab-content" id="nav-tabContentsettingr">
+                                        <div class="tab-pane fade text-white" id="nav-homesettr" role="tabpanel" aria-labelledby="nav-home-tabsettingr" tabindex="0">
+                                           <div class="sign__bets__wrap">
+                                                <h5 class="betslip__title">
+                                                    Betslip
+                                                </h5>
+                                                <div class="sign__boxes">
+                                                    <div class="content">
+                                                        <h6>
+                                                            Erase Betslip
+                                                        </h6>
+                                                        <p>
+                                                            Are you sure you want to erase Betslip?
+                                                        </p>
+                                                        <div class="btn__grp">
+                                                            <a href="#0" class="cmn--btn">
+                                                                <span>No</span>
+                                                            </a>
+                                                            <a href="#0" class="cmn--btn2">
+                                                                <span>Accept</span>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                           </div>
+                                        </div>
+                                        <div class="tab-pane fade text-white" id="nav-homeett2r" role="tabpanel" aria-labelledby="nav-home-tabsetting2r" tabindex="0">
+                                            <div class="sign__bets__wrap">
+                                                <h5 class="betslip__title">
+                                                    Betslip
+                                                </h5>
+                                                <div class="setting__boxes">
+                                                   <div class="setting__boxes__head">
+                                                        <span>Accept Changes automatically?</span>
+                                                        <a href="#0">
+                                                            <i class="icon-cross"></i>
+                                                        </a>
+                                                   </div>
+                                                   <div class="check__wrap">
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" id="check11">
+                                                            <label class="form-check-label" for="check11">
+                                                                Accept any odds changes
+                                                            </label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" id="check2oa">
+                                                            <label class="form-check-label" for="check2oa">
+                                                                Only accept increased odds
+                                                            </label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" id="check3a">
+                                                            <label class="form-check-label" for="check3a">
+                                                                Always ask
+                                                            </label>
+                                                        </div>
+                                                   </div>
+                                                </div>
+                                           </div>
+                                        </div>
+                                    </div>
+                                    <div class="nav" id="nav-tabsetingr" role="tablist">
+                                        <button class="nav-link" id="nav-home-tabsettingr" data-bs-toggle="tab" data-bs-target="#nav-homesettr" type="button" role="tab"  aria-selected="true">
+                                            <span class="icons"><i class="icon-trush"></i></span>
+                                            <span class="text">
+                                                Sign IN & Bet
+                                            </span>
+                                        </button>
+                                        <button class="nav-link" id="nav-home-tabsetting2r" data-bs-toggle="tab" data-bs-target="#nav-homeett2r" type="button" role="tab"  aria-selected="false">
+                                            <span class="icons"><i class="icon-setting"></i></span>
+                                            <span class="text">
+                                                Settings
+                                            </span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade text-white show active" id="nav-profiler" role="tabpanel" aria-labelledby="nav-profile-tabr" tabindex="0">
+                                <div class="multiple__components">
+                                    <div class="multiple__items">
+                                        <div class="multiple__head">
+                                            <div class="multiple__left">
+                                                <span class="icons">
+                                                    <i class="icon-football"></i>
+                                                </span>
+                                                <span>
+                                                    Real Kashmir vs Trau FC
+                                                </span>
+                                            </div>
+                                            <a href="#0" class="cros">
+                                                <i class="icon-cross"></i>
+                                            </a>
+                                        </div>
+                                        <div class="multiple__point">
+                                            <span class="pbox">
+                                                50.2
+                                            </span>
+                                            <span class="rightname">
+                                                <span class="fc">
+                                                    Trau FC
+                                                </span>
+                                                <span class="point">
+                                                    1x2
+                                                </span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="multiple__items">
+                                        <div class="multiple__head">
+                                            <div class="multiple__left">
+                                                <span class="icons">
+                                                    <i class="icon-football"></i>
+                                                </span>
+                                                <span>
+                                                    Stodder, Timo vs Kopriva, Vit
+                                                </span>
+                                            </div>
+                                            <a href="#0" class="cros">
+                                                <i class="icon-cross"></i>
+                                            </a>
+                                        </div>
+                                        <div class="multiple__point">
+                                            <span class="pbox">
+                                               3.66
+                                            </span>
+                                            <span class="rightname">
+                                                <span class="fc">
+                                                    Stodder, Timo
+                                                </span>
+                                                <span class="point">
+                                                   Winner
+                                                </span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="total__odds">
+                                        <div class="total__head">
+                                            <h6 class="odd">
+                                                Total Odds
+                                            </h6>
+                                            <span>
+                                                25
+                                            </span>
+                                        </div>
+                                        <div class="wrapper">
+                                            <div class="result">
+                                                <span>Stake amount, $</span>
+                                                <span class="result">0.00 $</span>
+                                            </div>
+                                            <div class="buttons">
+                                              <button type="button">5</button>
+                                              <button type="button">10</button>
+                                              <button type="button">50</button>
+                                            </div>
+                                          </div>
+                                    </div>
+                                    <a href="signin.html" class="cmn--btn2">
+                                        <span>Sign In & Bet</span>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade text-white" id="nav-contactr" role="tabpanel" aria-labelledby="nav-contact-tabr" tabindex="0">
+                                <div class="multiple__components">
+                                    <div class="multiple__items">
+                                        <div class="multiple__head">
+                                            <div class="multiple__left">
+                                                <span class="icons">
+                                                    <i class="icon-football"></i>
+                                                </span>
+                                                <span>
+                                                    Real Kashmir vs Trau FC
+                                                </span>
+                                            </div>
+                                            <a href="#0" class="cros">
+                                                <i class="icon-cross"></i>
+                                            </a>
+                                        </div>
+                                        <div class="multiple__point">
+                                            <span class="pbox">
+                                                50.2
+                                            </span>
+                                            <span class="rightname">
+                                                <span class="fc">
+                                                    Trau FC
+                                                </span>
+                                                <span class="point">
+                                                    1x2
+                                                </span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="multiple__items">
+                                        <div class="multiple__head">
+                                            <div class="multiple__left">
+                                                <span class="icons">
+                                                    <i class="icon-football"></i>
+                                                </span>
+                                                <span>
+                                                    Stodder, Timo vs Kopriva, Vit
+                                                </span>
+                                            </div>
+                                            <a href="#0" class="cros">
+                                                <i class="icon-cross"></i>
+                                            </a>
+                                        </div>
+                                        <div class="multiple__point">
+                                            <span class="pbox">
+                                               3.66
+                                            </span>
+                                            <span class="rightname">
+                                                <span class="fc">
+                                                    Stodder, Timo
+                                                </span>
+                                                <span class="point">
+                                                   Winner
+                                                </span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="total__odds">
+                                        <div class="total__head">
+                                            <h6 class="odd">
+                                                Total Odds
+                                            </h6>
+                                            <span>
+                                                25
+                                            </span>
+                                        </div>
+                                        <div class="wrapper">
+                                            <div class="result">
+                                                <span>Stake amount, $</span>
+                                                <span class="result">0.00 $</span>
+                                            </div>
+                                            <div class="buttons">
+                                              <button type="button">5</button>
+                                              <button type="button">10</button>
+                                              <button type="button">50</button>
+                                            </div>
+                                          </div>
+                                    </div>
+                                    <a href="signin.html" class="cmn--btn2">
+                                        <span>Sign In & Bet</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--MyBets End-->
+
+    <!--MyBets Start-->
+    <div class="modal event__modal" id="eventsp" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog  modal-lg modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="left__site__section">
+                    <div class="tab-content" id="myTabContentmainevent">
+                        <div class="tab-pane text-white fade show active" id="mainTabevent" role="tabpanel" tabindex="0">
+                            <div class="popular__events__body">
+                                <div class="container-fluid p-0">
+                                    <div class="row g-0">
+                                        <div class="col-xxl-2 col-xl-3 col-lg-3">
+                                            <div class="popular__events__left">
+                                                <div class="popular__events__head">
+                                                    <h5>
+                                                        Popular events
+                                                    </h5>
+                                                    <ul>
+                                                        <li>
+                                                            <span><img src="assets/img/leftmenu/cup.png" alt="img"></span>
+                                                            <span>World Cup 2022</span>
+                                                        </li>
+                                                        <li>
+                                                            <span><img src="assets/img/leftmenu/europ.png" alt="img"></span>
+                                                            <span>Euroleague. Season 24/25</span>
+                                                        </li>
+
+                                                    </ul>
+                                                </div>
+                                                <div class="star__wrap">
+                                                    <span><img src="assets/img/leftmenu/start.png" alt="img"></span>
+                                                    <span>Favorites</span>
+                                                </div>
+                                                <div class="prematch__wrap">
+                                                    <div class="nav" id="nav-tabpreevent" role="tablist">
+                                                        <button class="nav-link active" id="nav-home-tabpreevent" data-bs-toggle="tab" data-bs-target="#nav-homepreevent" type="button" role="tab"  aria-selected="true">Live</button>
+                                                        <button class="nav-link " id="nav-profile-tabpreevent" data-bs-toggle="tab" data-bs-target="#nav-profilepreevent" type="button" role="tab"  aria-selected="false">Prematch</button>
+                                                    </div>
+                                                    <div class="tab-content" id="nav-tabContentpreevent">
+                                                        <div class="tab-pane fade text-white show active" id="nav-homepre2" role="tabpanel" aria-labelledby="nav-home-tabpre" tabindex="0">
+                                                            <div class="prematch__scopre this____parent__remove sidebar-livematch">
+                                                              <div class="accordion" id="accordionExample1">
+                                                                  <div class="accordion-item">
+                                                                    <h2 class="accordion-header" id="headingOne1">
+                                                                      <button class="accordion-button " type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne1" aria-expanded="true" aria-controls="collapseOne1">
+                                                                        <span class="d-flex align-items-center gap-2 left-chokoboko">
+                                                                          <span class="mt-1"><i class="icon-football"></i></span>
+                                                                          <span class="score text-white">
+                                                                              Soccer
+                                                                          </span>
+                                                                        </span>
+                                                                        <span class="d-flex align-items-center gap-1 icon-rightfs10">
+                                                                          2
+                                                                          <i class="fa-solid fa-chevron-down"></i>
+                                                                        </span>
+                                                                      </button>
+                                                                    </h2>
+                                                                    <div id="collapseOne1" class="accordion-collapse collapse show" aria-labelledby="headingOne1" data-bs-parent="#accordionExample1">
+                                                                      <div class="accordion-body">
+                                                                        <div class="d-flex fs14 b__bottom pb-2 align-items-center justify-content-between text-white">
+                                                                          <span>
+                                                                              Brazil 
+                                                                          </span>
+                                                                          <span>
+                                                                              Vs
+                                                                          </span>
+                                                                          <span>
+                                                                              Argentina
+                                                                          </span>
+                                                                        </div>
+                                                                        <div class="d-flex fs14 b__bottom pb-2 pt-2 align-items-center justify-content-between text-white">
+                                                                          <span>
+                                                                              Canada 
+                                                                          </span>
+                                                                          <span>
+                                                                              Vs
+                                                                          </span>
+                                                                          <span>
+                                                                              Portugal
+                                                                          </span>
+                                                                        </div>
+                                                                        <div class="d-flex fs14 align-items-center pt-2 justify-content-between text-white">
+                                                                          <span>
+                                                                              Spain 
+                                                                          </span>
+                                                                          <span>
+                                                                              Vs
+                                                                          </span>
+                                                                          <span>
+                                                                              Germany
+                                                                          </span>
+                                                                        </div>
+                                                                      </div>
+                                                                    </div>
+                                                                  </div>
+                                                                  <div class="accordion-item">
+                                                                      <h2 class="accordion-header" id="headingtwos1">
+                                                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapsetwos1" aria-expanded="true" aria-controls="collapsetwos1">
+                                                                          <span class="d-flex align-items-center gap-2 left-chokoboko">
+                                                                            <span class="mt-1"><i class="icon-tennis"></i></span>
+                                                                            <span class="score text-white">
+                                                                                Tennis
+                                                                            </span>
+                                                                          </span>
+                                                                          <span class="d-flex align-items-center gap-1 icon-rightfs10">
+                                                                            4
+                                                                            <i class="fa-solid fa-chevron-down"></i>
+                                                                          </span>
+                                                                        </button>
+                                                                      </h2>
+                                                                      <div id="collapsetwos1" class="accordion-collapse collapse" aria-labelledby="headingtwos1" data-bs-parent="#accordionExample1">
+                                                                        <div class="accordion-body">
+                                                                          <div class="d-flex fs14 b__bottom pb-2 align-items-center justify-content-between text-white">
+                                                                            <span>
+                                                                                Brazil 
+                                                                            </span>
+                                                                            <span>
+                                                                                Vs
+                                                                            </span>
+                                                                            <span>
+                                                                                Argentina
+                                                                            </span>
+                                                                          </div>
+                                                                          <div class="d-flex fs14 b__bottom pb-2 pt-2 align-items-center justify-content-between text-white">
+                                                                            <span>
+                                                                                Canada 
+                                                                            </span>
+                                                                            <span>
+                                                                                Vs
+                                                                            </span>
+                                                                            <span>
+                                                                                Portugal
+                                                                            </span>
+                                                                          </div>
+                                                                          <div class="d-flex fs14 align-items-center pt-2 justify-content-between text-white">
+                                                                            <span>
+                                                                                Spain 
+                                                                            </span>
+                                                                            <span>
+                                                                                Vs
+                                                                            </span>
+                                                                            <span>
+                                                                                Germany
+                                                                            </span>
+                                                                          </div>
+                                                                        </div>
+                                                                      </div>
+                                                                  </div>
+                                                                  <div class="accordion-item">
+                                                                      <h2 class="accordion-header" id="headingthrees1">
+                                                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapsethrees1" aria-expanded="true" aria-controls="collapsethrees1">
+                                                                          <span class="d-flex align-items-center gap-2 left-chokoboko">
+                                                                            <span class="mt-1"><i class="icon-basketball"></i></span>
+                                                                            <span class="score text-white">
+                                                                                Basketball
+                                                                            </span>
+                                                                          </span>
+                                                                          <span class="d-flex align-items-center gap-1 icon-rightfs10">
+                                                                            4
+                                                                            <i class="fa-solid fa-chevron-down"></i>
+                                                                          </span>
+                                                                        </button>
+                                                                      </h2>
+                                                                      <div id="collapsethrees1" class="accordion-collapse collapse" aria-labelledby="headingthrees1" data-bs-parent="#accordionExample1">
+                                                                        <div class="accordion-body">
+                                                                          <div class="d-flex fs14 b__bottom pb-2 align-items-center justify-content-between text-white">
+                                                                            <span>
+                                                                                Brazil 
+                                                                            </span>
+                                                                            <span>
+                                                                                Vs
+                                                                            </span>
+                                                                            <span>
+                                                                                Argentina
+                                                                            </span>
+                                                                          </div>
+                                                                          <div class="d-flex fs14 b__bottom pb-2 pt-2 align-items-center justify-content-between text-white">
+                                                                            <span>
+                                                                                Canada 
+                                                                            </span>
+                                                                            <span>
+                                                                                Vs
+                                                                            </span>
+                                                                            <span>
+                                                                                Portugal
+                                                                            </span>
+                                                                          </div>
+                                                                          <div class="d-flex fs14 align-items-center pt-2 justify-content-between text-white">
+                                                                            <span>
+                                                                                Spain 
+                                                                            </span>
+                                                                            <span>
+                                                                                Vs
+                                                                            </span>
+                                                                            <span>
+                                                                                Germany
+                                                                            </span>
+                                                                          </div>
+                                                                        </div>
+                                                                      </div>
+                                                                  </div>
+                                                                  <div class="accordion-item">
+                                                                      <h2 class="accordion-header" id="headingfour1">
+                                                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapsefour1" aria-expanded="true" aria-controls="collapsefour1">
+                                                                          <span class="d-flex align-items-center gap-2 left-chokoboko">
+                                                                            <span class="mt-1"><i class="icon-volly"></i></span>
+                                                                            <span class="score text-white">
+                                                                                Volleyball
+                                                                            </span>
+                                                                          </span>
+                                                                          <span class="d-flex align-items-center gap-1 icon-rightfs10">
+                                                                            3
+                                                                            <i class="fa-solid fa-chevron-down"></i>
+                                                                          </span>
+                                                                        </button>
+                                                                      </h2>
+                                                                      <div id="collapsefour1" class="accordion-collapse collapse" aria-labelledby="headingfour1" data-bs-parent="#accordionExample1">
+                                                                        <div class="accordion-body">
+                                                                          <div class="d-flex fs14 b__bottom pb-2 align-items-center justify-content-between text-white">
+                                                                            <span>
+                                                                                Brazil 
+                                                                            </span>
+                                                                            <span>
+                                                                                Vs
+                                                                            </span>
+                                                                            <span>
+                                                                                Argentina
+                                                                            </span>
+                                                                          </div>
+                                                                          <div class="d-flex fs14 b__bottom pb-2 pt-2 align-items-center justify-content-between text-white">
+                                                                            <span>
+                                                                                Canada 
+                                                                            </span>
+                                                                            <span>
+                                                                                Vs
+                                                                            </span>
+                                                                            <span>
+                                                                                Portugal
+                                                                            </span>
+                                                                          </div>
+                                                                          <div class="d-flex fs14 align-items-center pt-2 justify-content-between text-white">
+                                                                            <span>
+                                                                                Spain 
+                                                                            </span>
+                                                                            <span>
+                                                                                Vs
+                                                                            </span>
+                                                                            <span>
+                                                                                Germany
+                                                                            </span>
+                                                                          </div>
+                                                                        </div>
+                                                                      </div>
+                                                                  </div>
+                                                                  <div class="accordion-item">
+                                                                      <h2 class="accordion-header" id="headingfive1">
+                                                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapsefive1" aria-expanded="true" aria-controls="collapsefive1">
+                                                                          <span class="d-flex align-items-center gap-2 left-chokoboko">
+                                                                            <span class="mt-1"><i class="icon-handball"></i></span>
+                                                                            <span class="score text-white">
+                                                                                Handball
+                                                                            </span>
+                                                                          </span>
+                                                                          <span class="d-flex align-items-center gap-1 icon-rightfs10">
+                                                                            5
+                                                                            <i class="fa-solid fa-chevron-down"></i>
+                                                                          </span>
+                                                                        </button>
+                                                                      </h2>
+                                                                      <div id="collapsefive1" class="accordion-collapse collapse" aria-labelledby="headingfive1" data-bs-parent="#accordionExample1">
+                                                                        <div class="accordion-body">
+                                                                          <div class="d-flex fs14 b__bottom pb-2 align-items-center justify-content-between text-white">
+                                                                            <span>
+                                                                                Brazil 
+                                                                            </span>
+                                                                            <span>
+                                                                                Vs
+                                                                            </span>
+                                                                            <span>
+                                                                                Argentina
+                                                                            </span>
+                                                                          </div>
+                                                                          <div class="d-flex fs14 b__bottom pb-2 pt-2 align-items-center justify-content-between text-white">
+                                                                            <span>
+                                                                                Canada 
+                                                                            </span>
+                                                                            <span>
+                                                                                Vs
+                                                                            </span>
+                                                                            <span>
+                                                                                Portugal
+                                                                            </span>
+                                                                          </div>
+                                                                          <div class="d-flex fs14 align-items-center pt-2 justify-content-between text-white">
+                                                                            <span>
+                                                                                Spain 
+                                                                            </span>
+                                                                            <span>
+                                                                                Vs
+                                                                            </span>
+                                                                            <span>
+                                                                                Germany
+                                                                            </span>
+                                                                          </div>
+                                                                        </div>
+                                                                      </div>
+                                                                  </div>
+                                                              </div>
+                                                            </div>
+                                                          </div>
+                                                        <div class="tab-pane fade text-white " id="nav-profilepreevent" role="tabpanel" aria-labelledby="nav-profile-tabpreevent" tabindex="0">
+                                                            <div class="multiple__components">
+                                                                <div class="prematch__scopre">
+                                                                        <a href="sportsbetting.html" class="prescore__items">
+                                                                            <div class="prescore__left">
+                                                                                <span><i class="icon-football"></i></span>
+                                                                                <span class="score">
+                                                                                    Soccer
+                                                                                </span>
+                                                                            </div>
+                                                                        </a>
+                                                                        <a href="lives.html" class="prescore__items">
+                                                                            <div class="prescore__left">
+                                                                                <span><i class="icon-tennis"></i></span>
+                                                                                <span class="score">
+                                                                                    Tennis
+                                                                                </span>
+                                                                            </div>
+                                                                        </a>
+                                                                        <a href="livecasino.html" class="prescore__items">
+                                                                            <div class="prescore__left">
+                                                                                <span><i class="icon-basketball"></i></span>
+                                                                                <span class="score">
+                                                                                    Basketball
+                                                                                </span>
+                                                                            </div>
+                                                                        </a>
+                                                                        <a href="lives.html" class="prescore__items">
+                                                                            <div class="prescore__left">
+                                                                                <span><i class="icon-ttennis"></i></span>
+                                                                                <span class="score">
+                                                                                    Table Tennis
+                                                                                </span>
+                                                                            </div>
+                                                                        </a>
+                                                                        <a href="lives.html" class="prescore__items">
+                                                                            <div class="prescore__left">
+                                                                                <span><i class="icon-volly"></i></span>
+                                                                                <span class="score">
+                                                                                    Volleyball
+                                                                                </span>
+                                                                            </div>
+                                                                        </a>
+                                                                        <a href="lives.html" class="prescore__items">
+                                                                            <div class="prescore__left">
+                                                                                <span><i class="icon-handball"></i></span>
+                                                                                <span class="score">
+                                                                                    Handball
+                                                                                </span>
+                                                                            </div>
+                                                                        </a>
+                                                                      </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div> 
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--MyBets End-->
+
+
+    <!--Jquery min js-->
+    <script src="/assets/js/jquery-3.6.0.min.js"></script>
+    <!--Bootstrap bundle min js-->
+    <script src="/assets/js/bootstrap.bundle.min.js"></script>
+    <!--Magnific Popup js-->
+    <script src="/assets/js/jquery.magnific-popup.min.js"></script>
+    <!--Owl Carousel min js-->
+    <script src="/assets/js/owl.carousel.min.js"></script>
+    <!--nice select min js-->
+    <script src="/assets/js/jquery.nice-select.min.js"></script>
+    <!--Wow min js-->
+    <script src="/assets/js/wow.min.js"></script>
+    <!--jquery ui min-->
+    <script src="/assets/js/jquery-ui.min.js"></script>
+    <script src="/toastr/js/toastr.min.js"></script>
+    <!--Api min js-->
+    <script>
+        const token = "<%=token%>";
+        const sportsSocket = new WebSocket('ws://127.0.0.1:9990');        
+    </script>
+
+    <script src="/assets/js/api.js"></script>
+    <!--Main js-->
+    <script src="/assets/js/main.js"></script>
+
+    <script src="/assets/js/button_event.js"></script>
+
+    <script src="/assets/js/util.js"></script>
+
+    <script src="/assets/js/socket_handler.js"></script>
+    
+<script>     
+    
+
+    function sendHeightToParent() {
+        const height = document.body.clientHeight; // Get the updated height of the content
+        window.parent.postMessage(height, "<%=from%>"); // Replace with the actual parent domain
+    }
+    
+</script>
+</body>
+</html>
