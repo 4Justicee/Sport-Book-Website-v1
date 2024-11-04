@@ -31,6 +31,11 @@ module.exports = (sequelize, Sequelize) => {
                 type: Sequelize.TEXT,
                 allowNull: true,
             },
+            condition_idx: {
+                type: Sequelize.STRING,
+                allowNull: true,
+                defaultValue: '',
+            },
             win: {
                 type: Sequelize.FLOAT,
                 allowNull: true,

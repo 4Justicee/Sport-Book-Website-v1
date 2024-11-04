@@ -1,8 +1,9 @@
-const { Contact, Agent, User, FavGames } = require("../models");
+const { Contact, Agent, User, FavGames, Upcoming, PrematchOdds, InplayOdds, Inplay, MyBet} = require("../models");
 const axios = require("axios");
 const md5 = require('md5');
 
 const config = require("../config/main")
+const {isEmpty, analSoccerInplayResponse} = require("../utils/isEmpty")
 
 const requestTo = async (comment, type, url, data = {}) => {
     try {        
@@ -232,4 +233,262 @@ exports.mainPage = async (req, res) => {
         return res.render("error/500");
     }
 
+};
+
+exports.placeSingleBet = async (req, res) => {
+    try {
+        const { data, token } = req.body;
+        const bet_data = JSON.parse(data);
+
+        if ( !data || !token) {
+            return res.status(200).send({
+                status:0,
+            });
+        }
+
+        const user = await User.findOne({ where: { token } });
+        if (!user) {
+            return res.status(200).send({
+                status:0,
+            });
+        }
+        for(let i = 0; i < bet_data.length; i++) {
+            const bid = bet_data[i].bid;
+            const stake = bet_data[i].stake;
+            const odd = bet_data[i].odd;
+
+            const barr = bid.split("-");
+            if(barr[0] == "idl") {
+                //use live table
+                const tableData = await Inplay.findOne({
+                    include: [
+                      {
+                          model: InplayOdds,
+                          attributes: ["data"],            
+                      },
+                    ],
+                    where:{
+                      id: barr[1]
+                    },
+                    raw:true
+                });
+                if(isEmpty(tableData)) {
+                    return res.status(200).send({
+                        status:0,
+                    });
+                }
+                const o = analSoccerInplayResponse(JSON.parse(tableData["inplayodd.data"]));                
+                if(barr[2] == 'h' || barr[2] == 'g' || barr[2] == 'f') {
+                    const nameObj = {h:'Asian Handicap', g:'Match Goals', f:'Fulltime Result'};
+                    const betName = nameObj[barr[2]];
+                    for(let j = 0; j < o.odd.length; j++) {
+                        if(o.odd[j].name.search(betName) != -1) {
+                            const ln = o.odd[j].odds.length;
+                            const idxes = (ln == 3)? {'1': 0, 'x': 1, '2': 1} : {'1':0, '2':1};
+                            const idx = idxes[barr[3]];
+                            const org_odd = Number(o.odd[j].odds[idx].odds);
+                            if(isNaN(org_odd) || Math.abs(org_odd - odd) > 0.05) {
+                                return res.status(200).send({
+                                    status:-1,  //odd mismatch error;
+                                });
+                            }
+                            const winCondition = {
+                                data: o.odd[j],
+                                idx,
+                            }
+                            const checkExist = await MyBet.findOne({where:{playerCode: user.userCode, event_id: barr[1], sport_id: tableData.sport_id, condition_idx: `${j},${idx}`}});
+                            if(!isEmpty(checkExist)) {
+                                return res.status(200).send({
+                                    status:-2,  //Duplicated Request
+                                });
+                            }
+
+                            await MyBet.create({
+                                playerCode: user.userCode,
+                                sport_id : tableData.sport_id,
+                                event_id: barr[1],
+                                condition_idx:`${j},${idx}`,
+                                bet: stake,
+                                condition: JSON.stringify(winCondition),
+                                win: org_odd * stake,
+                                status: 0,  //Betted
+                            })
+                            break;
+                        }   
+                    }
+                }
+                else {
+                    const org_odd = o.odd[barr[2]]?.odds[barr[3]]?.odds;
+                    if(isNaN(org_odd) || Math.abs(org_odd - odd) > 0.05) {
+                        return res.status(200).send({
+                            status:-1,  //odd mismatch error;
+                        });
+                    }
+                    const checkExist = await MyBet.findOne({where:{playerCode: user.userCode, event_id: barr[1], sport_id: tableData.sport_id, condition_idx: `${barr[2]},${barr[3]}`}});
+                        if(!isEmpty(checkExist)) {
+                            return res.status(200).send({
+                                status:-2,  //Duplicated Request
+                            });
+                        }
+                        
+                    const winCondition = {
+                        data: o.odd[barr[2]],
+                        idx : barr[3],
+                    }
+                    await MyBet.create({
+                        playerCode: user.userCode,
+                        sport_id : tableData.sport_id,
+                        event_id: barr[1],
+                        condition_idx:`${barr[2]},${barr[3]}`,
+                        bet: stake,
+                        condition: JSON.stringify(winCondition),
+                        win: org_odd * stake,
+                        status: 0,  //Betted
+                    })
+                }
+                
+            }
+            else {
+                //use prematch table
+            }
+        }
+
+        
+
+        return res.send({
+            status: 1
+        });
+    } catch (error) {
+        logger("error", "Game | Run Game", error.message, req);
+
+        return res.render("error/500");
+    }
+};
+
+
+exports.placeMultipleBet = async (req, res) => {
+    try {
+        const { data, token } = req.body;
+        const bet_data = JSON.parse(data);
+
+        if ( !data || !token) {
+            return res.status(200).send({
+                status:0,
+            });
+        }
+
+        const user = await User.findOne({ where: { token } });
+        if (!user) {
+            return res.status(200).send({
+                status:0,
+            });
+        }
+
+        const odd = (Number)(bet_data.odd);
+        const stake = (Number)(bet_data.stake);
+        const ids = bet_data.ids;
+        const cons  = [];
+
+        let oo = 1;
+        for(let i = 0; i < ids.length; i++) {
+            const bid = ids[i];
+
+            const barr = bid.split("-");
+            if(barr[0] == "idl") {
+                //use live table
+                const tableData = await Inplay.findOne({
+                    include: [
+                      {
+                          model: InplayOdds,
+                          attributes: ["data"],            
+                      },
+                    ],
+                    where:{
+                      id: barr[1]
+                    },
+                    raw:true
+                });
+                if(isEmpty(tableData)) {
+                    return res.status(200).send({
+                        status:0,
+                    });
+                }
+                const o = analSoccerInplayResponse(JSON.parse(tableData["inplayodd.data"]));                
+                if(barr[2] == 'h' || barr[2] == 'g' || barr[2] == 'f') {
+                    const nameObj = {h:'Asian Handicap', g:'Match Goals', f:'Fulltime Result'};
+                    const betName = nameObj[barr[2]];
+                    for(let j = 0; j < o.odd.length; j++) {
+                        if(o.odd[j].name.search(betName) != -1) {
+                            const ln = o.odd[j].odds.length;
+                            const idxes = (ln == 3)? {'1': 0, 'x': 1, '2': 1} : {'1':0, '2':1};
+                            const idx = idxes[barr[3]];
+                            const org_odd = Number(o.odd[j].odds[idx].odds);
+                            if(isNaN(org_odd)) {
+                                return res.status(200).send({
+                                    status:-1,  //odd mismatch error;
+                                });
+                            }
+                            oo *= org_odd;
+                            const d = {
+                                data: o.odd[j],
+                                idx,
+                            }
+                            cons.push(d);
+                            break;
+                        }   
+                    }
+                }
+                else {
+                    const org_odd = o.odd[barr[2]]?.odds[barr[3]]?.odds;
+                    if(isNaN(org_odd)) {
+                        return res.status(200).send({
+                            status:-1,  //odd mismatch error;
+                        });
+                    }
+                    const d = {
+                        data: o.odd[barr[2]],
+                        idx : barr[3],
+                    }
+                    cons.push(d);
+                    oo *= org_odd;
+                }
+                
+            }
+            else {
+                //use prematch table
+            }
+        }
+
+        if(Math.abs(oo - odd) > 0.2) {
+            return res.status(200).send({
+                status:-1,  //odd mismatch error;
+            });
+        }
+  
+        const checkExist = await MyBet.findOne({where:{playerCode: user.userCode, event_id:0, sport_id: 0, condition_idx: JSON.stringify(ids)}});
+        if(!isEmpty(checkExist)) {
+            return res.status(200).send({
+                status:-2,  //Duplicated Request
+            });
+        }
+        
+        await MyBet.create({
+            playerCode: user.userCode,
+            sport_id : 0,
+            event_id: 0,
+            condition_idx:JSON.stringify(ids),
+            bet: stake,
+            condition: JSON.stringify(cons),
+            win: oo * stake,
+            status: 0,  //Betted
+        })
+
+        return res.send({
+            status: 1
+        });
+    } catch (error) {
+        logger("error", "Game | Run Game", error.message, req);
+
+        return res.render("error/500");
+    }
 };

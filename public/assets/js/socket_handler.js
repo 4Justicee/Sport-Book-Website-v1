@@ -8,7 +8,7 @@ function handleSoccerLive(odds, data, idx, fav = 0) {
   const id = data.id;
   const simpleObj = JSON.stringify({h: data.home_name, a: data.away_name, t: time_str, scores, odd: o1x2});
   const starElem = (fav == 0) ? `<img class='star-off hand inplay_likestar' src="/assets/img/logo/star_off.png" tid="${id}" data='${simpleObj}' width='24'/>`:`<img class="hand inplay_removestar" tid="${id}" src="/assets/img/logo/star_on.png" width='22'/>`;
-  
+
   const a = $(`#tr-${id}`);
   if(a.length == 0) {                             
       $(`#live_data_view .table__items:nth-child(${idx+1})`).after(`
@@ -37,32 +37,32 @@ function handleSoccerLive(odds, data, idx, fav = 0) {
               </span>
           </div>
           <div class="mart__point__items">        
-              <a class="point__box full1">
+              <a class="point__box full1 bet-btn" groupNo="${idx}0" id='idl-${id}-f-1' mid="${id}" n="Fulltime Result" t="${data.home_name}" d3="${data.home_name} vs ${data.away_name}" o="${o1x2.hwin}">
                   ${o1x2.hwin == -1 ? `<i class="icon-lock"></i>` : o1x2.hwin}
               </a>
-              <a class="point__box fullx">
+              <a class="point__box fullx bet-btn" groupNo="${idx}0" id='idl-${id}-f-x' mid="${id}" n="Fulltime Result" t="Draw" o="${o1x2.draw}" d3="${data.home_name} vs ${data.away_name}">
                   ${o1x2.draw == -1 ? `<i class="icon-lock"></i>` : o1x2.draw}
               </a>
-              <a class="point__box full2">
+              <a class="point__box full2 bet-btn" groupNo="${idx}0" id='idl-${id}-f-2' mid="${id}" n="Fulltime Result" t="${data.away_name}" o="${o1x2.awin}" d3="${data.home_name} vs ${data.away_name}">
                   ${o1x2.awin == -1 ? `<i class="icon-lock"></i>` : o1x2.awin}
               </a>
           </div>
           <div class="mart__point__items"'>        
-              <a class="point__box overgoal">
+              <a class="point__box overgoal bet-btn" groupNo="${idx}1" id='idl-${id}-g-1' mid="${id}" n="Match Goals" t="${data.home_name}" d1="${go.goal}" d2="Over" d3="${data.home_name} vs ${data.away_name}" o="${go.overodd}">
               ${go.goal == -1 ? `<i class="icon-lock"></i>`: `<span class='point__box_addinfo goal'>${go.goal}</span>
                   <span class='overodd'>${go.overodd}</span>`}
               </a>
-              <a class="point__box undergoal">
+              <a class="point__box undergoal bet-btn" groupNo="${idx}1" id='idl-${id}-g-2' mid="${id}" n="Match Goals" t="${data.away_name}" d1="${go.goal}" d2="Under" o="${go.underodd}" d3="${data.home_name} vs ${data.away_name}">
                   ${go.goal == -1 ? `<i class="icon-lock"></i>`: `<span class='point__box_addinfo goal'>${go.goal}</span>
                   <span class='underodd'>${go.underodd}</span>`}
               </a>
           </div>
           <div class="mart__point__items">        
-              <a class="point__box handi1"> 
+              <a class="point__box handi1 bet-btn" groupNo="${idx}2" id='idl-${id}-h-1'  mid="${id}" n="Asian Handicap" t="${data.home_name}" d1="${handis.h_hand}" o="${handis.h_odd}" d3="${data.home_name} vs ${data.away_name}"> 
                   ${handis.h_hand == -1 ? `<i class="icon-lock"></i>`: `<span class='point__box_addinfo handivalue1'>${handis.h_hand}</span><span class='handi1odd'>${handis.h_odd}</span>`}
 
               </a>
-              <a class="point__box handi2">    
+              <a class="point__box handi2 bet-btn" groupNo="${idx}2" id='idl-${id}-h-2' mid="${id}" n="Asian Handicap" t="${data.away_name}" d1="${handis.a_hand}" o="${handis.a_odd}" d3="${data.home_name} vs ${data.away_name}">    
                   ${handis.a_hand == -1 ? `<i class="icon-lock"></i>`: `<span class='point__box_addinfo handivalue2'>${handis.a_hand}</span><span class='handi2odd'>${handis.a_odd}</span>`}
               </a>
           </div>
@@ -70,7 +70,7 @@ function handleSoccerLive(odds, data, idx, fav = 0) {
               <a class="point__box bg__none">
                   <span class='star_elem'>${starElem}</span>
                   &nbsp;&nbsp;&nbsp;&nbsp;
-                  <span class='hand inplay_detail_view_btn' tid="${id}"><i class="fas fa-angle-right"></i></span>
+                  <span class='hand inplay_detail_view_btn' tid="${id}"><i class="fas fa-angle-right" ></i></span>
               </a>
           </div>
       </div>`)
@@ -112,7 +112,6 @@ const options = {
 };  
 
 function handleSoccerPrematch(data, idx) {
-  
   const id = data.id;
   const away_name = data.away_name;
   const home_name = data.home_name;
@@ -123,6 +122,7 @@ function handleSoccerPrematch(data, idx) {
   const localTimeString = utcDate.toLocaleString(undefined, options);
 
   let hwin = -1, draw = -1, awin = -1, overodd = -1, goal = -1, underodd = -1; 
+  let hodd1 = -1, hodd2 = -1, handi1 = -1, handi2 = -1;
   if(odds.main != undefined) {
     if(odds.main.sp.full_time_result != undefined) {
       hwin = odds.main.sp.full_time_result.odds[0].odds;
@@ -134,7 +134,14 @@ function handleSoccerPrematch(data, idx) {
       overodd = odds.main.sp.goals_over_under.odds[0].odds;
       underodd = odds.main.sp.goals_over_under.odds[1].odds;
       goal = odds.main.sp.goals_over_under.odds[0].name;
-    }    
+    } 
+
+    if(odds.main.sp.asian_handicap != undefined) {
+      hodd1 = odds.main.sp.asian_handicap.odds[0].odds;
+      hodd2 = odds.main.sp.asian_handicap.odds[1].odds;
+      handi1 = odds.main.sp.asian_handicap.odds[0].handicap;
+      handi2 = odds.main.sp.asian_handicap.odds[1].handicap;
+    }
   }
   const a = $(`#trr-${id}`);
   if(a.length == 0) {               
@@ -156,26 +163,32 @@ function handleSoccerPrematch(data, idx) {
       </div>
       <div class="mart__point__two mart__pint__nextgo">
         <div class="mart__point__left">
-            <a href="#box" class="point__box homewin">
+            <a href="#box" class="point__box homewin bet-btn" groupNo="${id}0" id='idp-${id}-f-1' mid="${id}" n="Fulltime Result" t="${home_name}" o="${hwin}" d3="${home_name} vs ${away_name}">
               ${hwin == -1 ? `<i class="icon-lock"></i>`: `<span class="point__1">1</span><span>${hwin}</span>`}                                
             </a>
-            <a href="#box" class="point__box draw">
+            <a href="#box" class="point__box draw bet-btn" groupNo="${id}0" id='idp-${id}-f-x' mid="${id}" n="Fulltime Result" t="Draw" o="${draw}" d3="${home_name} vs ${away_name}">
                 ${draw == -1 ? `<i class="icon-lock"></i>`: `<span class="point__1">X</span><span>${draw}</span>`}                  
             </a>
-            <a href="#box" class="point__box awaywin">
+            <a href="#box" class="point__box awaywin bet-btn" groupNo="${id}0" id='idp-${id}-f-2' mid="${id}" n="Fulltime Result" t="${away_name}" o="${awin}" d3="${home_name} vs ${away_name}">
                 ${awin == -1 ? `<i class="icon-lock"></i>`: `<span class="point__1">2</span><span>${awin}</span>`}                  
             </a>
-            <a href="#box" class="point__box goalover">
+            <a href="#box" class="point__box goalover bet-btn" groupNo="${id}1" id='idp-${id}-g-1' mid="${id}" n="Match Goals" t="${home_name}" d1="${goal}" d2="Over" d3="${home_name} vs ${away_name}" o="${overodd}">
                 ${goal == -1 ? `<i class="icon-lock"></i>`: `<span class="point__1">${goal}&nbsp;Over</span><span>${overodd}</span>`}                  
             </a>
-            <a href="#box" class="point__box goalunder">
+            <a href="#box" class="point__box goalunder bet-btn" groupNo="${id}1" id='idp-${id}-g-2' mid="${id}" n="Match Goals" t="${away_name}" d1="${goal}" d2="Under" o="${underodd}" d3="${home_name} vs ${away_name}">
                 ${goal == -1 ? `<i class="icon-lock"></i>`: `<span class="point__1">${goal}&nbsp;Under</span><span>${underodd}</span>`}                  
             </a>
+            <a href="#box" class="point__box hodd1 bet-btn" groupNo="${id}2" id='idp-${id}-h-1' mid="${id}" n="Asian Handicap" t="${home_name}" d1="${handi1}" o="${hodd1}" d3="${home_name} vs ${away_name}">
+                ${hodd1 == -1 ? `<i class="icon-lock"></i>`: `<span class="point__1">${handi1}</span><span>${hodd1}</span>`}                  
+            </a>
+            <a href="#box" class="point__box hodd2 bet-btn" groupNo="${id}2" id='idp-${id}-h-2' mid="${id}" n="Asian Handicap" t="${away_name}" d1="${handi2}" o="${hodd2}" d3="${home_name} vs ${away_name}">
+                ${hodd2 == -1 ? `<i class="icon-lock"></i>`: `<span class="point__1">${handi2}</span><span>${hodd2}</span>`}                  
+            </a>
         </div>
-        <div class="mart__point__right">
+        <div class="mart__point__right prematch_detail_view_btn hand" tid="${id}">
             <a href="#min" class="point__box-text point__box__nextto">
             <span class='timestr'> ${localTimeString}</span>
-            <span class="icons"><i class="fas fa-angle-right"></i></span>
+            <span class='icon'><i class="fas fa-angle-right"></i></span>
             </a>
         </div>
       </div>
@@ -191,8 +204,10 @@ function handleSoccerPrematch(data, idx) {
     $(`#trr-${id} .goalover`).html(goal == -1 ? `<i class="icon-lock"></i>`: `<span class="point__1">${goal}&nbsp;Over</span><span>${overodd}</span>`);
     $(`#trr-${id} .goalunder`).html(goal == -1 ? `<i class="icon-lock"></i>`: `<span class="point__1">${goal}&nbsp;Under</span><span>${underodd}</span>`);
     $(`#trr-${id} .timestr`).html(localTimeString);
-  }
 
+    $(`#trr-${id} .hodd1`).html(hodd1 == -1 ? `<i class="icon-lock"></i>`: `<span class="point__1">${handi1}</span><span>${hodd1}</span>`);
+    $(`#trr-${id} .hodd2`).html(hodd2 == -1 ? `<i class="icon-lock"></i>`: `<span class="point__1">${handi2}</span><span>${hodd2}</span>`);
+  }
 }
 
 sportsSocket.onopen = function() {
