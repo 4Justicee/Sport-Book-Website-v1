@@ -278,15 +278,11 @@ exports.placeSingleBet = async (req, res) => {
                     });
                 }
                 const o = analSoccerInplayResponse(JSON.parse(tableData["inplayodd.data"]));                
-                if(barr[2] == 'h' || barr[2] == 'g' || barr[2] == 'f') {
-                    const nameObj = {h:'Asian Handicap', g:'Match Goals', f:'Fulltime Result'};
-                    const betName = nameObj[barr[2]];
-                    for(let j = 0; j < o.odd.length; j++) {
-                        if(o.odd[j].name.search(betName) != -1) {
-                            const ln = o.odd[j].odds.length;
-                            const idxes = (ln == 3)? {'1': 0, 'x': 1, '2': 1} : {'1':0, '2':1};
-                            const idx = idxes[barr[3]];
-                            const org_odd = Number(o.odd[j].odds[idx].odds);
+                for(let j = 0; j < o.odd.length; j++) {                   
+                    for(let k = 0; k < o.odd[j].odds.length; k++) {
+                        const odata = o.odd[j].odds[k];
+                        if(odata.id == barr[2]) {
+                            const org_odd = Number(odata.odds);
                             if(isNaN(org_odd) || Math.abs(org_odd - odd) > 0.05) {
                                 return res.status(200).send({
                                     status:-1,  //odd mismatch error;
@@ -294,9 +290,10 @@ exports.placeSingleBet = async (req, res) => {
                             }
                             const winCondition = {
                                 data: o.odd[j],
-                                idx,
+                                idx: barr[2],
                             }
-                            const checkExist = await MyBet.findOne({where:{playerCode: user.userCode, event_id: barr[1], sport_id: tableData.sport_id, condition_idx: `${j},${idx}`}});
+
+                            const checkExist = await MyBet.findOne({where:{playerCode: user.userCode, event_id: barr[1], sport_id: tableData.sport_id, condition_idx: barr[2]}});
                             if(!isEmpty(checkExist)) {
                                 return res.status(200).send({
                                     status:-2,  //Duplicated Request
@@ -307,49 +304,76 @@ exports.placeSingleBet = async (req, res) => {
                                 playerCode: user.userCode,
                                 sport_id : tableData.sport_id,
                                 event_id: barr[1],
-                                condition_idx:`${j},${idx}`,
+                                condition_idx:barr[2],
                                 bet: stake,
                                 condition: JSON.stringify(winCondition),
                                 win: org_odd * stake,
                                 status: 0,  //Betted
                             })
                             break;
-                        }   
-                    }
-                }
-                else {
-                    const org_odd = o.odd[barr[2]]?.odds[barr[3]]?.odds;
-                    if(isNaN(org_odd) || Math.abs(org_odd - odd) > 0.05) {
-                        return res.status(200).send({
-                            status:-1,  //odd mismatch error;
-                        });
-                    }
-                    const checkExist = await MyBet.findOne({where:{playerCode: user.userCode, event_id: barr[1], sport_id: tableData.sport_id, condition_idx: `${barr[2]},${barr[3]}`}});
-                        if(!isEmpty(checkExist)) {
-                            return res.status(200).send({
-                                status:-2,  //Duplicated Request
-                            });
                         }
-                        
-                    const winCondition = {
-                        data: o.odd[barr[2]],
-                        idx : barr[3],
-                    }
-                    await MyBet.create({
-                        playerCode: user.userCode,
-                        sport_id : tableData.sport_id,
-                        event_id: barr[1],
-                        condition_idx:`${barr[2]},${barr[3]}`,
-                        bet: stake,
-                        condition: JSON.stringify(winCondition),
-                        win: org_odd * stake,
-                        status: 0,  //Betted
-                    })
-                }
+                    }                
+                }               
                 
             }
             else {
                 //use prematch table
+                const tableData = await Upcoming.findOne({
+                    include: [
+                      {
+                          model: PrematchOdds,
+                          attributes: ["data"],            
+                      },
+                    ],
+                    where:{
+                      id: barr[1]
+                    },
+                    raw:true
+                });
+                if(isEmpty(tableData)) {
+                    return res.status(200).send({
+                        status:0,
+                    });
+                }
+                const o= JSON.parse(tableData['prematchOdd.data']);
+                const bettings = ["main", "asian_lines", "goals", "half","minutes", "others", "specials"];
+                let b = 0;
+                for(let j = 0; j < bettings.length; j++) {
+                    const item = bettings[j];
+                    if(o[item] == undefined)
+                        continue;
+                    const odd_data = o[item].sp;
+                    if(Array.isArray(o[item])) {
+                        for(let j = 0; j < o[item].length; j++) {
+                            const sp = o[item][j].sp;
+                            const keys = Object.keys(sp);		
+                            b= await func(keys, sp, barr[2], odd, stake, barr[1], user.userCode, tableData.sport_id);	
+                            if(b == 1){
+                                break;
+                            }
+                            if(b < 0) {
+                                return res.status(200).send({
+                                    status:b
+                                });
+                            }
+                        }
+                        if(b == 1){
+                            break;
+                        }
+                    }
+                    else {
+                        const keys = Object.keys(odd_data);		
+                        b= await func(keys, odd_data, barr[2], odd, stake, barr[1], user.userCode, tableData.sport_id);
+                        if(b == 1) {
+                            break;
+                        }
+                        if(b < 0) {
+                            return res.status(200).send({
+                                status:b
+                            });
+                        }
+                    }				
+                }
             }
         }
 
@@ -365,6 +389,64 @@ exports.placeSingleBet = async (req, res) => {
     }
 };
 
+const func = async (keys, odd_data, rid, odd, stake, evtId, userCode, sid) => {
+    for(let j = 0; j < keys.length; j++) {
+        const key = keys[j];
+        const bet_name = odd_data[key].name;
+        const odds = odd_data[key].odds;
+        for(let k = 0; k < odds.length; k++) {
+            const org_odd = (Number)(odds[k].odds);
+            const id = odds[k].id;
+            if(rid == id ) {
+                if(isNaN(org_odd) || Math.abs(org_odd - odd) > 0.05) {
+                    return -1;
+                }
+
+                const winCondition = {
+                    data: odd_data[key],
+                    idx: rid,
+                }
+    
+                const checkExist = await MyBet.findOne({where:{playerCode: userCode, event_id: evtId, sport_id: sid, condition_idx: rid}});
+                if(!isEmpty(checkExist)) {
+                    return -2;
+                }
+    
+                await MyBet.create({
+                    playerCode: userCode,
+                    sport_id : sid,
+                    event_id: evtId,
+                    condition_idx:rid,
+                    bet: stake,
+                    condition: JSON.stringify(winCondition),
+                    win: org_odd * stake,
+                    status: 0,  //Betted
+                })
+                return 1;
+            }
+            
+        }
+    }
+    return 0;
+}
+
+const func1 = async (keys, odd_data, rid, odd, cons) => {
+    for(let j = 0; j < keys.length; j++) {
+        const key = keys[j];
+        const bet_name = odd_data[key].name;
+        const odds = odd_data[key].odds;
+        for(let k = 0; k < odds.length; k++) {
+            const org_odd = (Number)(odds[k].odds);
+            const id = odds[k].id;
+            if(rid == id ) {             
+                cons.push(odd_data[key]);                 
+                return org_odd;
+            }
+            
+        }
+    }
+    return 1;
+}
 
 exports.placeMultipleBet = async (req, res) => {
     try {
@@ -392,7 +474,6 @@ exports.placeMultipleBet = async (req, res) => {
         let oo = 1;
         for(let i = 0; i < ids.length; i++) {
             const bid = ids[i];
-
             const barr = bid.split("-");
             if(barr[0] == "idl") {
                 //use live table
@@ -413,49 +494,67 @@ exports.placeMultipleBet = async (req, res) => {
                         status:0,
                     });
                 }
-                const o = analSoccerInplayResponse(JSON.parse(tableData["inplayodd.data"]));                
-                if(barr[2] == 'h' || barr[2] == 'g' || barr[2] == 'f') {
-                    const nameObj = {h:'Asian Handicap', g:'Match Goals', f:'Fulltime Result'};
-                    const betName = nameObj[barr[2]];
-                    for(let j = 0; j < o.odd.length; j++) {
-                        if(o.odd[j].name.search(betName) != -1) {
-                            const ln = o.odd[j].odds.length;
-                            const idxes = (ln == 3)? {'1': 0, 'x': 1, '2': 1} : {'1':0, '2':1};
-                            const idx = idxes[barr[3]];
-                            const org_odd = Number(o.odd[j].odds[idx].odds);
-                            if(isNaN(org_odd)) {
-                                return res.status(200).send({
-                                    status:-1,  //odd mismatch error;
-                                });
-                            }
+                const o = analSoccerInplayResponse(JSON.parse(tableData["inplayodd.data"]));               
+                for(let j = 0; j < o.odd.length; j++) {                   
+                    for(let k = 0; k < o.odd[j].odds.length; k++) {
+                        const odata = o.odd[j].odds[k];
+                        if(odata.id == barr[2]) {
+                            const org_odd = Number(odata.odds);                            
                             oo *= org_odd;
                             const d = {
                                 data: o.odd[j],
-                                idx,
+                                idx : barr[2],
                             }
                             cons.push(d);
-                            break;
-                        }   
+                        }
                     }
-                }
-                else {
-                    const org_odd = o.odd[barr[2]]?.odds[barr[3]]?.odds;
-                    if(isNaN(org_odd)) {
-                        return res.status(200).send({
-                            status:-1,  //odd mismatch error;
-                        });
-                    }
-                    const d = {
-                        data: o.odd[barr[2]],
-                        idx : barr[3],
-                    }
-                    cons.push(d);
-                    oo *= org_odd;
-                }
-                
+                }           
             }
             else {
-                //use prematch table
+                const tableData = await Upcoming.findOne({
+                    include: [
+                      {
+                          model: PrematchOdds,
+                          attributes: ["data"],            
+                      },
+                    ],
+                    where:{
+                      id: barr[1]
+                    },
+                    raw:true
+                });
+                if(isEmpty(tableData)) {
+                    return res.status(200).send({
+                        status:0,
+                    });
+                }
+                const o= JSON.parse(tableData['prematchOdd.data']);
+                const bettings = ["main", "asian_lines", "goals", "half","minutes", "others", "specials"];
+                let b = 1;
+                for(let j = 0; j < bettings.length; j++) {
+                    const item = bettings[j];
+                    if(o[item] == undefined)
+                        continue;
+                    const odd_data = o[item].sp;
+                    if(Array.isArray(o[item])) {
+                        for(let j = 0; j < o[item].length; j++) {
+                            const sp = o[item][j].sp;
+                            const keys = Object.keys(sp);		
+                            b= await func1(keys, sp, barr[2], odd, cons);	
+                            if(b != 1) {
+                                break;
+                            }                            
+                        }
+                    }
+                    else {
+                        const keys = Object.keys(odd_data);		
+                        b= await func1(keys, odd_data, barr[2], odd, cons);                        
+                    }
+                    oo *= b;	
+                    if(b != 1){
+                        break;
+                    }
+                }
             }
         }
 

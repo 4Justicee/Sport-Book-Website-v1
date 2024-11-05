@@ -40,9 +40,12 @@ const sport_names={
 }
 
 const cornerImage = `<img style='width:12px' src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4NCjxzdmcgd2lkdGg9IjlweCIgaGVpZ2h0PSIxMHB4IiB2aWV3Qm94PSIwIDAgOSAxMCIgdmVyc2lvbj0iMS4xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIj4NCiAgICA8dGl0bGU+NURBNjNGRDEtQUE4Qi00OTYyLUJENzAtMTQzNDQwRDk2MTJFQDF4PC90aXRsZT4NCiAgICA8ZyBpZD0iTGl2ZS1TY29yZWJvYXJkcyIgc3Ryb2tlPSJub25lIiBzdHJva2Utd2lkdGg9IjEiIGZpbGw9Im5vbmUiIGZpbGwtcnVsZT0iZXZlbm9kZCI+DQogICAgICAgIDxnIGlkPSIwNi41X2RhcmtNb2RlX21vYmlsZV9ETVNCIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgtMjUxLjAwMDAwMCwgLTE0NS4wMDAwMDApIj4NCiAgICAgICAgICAgIDxnIGlkPSJHcm91cC0xNSIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMC4wMDAwMDAsIDEwMC4wMDAwMDApIj4NCiAgICAgICAgICAgICAgICA8ZyBpZD0iR3JvdXAtMTQiIHRyYW5zZm9ybT0idHJhbnNsYXRlKDI1MS4wMDAwMDAsIDM1LjAwMDAwMCkiPg0KICAgICAgICAgICAgICAgICAgICA8ZyBpZD0iR3JvdXAtNyIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMC4wMDAwMDAsIDEwLjAwMDAwMCkiPg0KICAgICAgICAgICAgICAgICAgICAgICAgPHJlY3QgaWQ9IlJlY3RhbmdsZS1Db3B5LTUiIGZpbGw9IiNGRkZGRkYiIHg9IjAiIHk9IjAiIHdpZHRoPSIxIiBoZWlnaHQ9IjEwIj48L3JlY3Q+DQogICAgICAgICAgICAgICAgICAgICAgICA8cmVjdCBpZD0iUmVjdGFuZ2xlIiBmaWxsPSIjRkZGRkZGIiB4PSIwIiB5PSIwIiB3aWR0aD0iOS4wMDMwMzA1NSIgaGVpZ2h0PSI2LjY2NjY2NjY3Ij48L3JlY3Q+DQogICAgICAgICAgICAgICAgICAgICAgICA8cmVjdCBpZD0iUmVjdGFuZ2xlLUNvcHktOSIgZmlsbD0iIzMzNEU2QSIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoNi4zNDA5MDksIDIuMDgzMzMzKSBzY2FsZSgtMSwgMSkgdHJhbnNsYXRlKC02LjM0MDkwOSwgLTIuMDgzMzMzKSAiIHg9IjQuNSIgeT0iMC44MzMzMzMzMzMiIHdpZHRoPSIzLjY4MTgxODE4IiBoZWlnaHQ9IjIuNSI+PC9yZWN0Pg0KICAgICAgICAgICAgICAgICAgICAgICAgPHJlY3QgaWQ9IlJlY3RhbmdsZS1Db3B5LTEwIiBmaWxsPSIjMzM0RTZBIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgyLjY1OTA5MSwgNC41ODMzMzMpIHNjYWxlKC0xLCAxKSB0cmFuc2xhdGUoLTIuNjU5MDkxLCAtNC41ODMzMzMpICIgeD0iMC44MTgxODE4MTgiIHk9IjMuMzMzMzMzMzMiIHdpZHRoPSIzLjY4MTgxODE4IiBoZWlnaHQ9IjIuNSI+PC9yZWN0Pg0KICAgICAgICAgICAgICAgICAgICA8L2c+DQogICAgICAgICAgICAgICAgPC9nPg0KICAgICAgICAgICAgPC9nPg0KICAgICAgICA8L2c+DQogICAgPC9nPg0KPC9zdmc+DQo=" class="icon-dac43ecd499d0fefdaaa" alt="corner-flag">`;
+
+let prematchDetailMode = 'all';
+
 $(document).ready(function(){  
 
-	$("#main_contents").delegate("#show_all_live","click", function(e) {
+$("#main_contents").delegate("#show_all_live","click", function(e) {
 	const b = $(this).hasClass("showAll");
 	if(b == false) {
 		$(`#main_contents .table__items`).css("display","flex");
@@ -96,15 +99,9 @@ $("#main_contents").delegate(".inplay_likestar","click", function(e) {
 	});  
 });
 
-$("#main_contents").delegate(".inplay_detail_view_btn","click", function(e) {
-	$("#main_contents>div").remove();
+$("#main_contents").delegate(".inplay_detail_view_btn","click", function(e) {	
 	const id = $(this).attr("tid");
 	
-	//only request current information
-	sportsSocket.send(JSON.stringify({
-		type: 'detail_live',
-		id: id,
-	}));
 
 	const data = JSON.parse(sessionStorage.getItem('live_data'));
 	let o = null;
@@ -129,6 +126,23 @@ $("#main_contents").delegate(".inplay_detail_view_btn","click", function(e) {
 	const names = o.names;
 	const passed_second = o.passed_second;
 	const pass_time_str = Math.floor(passed_second / 60) + "' " + passed_second % 60;
+	if(Object.keys(o.data).length == 0){
+		return;
+	}
+
+	sportsSocket.send(JSON.stringify({
+		token: token,
+		page:'home', 
+		live:'on', 
+		lsport:0, 
+		prematch:'off', 
+		psport:0, 
+		detail_id:id, 
+		data1:"",
+		data2:""
+	}));
+	
+	$("#main_contents>div").remove();
 
 	let order = true;
 	if(o.home_name != names.names1) {
@@ -173,9 +187,10 @@ $("#main_contents").delegate(".inplay_detail_view_btn","click", function(e) {
 				const n = odds[j].name;
 				const h = odds[j].header;
 				const v = odds[j].odds;
+				const oid = odds[j].id;
 				const t = h == undefined ? n : n+", "+h;
 				bettingItem += `<div class="col-md-4 col-sm-4">
-					<div style='display:flex; justify-content:space-between; padding: 10px' class='bet-btn' id='idl-${id}-${i}-${j}' groupNo="${i}" mid="${id}" t="${item.name}" d1="${n}" d2="${h}" o="${v}" d3="${o.home_name} vs ${o.away_name}">
+					<div style='display:flex; justify-content:space-between; padding: 10px' class='bet-btn' id='idl-${id}-${oid}' groupNo="${i}" mid="${id}" t="${item.name}" d1="${n}" d2="${h}" o="${v}" d3="${o.home_name} vs ${o.away_name}">
 						<span>${v == "NaN" ? '<i class="icon-lock"></i>':t}</span>
 						<span>${v == "NaN" ? '<i class="icon-lock"></i>':v}</span>
 					</div>
@@ -188,12 +203,13 @@ $("#main_contents").delegate(".inplay_detail_view_btn","click", function(e) {
 				const h = odds[j].header;
 				const v = odds[j].odds;
 				const t = h == undefined ? n : n+", "+h;
+				const oid = odds[j].id;
 				let n1 = "";
 				if(odds.length == 2) {
 					n1 = j == 0 ? o.home_name : o.away_name;
 				}
 				bettingItem += `<div class="col-md-6 col-sm-6">
-					<div style='display:flex; justify-content:space-between; padding: 10px' class='bet-btn' id='idl-${id}-${i}-${j}' groupNo="${i}" t="${item.name}" mid="${id}" n="${n1}" d1="${n}" d2="${h}" o="${v}" d3="${o.home_name} vs ${o.away_name}">
+					<div style='display:flex; justify-content:space-between; padding: 10px' class='bet-btn' id='idl-${id}-${oid}' groupNo="${i}" t="${item.name}" mid="${id}" n="${n1}" d1="${n}" d2="${h}" o="${v}" d3="${o.home_name} vs ${o.away_name}">
 						<span>${v == "NaN" ? '<i class="icon-lock"></i>':t}</span>
 						<span>${v == "NaN" ? '<i class="icon-lock"></i>':v}</span>
 					</div>
@@ -276,154 +292,101 @@ $("#main_contents").delegate(".inplay_detail_view_btn","click", function(e) {
 
 $("#main_contents").delegate(".prematch_detail_view_btn","click", function(e) {
 	$("#main_contents>div").remove();
-	const id = $(this).attr("tid");
-	
-	//only request current information
-	sportsSocket.send(JSON.stringify({
-		type: 'detail_prematch',
-		id: id,
-	}));
+	const id = $(this).attr("tid");	
+	processPrematchDetail(id);	
+});
 
-	const data = JSON.parse(sessionStorage.getItem('prematch_data'));
-	let o = null;
-	for(i = 0; i < data.data.length; i++) {
-		if(data.data[i].id == id) {
-			o = data.data[i];
+$("#main_contents").on("click", "#all-odds-view", function(e) {
+	const id = $(this).attr("did");
+	$("#main_contents>div").remove();
+
+
+	prematchDetailMode = 'all';
+	processPrematchDetail(id);
+});
+
+$("#main_contents").on("click", "#main-odd-view", function(e) {
+	const id = $(this).attr("did");
+	$("#main_contents>div").remove();
+
+	prematchDetailMode = 'main';
+	processPrematchDetail(id);
+});
+
+$("#main_contents").on("click", "#asian-lines-odd-view", function(e) {
+	const id = $(this).attr("did");
+	$("#main_contents>div").remove();
+	
+	prematchDetailMode = 'asian_lines';
+	processPrematchDetail(id);
+});
+
+$("#main_contents").on("click", "#goals-odd-view", function(e) {
+	const id = $(this).attr("did");
+	$("#main_contents>div").remove();
+	prematchDetailMode = 'goals';
+	processPrematchDetail(id);
+});
+
+$("#main_contents").on("click", "#half-odd-view", function(e) {
+	const id = $(this).attr("did");
+	$("#main_contents>div").remove();
+	prematchDetailMode = 'half';
+	processPrematchDetail(id);
+});
+
+$("#main_contents").on("click", "#minutes-odd-view", function(e) {
+	const id = $(this).attr("did");
+	$("#main_contents>div").remove();
+	prematchDetailMode = 'minutes';
+	processPrematchDetail(id);
+});
+
+$("#main_contents").on("click", "#others-odd-view", function(e) {
+	const id = $(this).attr("did");
+	$("#main_contents>div").remove();
+	prematchDetailMode = 'others';
+	processPrematchDetail(id);
+});
+
+$("#main_contents").on("click", "#specials-odd-view", function(e) {
+	const id = $(this).attr("did");
+	$("#main_contents>div").remove();
+	prematchDetailMode = 'specials';
+	processPrematchDetail(id);
+});
+
+function removeBetsByIdFromPanel(id) {
+	var elems = $('#single_bets_view [elem]');  
+	for(let i = 0; i < elems.length; i++) {
+		const elem = elems[i];
+		if($(elem).attr("elem") == id) {
+			$(elem).closest('.multiple__items').remove(); // Set 'a1' value 
 			break;
 		}
 	}
-	if(o == null) {
-		toastr.error("Invalid match");
-		return;
-	}
-	console.log(o);
 
-	const sid = o.sport_id;
-	const sports_name = sport_names[sid];
-	const title = `${sports_name} \/ ${o.league_name} \/ ${o.home_name} vs ${o.away_name}`;
-	const date = new Date(o.time_str);  
-	const home_image = o.home_image_id;
-	const away_image = o.away_image_id;
-	let order = true;
-	if(o.home_name != names.names1) {
-		order = false;
-	}
-	
-
-	const team1_str = (home_image == 0) ? `<i class='icon-star'></i>${o.home_name}`:`<img src='https://assets.b365api.com/images/team/s/${home_image}.png'/>${o.home_name}`;
-	const team2_str = (away_image == 0) ? `<i class='icon-star'></i>${o.away_name}`:`<img src='https://assets.b365api.com/images/team/s/${away_image}.png'/>${o.away_name}`;
-	const bettings = ["asian_lines", "goals", "half", "main", "minutes", "others", "specials"];
-
-	let accordionElems = '';
-	for(let i = 0; i < bettings.length; i++) {
-		const item = bettings[i];
-		const odds = item.odds;
-
-		let bettingItem = '';
-		if(odds.length == 3) {
-			for(let j = 0; j < odds.length; j++) {
-				const n = odds[j].name;
-				const h = odds[j].header;
-				const v = odds[j].odds;
-				const t = h == undefined ? n : n+", "+h;
-				bettingItem += `<div class="col-md-4 col-sm-4">
-					<div style='display:flex; justify-content:space-between; padding: 10px' class='bet-btn' id='idr-${id}-${i}-${j}' groupNo="${i}" mid="${id}" t="${item.name}" d1="${n}" d2="${h}" o="${v}" d3="${o.home_name} vs ${o.away_name}">
-						<span>${v == "NaN" ? '<i class="icon-lock"></i>':t}</span>
-						<span>${v == "NaN" ? '<i class="icon-lock"></i>':v}</span>
-					</div>
-				</div>`;
-			}			
+	elems = $('#multiple_bets_view [elem]');  
+	for(let i = 0; i < elems.length; i++) {
+		const elem = elems[i];
+		if($(elem).attr("elem") == id) {
+			$(elem).closest('.multiple__items').remove(); // Set 'a1' value 
+			break;
 		}
-		else {
-			for(let j = 0; j < odds.length; j++) {
-				const n = odds[j].name;
-				const h = odds[j].header;
-				const v = odds[j].odds;
-				const t = h == undefined ? n : n+", "+h;
-				let n1 = "";
-				if(odds.length == 2) {
-					n1 = j == 0 ? o.home_name : o.away_name;
-				}
-				bettingItem += `<div class="col-md-6 col-sm-6">
-					<div style='display:flex; justify-content:space-between; padding: 10px' class='bet-btn' id='idr-${id}-${i}-${j}' groupNo="${i}" t="${item.name}" mid="${id}" n="${n1}" d1="${n}" d2="${h}" o="${v}" d3="${o.home_name} vs ${o.away_name}">
-						<span>${v == "NaN" ? '<i class="icon-lock"></i>':t}</span>
-						<span>${v == "NaN" ? '<i class="icon-lock"></i>':v}</span>
-					</div>
-				</div>`;
-			}
-		}
-
-		accordionElems += `<div class="accordion-item">
-			<h2 class="accordion-header" id="headingOne${i}">
-				<button class="accordion-button " type="button" data-bs-toggle="collapse" data-bs-target="#odd-${id}-${i}" aria-expanded="true" aria-controls="odd-${id}-${i}">
-				<span class="d-flex align-items-center gap-2 left-chokoboko">
-					<span class="mt-1"><i class="icon-football"></i></span>
-					<span class="score text-white">
-						${item.name}
-					</span>
-				</span>
-				<span class="d-flex align-items-center gap-1 icon-rightfs10">
-					<i class="fa-solid fa-chevron-down"></i>
-				</span>
-				</button>
-			</h2>
-			<div id="odd-${id}-${i}" class="accordion-collapse collapse show" aria-labelledby="headingOne${i}">
-				<div class="accordion-body">
-					<div class="row g-0">
-                        ${bettingItem}
-					</div>
-				</div>
-			</div>
-		</div>`;
 	}
-	// Options for formatting  
-	const options = {  
-		weekday: 'long',  
-		year: 'numeric',  
-		month: 'long',  
-		day: 'numeric',  
-		hour: '2-digit',  
-		minute: '2-digit',  
-		hour12: false,  
-	};  
 
-	// Convert to local time and format  
-	const localeDateString = `Live | ${pass_time_str}`//date.toLocaleString('en-US', options);  
-	
+	var currentBets = $('#single_bets_view .multiple__items');
+	if(currentBets.length == 0) {
+		$("#single_bets_view").html(`<div class='empty empty-box-1'>There are no bets on your ticket</div>
+	<div class='empty empty-box-2'>Click the odds to add a bet</div>`);
+	}
 
-	$("#main_contents").prepend(`<div class="main__body__wrap left__right__space mt__30" id="detail-${id}">                                                       
-		<div class="live__heightlight mb__30">
-			<div class="section__title">
-				<h5>
-					${title}
-				</h5>
-			</div>
-			<div class='b__bottom' style='margin-left:2rem; padding:10px 0px; justify-content:space-between; display:flex'>
-				<div style='color:#09ff8d; font-weight:bold'>${localeDateString}</div>
-				<div style='display:flex;gap:1rem;align-items:center;'>
-					${cornerImage}
-					<div style='width:12px;background-color:#ffff00; height:14px'></div>
-					<div style='width:12px;background-color:#ff0000; height:14px'></div>
-					<i class='icon-football'></i>
-				</div>
-			</div>
-			<div class='b__bottom' style='margin-left:2rem; padding:10px 0px; display:flex'>
-				<div style='display:flex; gap:5px'>${team1_str}</div>
-			</div>
-			<div class='b__bottom' style='margin-left:2rem;padding:10px 0px; display:flex'>
-				<div style='display:flex; gap:5px'>${team2_str}</div>
-			</div>			
-			<div class="height__table" style='margin-top:1.5rem'>
-				<div class="tab-content sidebar-livematch">
-					<div class="accordion">
-						${accordionElems}
-					</div>
-				</div>
-			</div>
-		</div>                                                  
-	</div>`);
-});
-
+	var cb = $('#multiple_bets_view .multiple__items');
+	if(cb.length == 0) {
+		$("#multiple_bets_view").html(`<div class='empty empty-box-1'>There are no bets on your ticket</div>
+	<div class='empty empty-box-2'>Click the odds to add a bet</div>`);
+	}
+}
 
 $("#main_contents").delegate(".bet-btn", "click", function(e){
 	const nGroup = $(this).attr("groupNo");
@@ -445,40 +408,25 @@ $("#main_contents").delegate(".bet-btn", "click", function(e){
 
 	if($(this).hasClass("selected")) {
 		$(this).removeClass("selected");
-		var elems = $('#single_bets_view [elem]');  
-		for(let i = 0; i < elems.length; i++) {
-			const elem = elems[i];
-			if($(elem).attr("elem") == id) {
-				$(elem).closest('.multiple__items').remove(); // Set 'a1' value 
-				break;
-			}
-		}
-
-		elems = $('#multiple_bets_view [elem]');  
-		for(let i = 0; i < elems.length; i++) {
-			const elem = elems[i];
-			if($(elem).attr("elem") == id) {
-				$(elem).closest('.multiple__items').remove(); // Set 'a1' value 
-				break;
-			}
-		}
-
-		var currentBets = $('#single_bets_view .multiple__items');
-		if(currentBets.length == 0) {
-			$("#single_bets_view").html(`<div class='empty empty-box-1'>There are no bets on your ticket</div>
-		<div class='empty empty-box-2'>Click the odds to add a bet</div>`);
-		}
-
-		var cb = $('#multiple_bets_view .multiple__items');
-		if(cb.length == 0) {
-			$("#multiple_bets_view").html(`<div class='empty empty-box-1'>There are no bets on your ticket</div>
-		<div class='empty empty-box-2'>Click the odds to add a bet</div>`);
-		}
+		removeBetsByIdFromPanel(id);
 		return;
 	}
+	const divGroup = $(`div[groupNo="${nGroup}"]`)
+	const aGroup = $(`a[groupNo="${nGroup}"]`);
 
-	$(`div[groupNo="${nGroup}"]`).removeClass("selected")
-	$(`a[groupNo="${nGroup}"]`).removeClass("selected")
+	for(let i = 0; i < divGroup.length; i++) {
+		const id = divGroup[i].id;
+		removeBetsByIdFromPanel(id);
+	}
+
+	for(let i = 0; i < aGroup.length; i++) {
+		const id = aGroup[i].id;
+		removeBetsByIdFromPanel(id);
+	}
+
+	divGroup.removeClass("selected") //need to modify
+	aGroup.removeClass("selected")	//need to modify
+
 	$(this).addClass("selected");
 
 	const needEmpty = $("#single_bets_view").find(".empty").length == 2;
@@ -645,6 +593,231 @@ $("#main_contents").delegate(".bet-btn", "click", function(e){
 	calcTotalOdd();
 });
 
+function processPrematchDetail(id) {
+	//only request current information
+	sportsSocket.send(JSON.stringify({
+		token: token,
+		page:'home', 
+		live:'off', 
+		lsport:0, 
+		prematch:'on', 
+		psport:0, 
+		detail_id:id, 
+		data1:"",
+		data2:""
+	}));
+
+	const data = JSON.parse(sessionStorage.getItem('prematch_data'));
+	let o = null;
+	for(i = 0; i < data.data.length; i++) {
+		if(data.data[i].id == id) {
+			o = data.data[i];
+			break;
+		}
+	}
+	if(o == null) {
+		toastr.error("Invalid match");
+		return;
+	}
+
+	const sid = o.sport_id;
+	const sports_name = sport_names[sid];
+	const title = `${sports_name} \/ ${o.league_name} \/ ${o.home_name} vs ${o.away_name}`;
+	const home_image = o.home_image_id;
+	const away_image = o.away_image_id;
+	const matchTime = o.time_str;
+	const team1_str = (home_image == 0) ? `<i class='icon-star'></i>${o.home_name}`:`<img src='https://assets.b365api.com/images/team/s/${home_image}.png'/>${o.home_name}`;
+	const team2_str = (away_image == 0) ? `<i class='icon-star'></i>${o.away_name}`:`<img src='https://assets.b365api.com/images/team/s/${away_image}.png'/>${o.away_name}`;
+	const bettings = ["main", "asian_lines", "goals", "half","minutes", "others", "specials"];
+
+	
+	let accordionElems = '';
+	let modeSelect = [];
+	const func = (keys, odd_data, home_name, away_name, id, i, item) => {
+		for(let j = 0; j < keys.length; j++) {
+			const key = keys[j];
+			const bet_name = odd_data[key].name;
+			const odds = odd_data[key].odds;
+			if(odds.length == 0)
+				continue;
+			let bettingItem = '';
+			if(odds.length == 3) {
+				for(let k = 0; k < odds.length; k++) {
+					const odd = odds[k].odds;
+					const header = odds[k].header;
+					const name = odds[k].name;
+					const oid = odds[k].id;
+					const handi = odds[k].handicap;
+					const n = name == undefined ? handi : name;
+					const t = header == undefined ? n : n+", "+header;
+
+					bettingItem += `<div class="col-md-4 col-sm-4">
+						<div style='display:flex; justify-content:space-between; padding: 10px' class='bet-btn' id='idr-${id}-${oid}' groupNo="${i}-${j}" mid="${id}" t="${bet_name}" d1="${header}" d2="${name}" o="${odd}" d3="${home_name} vs ${away_name}">
+							<span>${odd == "NaN" ? '<i class="icon-lock"></i>':t}</span>
+							<span>${odd == "NaN" ? '<i class="icon-lock"></i>':odd}</span>
+						</div>
+					</div>`;
+				}
+			}
+			else {
+				for(let k = 0; k < odds.length; k++) {
+					const odd = odds[k].odds;
+					const header = odds[k].header;
+					const name = odds[k].name;
+					const oid = odds[k].id;
+					const handi = odds[k].handicap;
+					const n = name == undefined ? handi : name;
+					const t = header == undefined ? n : n+", "+header;
+
+					let n1 = "";
+					if(odds.length == 2) {
+						n1 = j == 0 ? o.home_name : o.away_name;
+					}
+					bettingItem += `<div class="col-md-6 col-sm-6">
+						<div style='display:flex; justify-content:space-between; padding: 10px' class='bet-btn' id='idr-${id}-${oid}' groupNo="${i}-${j}" t="${bet_name}" mid="${id}" n="${n1}" d1="${n}" d2="${header}" o="${odd}" d3="${home_name} vs ${away_name}">
+							<span>${odd == "NaN" ? '<i class="icon-lock"></i>':t}</span>
+							<span>${odd == "NaN" ? '<i class="icon-lock"></i>':odd}</span>
+						</div>
+					</div>`;
+				}
+			}
+
+			accordionElems += `<div class="accordion-item">
+				<h2 class="accordion-header" id="headingOne${i}-${j}">
+					<button class="accordion-button " type="button" data-bs-toggle="collapse" data-bs-target="#odd-${id}-${i}-${j}" aria-expanded="true" aria-controls="odd-${id}-${i}-${j}">
+					<span class="d-flex align-items-center gap-2 left-chokoboko">
+						<span class="mt-1"><i class="icon-football"></i></span>
+						<span class="score text-white">
+							${bet_name}-${item.toUpperCase()}
+						</span>
+					</span>
+					<span class="d-flex align-items-center gap-1 icon-rightfs10">
+						<i class="fa-solid fa-chevron-down"></i>
+					</span>
+					</button>
+				</h2>
+				<div id="odd-${id}-${i}-${j}" class="accordion-collapse collapse show" aria-labelledby="headingOne${i}-${j}">
+					<div class="accordion-body">
+						<div class="row g-0">
+							${bettingItem}
+						</div>
+					</div>
+				</div>
+			</div>`;
+		}
+	}	
+	
+	if(prematchDetailMode == 'all') {
+		modeSelect = modeSelect.concat(bettings);
+	}
+	else {
+		modeSelect = [prematchDetailMode];
+	}
+
+	for(let i = 0; i < modeSelect.length; i++) {
+		const item = modeSelect[i];
+		if(o.data[item] == undefined)
+			continue;
+		const odd_data = o.data[item].sp;
+		if(Array.isArray(o.data[item])) {
+			for(let j = 0; j < o.data[item].length; j++) {
+				const sp = o.data[item][j].sp;
+				const keys = Object.keys(sp);		
+				func(keys, sp, o.home_name, o.away_name, id, i, item);	
+			}
+		}
+		else {
+			const keys = Object.keys(odd_data);		
+			func(keys, odd_data, o.home_name, o.away_name, id, i, item);
+		}				
+	}
+	
+	// Convert it to a Date object  
+	let dateObj = new Date(matchTime);  
+	let options = {  
+		weekday: 'long',   // long name of the day  
+		year: 'numeric',   // numeric year  
+		month: 'long',     // long name of month  
+		day: 'numeric',    // numeric day of the month  
+		hour: 'numeric',   // numeric hour  
+		minute: 'numeric', // numeric minutes  
+		timeZoneName: 'short' // short name of the time zone  
+	};  
+
+	// Format the date to the local timezone  
+	let formattedDate = dateObj.toLocaleString('en-US', options);  
+
+	$("#main_contents").prepend(`<div class="main__body__wrap left__right__space mt__30" id="detail-${id}">                                                       
+		<div class="live__heightlight mb__30">
+			<div class="section__title">
+				<h5>
+					${title}
+				</h5>
+			</div>			
+			<div class='b__bottom' style='margin-left:2rem; padding:10px 0px; justify-content:space-between; display:flex'>
+				<div style='color:#09ff8d; font-weight:bold'>${formattedDate}</div>				
+			</div>
+			<div class='b__bottom' style='margin-left:2rem; padding:10px 0px; display:flex'>
+				<div style='display:flex; gap:5px'>${team1_str}</div>
+			</div>
+			<div class='b__bottom' style='margin-left:2rem;padding:10px 0px; display:flex'>
+				<div style='display:flex; gap:5px'>${team2_str}</div>
+			</div>
+			<div class="heightlight__tab nexttogo__tab">
+				<div class="nav pt-20" id="nav-detail-odd" role="tablist">
+					<button class="nav-link prematch-detail-nav ${prematchDetailMode == 'all'?'active':''}" id="all-odds-view" data-bs-toggle="tab" data-bs-target="#all-odds-view-tab" type="button" role="tab" aria-selected="true" did="${id}">					
+						<span>
+							All
+						</span>
+					</button>
+					<button class="nav-link prematch-detail-nav ${prematchDetailMode == 'main'?'active':''}" id="main-odd-view" data-bs-toggle="tab" data-bs-target="#main-odd-view-tab" type="button" role="tab" aria-selected="false" did="${id}">
+						<span>
+							Main
+						</span>
+					</button>
+					<button class="nav-link prematch-detail-nav  ${prematchDetailMode == 'asian_lines'?'active':''}" id="asian-lines-odd-view" data-bs-toggle="tab" data-bs-target="#asian-lines-odd-view-tab" type="button" role="tab" aria-selected="false" did="${id}">
+						<span>
+							Asian Lines
+						</span>
+					</button>
+					<button class="nav-link prematch-detail-nav  ${prematchDetailMode == 'goals'?'active':''}" id="goals-odd-view" data-bs-toggle="tab" data-bs-target="#goals-odd-view-tab" type="button" role="tab" aria-selected="false" did="${id}">
+						<span>
+							Goals
+						</span>
+					</button>
+					<button class="nav-link prematch-detail-nav  ${prematchDetailMode == 'half'?'active':''}" id="half-odd-view" data-bs-toggle="tab" data-bs-target="#half-odd-view-tab" type="button" role="tab" aria-selected="false" did="${id}">
+						<span>
+							Half
+						</span>
+					</button>
+					<button class="nav-link prematch-detail-nav  ${prematchDetailMode == 'minutes'?'active':''}" id="minutes-odd-view" data-bs-toggle="tab" data-bs-target="#minutes-odd-view-tab" type="button" role="tab" aria-selected="false" did="${id}">
+						<span>
+							Minutes
+						</span>
+					</button>
+					<button class="nav-link prematch-detail-nav  ${prematchDetailMode == 'others'?'active':''}" id="others-odd-view" data-bs-toggle="tab" data-bs-target="#others-odd-view-tab" type="button" role="tab" aria-selected="false" did="${id}">
+						<span>
+							Others
+						</span>
+					</button>
+					<button class="nav-link prematch-detail-nav  ${prematchDetailMode == 'specials'?'active':''}" id="specials-odd-view" data-bs-toggle="tab" data-bs-target="#specials-odd-view-tab" type="button" role="tab" aria-selected="false" did="${id}">
+						<span>
+							Specials
+						</span>
+					</button>
+				</div>
+			</div>
+			<div class="height__table" style='margin-top:1.5rem'>
+				<div class="tab-content sidebar-livematch">
+					<div class="accordion">
+						${accordionElems}
+					</div>
+				</div>
+			</div>
+		</div>                                                  
+	</div>`);
+}	
+
 function calcTotalOdd() {
 	const m_odd = $("#multiple_bets_view .m_odd");
 	let totalOdd = 1;
@@ -655,6 +828,7 @@ function calcTotalOdd() {
 	}
 	$("#total_odd").html(totalOdd.toFixed(2));
 }
+
 function calcTotalBets() {
 	const stakes = $(".input-stake");
 	const wins = $(".input-win");
@@ -685,6 +859,7 @@ function calcMTotalBet() {
 	$("#mtotal_win").html(win.toFixed(3))
 	$("#mtotal_payout").html((stake+win).toFixed(3))
 }
+
 $("#single_bets_view").on("input",".input-stake", function(e) {
 	const o = Number($(this).attr("odd")) - 1;
 	const v = Number($(this).val());
@@ -891,34 +1066,6 @@ $("#multiple_bets_view").on("click",".remove-bet-item", function(e) {
 		$("#multiple_bets_view").html(`<div class='empty empty-box-1'>There are no bets on your ticket</div>
 	<div class='empty empty-box-2'>Click the odds to add a bet</div>`);
 	}
-});
-
-$("#live_data_view").delegate(".handi1","click", function(e) {
-
-});
-
-$("#live_data_view").delegate(".handi2","click", function(e) {
-
-});
-
-$("#live_data_view").delegate(".overgoal","click", function(e) {
-
-});
-
-$("#live_data_view").delegate(".undergoal","click", function(e) {
-
-});
-
-$("#live_data_view").delegate(".full1","click", function(e) {
-
-});
-
-$("#live_data_view").delegate(".fullx","click", function(e) {
-
-});
-
-$("#live_data_view").delegate(".full2","click", function(e) {
-
 });
 
 $("#lightlighttab").click(function (e) {
@@ -1534,9 +1681,7 @@ $("#main-tab-home").click(function(e) {
 				</div>
 			</div>
 		</div>                                                      
-		</div>`;
-	
-	
+		</div>`;	
 })
 
 $("#main-tab-live").click(function(e) {
@@ -1549,12 +1694,10 @@ $("#main-tab-today").click(function(e) {
 	$(this).addClass("active");
 })
 
-
 $("#main-tab-league").click(function(e) {
 	$(".main-nav-button").removeClass("active");
 	$(this).addClass("active");
 })
-
 
 $("#main-tab-result").click(function(e) {
 	$(".main-nav-button").removeClass("active");
@@ -1599,5 +1742,5 @@ function showConfirmAlert(title, callback) {
 			callback();
 		}
 	});
-  }
+}
   

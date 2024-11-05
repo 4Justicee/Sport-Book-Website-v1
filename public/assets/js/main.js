@@ -567,7 +567,18 @@ $(document).ready(function () {
     fillLiveAccordion();
     fillPrematchAccordion();    
 
-    sportsSocket.send(JSON.stringify({type:'home'}));
+    //
+    /*sportsSocket.send(JSON.stringify(
+    {
+      type:'home', 
+      page:'home', 
+      live:'on', 
+      lsport:1, 
+      prematch:'on', 
+      psports:1, 
+      ldetail:false, 
+      pdetail:false
+    }));*/
 
 });
 

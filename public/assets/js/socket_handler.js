@@ -37,32 +37,30 @@ function handleSoccerLive(odds, data, idx, fav = 0) {
               </span>
           </div>
           <div class="mart__point__items">        
-              <a class="point__box full1 bet-btn" groupNo="${idx}0" id='idl-${id}-f-1' mid="${id}" n="Fulltime Result" t="${data.home_name}" d3="${data.home_name} vs ${data.away_name}" o="${o1x2.hwin}">
+              <a class="point__box full1 bet-btn" groupNo="${idx}0" id='idl-${id}-${o1x2.hid}' mid="${id}" n="Fulltime Result" t="${data.home_name}" d3="${data.home_name} vs ${data.away_name}" o="${o1x2.hwin}">
                   ${o1x2.hwin == -1 ? `<i class="icon-lock"></i>` : o1x2.hwin}
               </a>
-              <a class="point__box fullx bet-btn" groupNo="${idx}0" id='idl-${id}-f-x' mid="${id}" n="Fulltime Result" t="Draw" o="${o1x2.draw}" d3="${data.home_name} vs ${data.away_name}">
+              <a class="point__box fullx bet-btn" groupNo="${idx}0" id='idl-${id}-${o1x2.did}' mid="${id}" n="Fulltime Result" t="Draw" o="${o1x2.draw}" d3="${data.home_name} vs ${data.away_name}">
                   ${o1x2.draw == -1 ? `<i class="icon-lock"></i>` : o1x2.draw}
               </a>
-              <a class="point__box full2 bet-btn" groupNo="${idx}0" id='idl-${id}-f-2' mid="${id}" n="Fulltime Result" t="${data.away_name}" o="${o1x2.awin}" d3="${data.home_name} vs ${data.away_name}">
+              <a class="point__box full2 bet-btn" groupNo="${idx}0" id='idl-${id}-${o1x2.aid}' mid="${id}" n="Fulltime Result" t="${data.away_name}" o="${o1x2.awin}" d3="${data.home_name} vs ${data.away_name}">
                   ${o1x2.awin == -1 ? `<i class="icon-lock"></i>` : o1x2.awin}
               </a>
-          </div>
-          <div class="mart__point__items"'>        
-              <a class="point__box overgoal bet-btn" groupNo="${idx}1" id='idl-${id}-g-1' mid="${id}" n="Match Goals" t="${data.home_name}" d1="${go.goal}" d2="Over" d3="${data.home_name} vs ${data.away_name}" o="${go.overodd}">
+       
+              <a class="point__box overgoal bet-btn" groupNo="${idx}1" id='idl-${id}-${go.oid}' mid="${id}" n="Match Goals" t="${data.home_name}" d1="${go.goal}" d2="Over" d3="${data.home_name} vs ${data.away_name}" o="${go.overodd}">
               ${go.goal == -1 ? `<i class="icon-lock"></i>`: `<span class='point__box_addinfo goal'>${go.goal}</span>
                   <span class='overodd'>${go.overodd}</span>`}
               </a>
-              <a class="point__box undergoal bet-btn" groupNo="${idx}1" id='idl-${id}-g-2' mid="${id}" n="Match Goals" t="${data.away_name}" d1="${go.goal}" d2="Under" o="${go.underodd}" d3="${data.home_name} vs ${data.away_name}">
+              <a class="point__box undergoal bet-btn" groupNo="${idx}1" id='idl-${id}-${go.uid}' mid="${id}" n="Match Goals" t="${data.away_name}" d1="${go.goal}" d2="Under" o="${go.underodd}" d3="${data.home_name} vs ${data.away_name}">
                   ${go.goal == -1 ? `<i class="icon-lock"></i>`: `<span class='point__box_addinfo goal'>${go.goal}</span>
                   <span class='underodd'>${go.underodd}</span>`}
               </a>
-          </div>
-          <div class="mart__point__items">        
-              <a class="point__box handi1 bet-btn" groupNo="${idx}2" id='idl-${id}-h-1'  mid="${id}" n="Asian Handicap" t="${data.home_name}" d1="${handis.h_hand}" o="${handis.h_odd}" d3="${data.home_name} vs ${data.away_name}"> 
+      
+              <a class="point__box handi1 bet-btn" groupNo="${idx}2" id='idl-${id}-${handis.id1}' mid="${id}" n="Asian Handicap" t="${data.home_name}" d1="${handis.h_hand}" o="${handis.h_odd}" d3="${data.home_name} vs ${data.away_name}"> 
                   ${handis.h_hand == -1 ? `<i class="icon-lock"></i>`: `<span class='point__box_addinfo handivalue1'>${handis.h_hand}</span><span class='handi1odd'>${handis.h_odd}</span>`}
 
               </a>
-              <a class="point__box handi2 bet-btn" groupNo="${idx}2" id='idl-${id}-h-2' mid="${id}" n="Asian Handicap" t="${data.away_name}" d1="${handis.a_hand}" o="${handis.a_odd}" d3="${data.home_name} vs ${data.away_name}">    
+              <a class="point__box handi2 bet-btn" groupNo="${idx}2" id='idl-${id}-${handis.id2}' mid="${id}" n="Asian Handicap" t="${data.away_name}" d1="${handis.a_hand}" o="${handis.a_odd}" d3="${data.home_name} vs ${data.away_name}">    
                   ${handis.a_hand == -1 ? `<i class="icon-lock"></i>`: `<span class='point__box_addinfo handivalue2'>${handis.a_hand}</span><span class='handi2odd'>${handis.a_odd}</span>`}
               </a>
           </div>
@@ -122,23 +120,32 @@ function handleSoccerPrematch(data, idx) {
   const localTimeString = utcDate.toLocaleString(undefined, options);
 
   let hwin = -1, draw = -1, awin = -1, overodd = -1, goal = -1, underodd = -1; 
+  let hid, did, aid, oid, uid, id1, id2;
   let hodd1 = -1, hodd2 = -1, handi1 = -1, handi2 = -1;
   if(odds.main != undefined) {
     if(odds.main.sp.full_time_result != undefined) {
       hwin = odds.main.sp.full_time_result.odds[0].odds;
+      hid = odds.main.sp.full_time_result.odds[0].id;
       draw = odds.main.sp.full_time_result.odds[1].odds;
+      did = odds.main.sp.full_time_result.odds[1].id;
       awin = odds.main.sp.full_time_result.odds[2].odds;
+      aid = odds.main.sp.full_time_result.odds[2].id;
     }
 
     if(odds.main.sp.goals_over_under != undefined) {
       overodd = odds.main.sp.goals_over_under.odds[0].odds;
+      oid = odds.main.sp.goals_over_under.odds[0].id;
       underodd = odds.main.sp.goals_over_under.odds[1].odds;
+      uid = odds.main.sp.goals_over_under.odds[1].id;
       goal = odds.main.sp.goals_over_under.odds[0].name;
     } 
 
     if(odds.main.sp.asian_handicap != undefined) {
       hodd1 = odds.main.sp.asian_handicap.odds[0].odds;
+      id1 = odds.main.sp.asian_handicap.odds[0].id;
       hodd2 = odds.main.sp.asian_handicap.odds[1].odds;
+      id2 = odds.main.sp.asian_handicap.odds[1].id;
+
       handi1 = odds.main.sp.asian_handicap.odds[0].handicap;
       handi2 = odds.main.sp.asian_handicap.odds[1].handicap;
     }
@@ -163,25 +170,25 @@ function handleSoccerPrematch(data, idx) {
       </div>
       <div class="mart__point__two mart__pint__nextgo">
         <div class="mart__point__left">
-            <a href="#box" class="point__box homewin bet-btn" groupNo="${id}0" id='idp-${id}-f-1' mid="${id}" n="Fulltime Result" t="${home_name}" o="${hwin}" d3="${home_name} vs ${away_name}">
+            <a href="#box" class="point__box homewin bet-btn" groupNo="${id}0" id='idp-${id}-${hid}' mid="${id}" n="Fulltime Result" t="${home_name}" o="${hwin}" d3="${home_name} vs ${away_name}">
               ${hwin == -1 ? `<i class="icon-lock"></i>`: `<span class="point__1">1</span><span>${hwin}</span>`}                                
             </a>
-            <a href="#box" class="point__box draw bet-btn" groupNo="${id}0" id='idp-${id}-f-x' mid="${id}" n="Fulltime Result" t="Draw" o="${draw}" d3="${home_name} vs ${away_name}">
+            <a href="#box" class="point__box draw bet-btn" groupNo="${id}0" id='idp-${id}-${did}' mid="${id}" n="Fulltime Result" t="Draw" o="${draw}" d3="${home_name} vs ${away_name}">
                 ${draw == -1 ? `<i class="icon-lock"></i>`: `<span class="point__1">X</span><span>${draw}</span>`}                  
             </a>
-            <a href="#box" class="point__box awaywin bet-btn" groupNo="${id}0" id='idp-${id}-f-2' mid="${id}" n="Fulltime Result" t="${away_name}" o="${awin}" d3="${home_name} vs ${away_name}">
+            <a href="#box" class="point__box awaywin bet-btn" groupNo="${id}0" id='idp-${id}-${aid}' mid="${id}" n="Fulltime Result" t="${away_name}" o="${awin}" d3="${home_name} vs ${away_name}">
                 ${awin == -1 ? `<i class="icon-lock"></i>`: `<span class="point__1">2</span><span>${awin}</span>`}                  
             </a>
-            <a href="#box" class="point__box goalover bet-btn" groupNo="${id}1" id='idp-${id}-g-1' mid="${id}" n="Match Goals" t="${home_name}" d1="${goal}" d2="Over" d3="${home_name} vs ${away_name}" o="${overodd}">
+            <a href="#box" class="point__box goalover bet-btn" groupNo="${id}1" id='idp-${id}-${oid}' mid="${id}" n="Match Goals" t="${home_name}" d1="${goal}" d2="Over" d3="${home_name} vs ${away_name}" o="${overodd}">
                 ${goal == -1 ? `<i class="icon-lock"></i>`: `<span class="point__1">${goal}&nbsp;Over</span><span>${overodd}</span>`}                  
             </a>
-            <a href="#box" class="point__box goalunder bet-btn" groupNo="${id}1" id='idp-${id}-g-2' mid="${id}" n="Match Goals" t="${away_name}" d1="${goal}" d2="Under" o="${underodd}" d3="${home_name} vs ${away_name}">
+            <a href="#box" class="point__box goalunder bet-btn" groupNo="${id}1" id='idp-${id}-${uid}' mid="${id}" n="Match Goals" t="${away_name}" d1="${goal}" d2="Under" o="${underodd}" d3="${home_name} vs ${away_name}">
                 ${goal == -1 ? `<i class="icon-lock"></i>`: `<span class="point__1">${goal}&nbsp;Under</span><span>${underodd}</span>`}                  
             </a>
-            <a href="#box" class="point__box hodd1 bet-btn" groupNo="${id}2" id='idp-${id}-h-1' mid="${id}" n="Asian Handicap" t="${home_name}" d1="${handi1}" o="${hodd1}" d3="${home_name} vs ${away_name}">
+            <a href="#box" class="point__box hodd1 bet-btn" groupNo="${id}2" id='idp-${id}-${id1}' mid="${id}" n="Asian Handicap" t="${home_name}" d1="${handi1}" o="${hodd1}" d3="${home_name} vs ${away_name}">
                 ${hodd1 == -1 ? `<i class="icon-lock"></i>`: `<span class="point__1">${handi1}</span><span>${hodd1}</span>`}                  
             </a>
-            <a href="#box" class="point__box hodd2 bet-btn" groupNo="${id}2" id='idp-${id}-h-2' mid="${id}" n="Asian Handicap" t="${away_name}" d1="${handi2}" o="${hodd2}" d3="${home_name} vs ${away_name}">
+            <a href="#box" class="point__box hodd2 bet-btn" groupNo="${id}2" id='idp-${id}-${id2}' mid="${id}" n="Asian Handicap" t="${away_name}" d1="${handi2}" o="${hodd2}" d3="${home_name} vs ${away_name}">
                 ${hodd2 == -1 ? `<i class="icon-lock"></i>`: `<span class="point__1">${handi2}</span><span>${hodd2}</span>`}                  
             </a>
         </div>
@@ -211,7 +218,17 @@ function handleSoccerPrematch(data, idx) {
 }
 
 sportsSocket.onopen = function() {
-  sportsSocket.send(JSON.stringify({token, type:'token'}));
+  sportsSocket.send(JSON.stringify({
+    token: token,
+    page:'home', 
+    live:'on', 
+    lsport:1, 
+    prematch:'on', 
+    psport:1, 
+    detail_id:0, 
+    data1:"",
+    data2:""
+  }));
 };
 
 sportsSocket.onerror = function(error) {};

@@ -3,25 +3,28 @@ const { Sequelize, Op } = require('sequelize');
 const { Upcoming, Inplay, League, Team, Ended, PrematchOdds, InplayOdds, User, FavGames } = require("../models");
 const {isEmpty, analSoccerInplayResponse} = require("../utils/isEmpty")
 
-
-
 const sendLiveEvent = async(ws) => {
-  const info = ws.live_info;
-  let sid = 1;  //if not defined, we have to send soccer data 
+  const isSendLive = ws.live == 'on';
+  if(!isSendLive) {
+    return;
+  }
+  const detail_id = ws.detail_id;
+  let sid = ws.lsport;
   try {
-    if(info != undefined) {
-      sid = info.sid;
-      if(info.need == 0) {
-        return; 
-      }
-    }
-
     if(ws.userCode == undefined) {
       const u = await User.findOne({token:ws.token});
       ws.userCode = u.userCode;
     }
+    
+    const whereObj = {};
 
-    const now = Date.now();
+    if(ws.lsport != 0 && ws.lsport != undefined) {
+      whereObj.sport_id = sid;
+    }
+    if(detail_id != 0) {
+      whereObj.id = detail_id;
+    }
+
     const data = await Inplay.findAll({
       include: [
         {
@@ -29,9 +32,7 @@ const sendLiveEvent = async(ws) => {
             attributes: ["data"],            
         },
       ],
-      where:{
-        sport_id: sid
-      },
+      where:whereObj,
       raw:true
     });
 
@@ -64,16 +65,27 @@ const sendLiveEvent = async(ws) => {
 }
 
 const sendPrematchEvent = async(ws) => {
-  const info = ws.prematch_info;
-  let sid = 1;  //if not defined, we have to send soccer data
+  const isSendPrematch = ws.prematch == 'on';
+  if(!isSendPrematch) {
+    return;
+  }
+  let sid = ws.psport;  //if not defined, we have to send soccer data
   try {
-    if(info != undefined) {
-      sid = info.sid;
-      if(info.need == 0) {
-        return;
-      }
-    }
     const now = Date.now() / 1000;
+    const detail_id = ws.detail_id;
+    const whereObj = {
+      time: {
+        [Op.gt]: now
+      },
+      time_status:0,
+    };
+
+    if(ws.psport != 0 && ws.psport != undefined) {
+      whereObj.sport_id = sid;
+    }
+    if(detail_id != 0) {
+      whereObj.id = detail_id;
+    }
 
     const data = await Upcoming.findAll({
       include: [
@@ -82,16 +94,11 @@ const sendPrematchEvent = async(ws) => {
             attributes: ["data"],            
         },
       ],
-      where:{
-        sport_id: sid,
-        time: {
-          [Op.gt]: now
-        },
-        time_status:0,
-      },
+      where:whereObj,
       limit: 10, // Limit to 30 records  
       raw:true
     });
+    
     data.forEach(element => {
       const obj = element['prematchOdd.data'];
       try {
@@ -99,9 +106,9 @@ const sendPrematchEvent = async(ws) => {
       }catch(e) {
         element.data = {};
       }
-
       delete element["prematchOdd.data"];
     });
+
     ws.send(JSON.stringify({
       type: "prematch",
       data
@@ -115,7 +122,6 @@ const sendPrematchEvent = async(ws) => {
 module.exports = async () => {
     try {
         const wss = new WebSocket.Server({ port: 9990 });
-
         wss.on('connection', (ws) => {
             console.log('New client connected!');
 
@@ -128,29 +134,17 @@ module.exports = async () => {
             }, 5000);
 
             // Handle messages received from the client
-            ws.on('message', (message) => {
-                           
+            ws.on('message', (message) => {                           
               const o = JSON.parse(message);
-              if(o.type == 'token') {                
-                ws.token = o.token;
-              }
-
-              if(o.type == 'live') {
-                ws.live_info = {
-                  sid: o.sid,                 
-                }
-                if(o.allow != "both") {
-                  ws.prematch_info.need = 0;
-                }
-              }
-              if(o.type == 'prematch') {
-                ws.prematch_info = {
-                  sid: o.sid,                 
-                }
-                if(o.allow != "both") {
-                  ws.live_info.need = 0;
-                }
-              }
+              ws.token = o.token;
+              ws.page = o.page;
+              ws.live = o.live;
+              ws.lsport = o.lsport;
+              ws.prematch = o.prematch;
+              ws.psport = o.psport;
+              ws.detail_id = o.detail_id;
+              ws.data1 = o.data1;             
+              ws.data2 = o.data2;             
             });
           
             // Handle client disconnection
