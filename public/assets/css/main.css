@@ -1738,7 +1738,7 @@ p {
   gap: 10px;
 }
 .main__table .table__wrap .table__items .mart__point__two .mart__point__right {
-  padding-left: 40px;
+  /* padding-left: 40px; */
   display: flex;
   align-items: center;
   gap: 0 10px;

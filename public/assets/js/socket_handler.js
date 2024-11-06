@@ -8,7 +8,7 @@ function handleSoccerLive(odds, data, idx, fav = 0) {
   const id = data.id;
   const simpleObj = JSON.stringify({h: data.home_name, a: data.away_name, t: time_str, scores, odd: o1x2});
   const starElem = (fav == 0) ? `<img class='star-off hand inplay_likestar' src="/assets/img/logo/star_off.png" tid="${id}" data='${simpleObj}' width='24'/>`:`<img class="hand inplay_removestar" tid="${id}" src="/assets/img/logo/star_on.png" width='22'/>`;
-
+  
   const a = $(`#tr-${id}`);
   if(a.length == 0) {                             
       $(`#live_data_view .table__items:nth-child(${idx+1})`).after(`
@@ -217,6 +217,147 @@ function handleSoccerPrematch(data, idx) {
   }
 }
 
+function handleTopMatch(data) {
+  let nNewAdd = 0;
+  for(let i = 0; i < data.length; i++) {
+    const d = data[i];            
+    const odds = d.data?.main?.sp;           
+    if(odds == null)
+        continue;
+    const r = odds.full_time_result;
+    let hwin = -1, draw = -1, awin = -1;
+    let hid, did;
+    if(r != undefined) {
+      hwin = r.odds[0].odds;
+      hid = r.odds[0].id;
+      draw = r.odds[1].odds;
+      did = r.odds[1].id;
+      awin = r.odds[2].odds;
+      aid = r.odds[2].id;
+    }
+    // Convert it to a Date object  
+	let dateObj = new Date(d.time_str);  
+	let options = {  
+		weekday: 'long',   // long name of the day  
+		year: 'numeric',   // numeric year  
+		month: 'long',     // long name of month  
+		day: 'numeric',    // numeric day of the month  
+		hour: 'numeric',   // numeric hour  
+		minute: 'numeric', // numeric minutes  
+		timeZoneName: 'short' // short name of the time zone  
+	};  
+
+	// Format the date to the local timezone  
+	let formattedDate = dateObj.toLocaleString('en-US', options);  
+
+    const a = $(`#topMatches #trt-${d.id}`);
+    if(a.length == 0) {
+      $("#topMatches").append(`<a href="#0" class="match__fixing__items" id='trt-${d.id}'>
+        <div class="match__head">
+            <div class="match__head__left">
+                <span class="icons">
+                    <i class="icon-football"></i>
+                </span>
+                <span>
+                    ${d.league_name}
+                </span>
+            </div>
+            <span class="today">
+                ${formattedDate}
+            </span>
+        </div>
+        <div class="match__vs">
+            <div class="match__vs__left">
+                <span>
+                    ${d.home_name}
+                </span>
+                <span class="flag">
+                    <img src="assets/img/matchfixing/arjentina.png" alt="flag">
+                </span>
+            </div>
+            <span class="vs">
+                vs
+            </span>
+            <div class="match__vs__left">
+                <span class="flag">
+                    <img src="assets/img/matchfixing/france.png" alt="flag">
+                </span>
+                <span>
+                    ${d.away_name}
+                </span>
+            </div>
+        </div>
+        <div class="match__result">
+            <span class="matchborder"></span>
+            <span class="match__text">
+                Match Reult
+            </span>
+        </div>
+        <ul class="match__point">
+            <li class='bet-btn' groupNo="${d.id}" id='idp-${d.id}-${hid}-t' mid="${d.id}" n="Fulltime Result" t="${d.home_name}" o="${hwin}" d3="${d.home_name} vs ${d.away_name}">
+                <span>1</span>
+                <span class='homewin1'>${hwin}</span>
+            </li>
+            <li class='bet-btn' groupNo="${d.id}" id='idp-${d.id}-${did}-t' mid="${d.id}" n="Fulltime Result" t="Draw" o="${draw}" d3="${d.home_name} vs ${d.away_name}">
+                <span>x</span>
+                <span class='draw1'>${draw}</span>
+            </li>
+            <li class='bet-btn' groupNo="${d.id}" id='idp-${d.id}-${aid}-t' mid="${d.id}" n="Fulltime Result" t="${d.away_name}" o="${awin}" d3="${d.home_name} vs ${d.away_name}">
+                <span>2</span>
+                <span class='awaywin1'>${awin}</span>
+            </li>
+        </ul>
+      </a>`);      
+      nNewAdd = 1;
+    }
+    else {
+      $(`#trt-${d.id} .homewin1`).html(hwin == -1 ? `<i class="icon-lock"></i>`: `${hwin}`);
+      $(`#trt-${d.id} .draw1`).html(draw == -1 ? `<i class="icon-lock"></i>`: `${draw}`);
+      $(`#trt-${d.id} .awaywin1`).html(awin == -1 ? `<i class="icon-lock"></i>`: `${awin}`);
+    }
+    $("#topMatches").addClass("top__bottom__space");
+  }
+  if(nNewAdd == 1) {
+    $("#topMatches").owlCarousel({
+      loop: true,
+      margin: 9,
+      smartSpeed: 2500,
+      autoplayTimeout: 3000,
+      autoplay: false,
+      nav: false,
+      dots: false,
+      responsiveClass: true,
+      navText: [
+        '<i class="fa-solid fa-angle-left"></i>',
+        '<i class="fa-solid fa-angle-right"></i>',
+      ],
+      responsive: {
+        0: {
+          items: 1,
+        },
+        600: {
+          items: 2,
+        },
+        767: {
+          items: 2,
+        },
+        991: {
+          items: 2,
+        },
+        1199: {
+          items: 2,
+        },
+        1243: {
+          items: 3,
+        },
+        1399: {
+          items: 3,
+        },
+      },
+    });
+  }
+}
+
 sportsSocket.onopen = function() {
   sportsSocket.send(JSON.stringify({
     token: token,
@@ -234,19 +375,11 @@ sportsSocket.onopen = function() {
 sportsSocket.onerror = function(error) {};
 sportsSocket.onclose = function() {};
 sportsSocket.onmessage = function(event) {        
-    const obj = JSON.parse(event.data);        
-    
-    if(obj.type == 'live') {         
-      sessionStorage.setItem('live_data', event.data);
+    const obj = JSON.parse(event.data);           
 
-      const currentIds = new Set(obj.data.map(item => `tr-${item.id}`));  
-      const allDivs = document.querySelectorAll('div[id^="tr-"]'); 
-      allDivs.forEach(div => {  
-          // If the div's id is not in the Set of current IDs, remove it  
-          if (!currentIds.has(div.id)) {  
-              div.remove();  
-          }  
-      });
+    if(obj.type == 'live') {         
+      removeUnusing(obj.data,"tr");
+      sessionStorage.setItem('live_data', event.data);     
 
       const sport_id = obj.data.length > 0 ? obj.data[0].sport_id : 1;
       makeHeader(sport_id);
@@ -264,7 +397,7 @@ sportsSocket.onmessage = function(event) {
 
     if(obj.type == 'prematch') {
       sessionStorage.setItem('prematch_data', event.data);
-
+      removeUnusing(obj.data,"trr");
       for(let i = 0; i < obj.data.length; i++) {
         const data = obj.data[i];            
         const sport_id = data.sport_id;
@@ -272,5 +405,20 @@ sportsSocket.onmessage = function(event) {
           handleSoccerPrematch(data, i);  
         }                                            
       }
+      if(obj.page == "home"){
+        removeUnusing(obj.tops, "trt");
+        handleTopMatch(obj.tops);
+      }
     }
 };  
+
+function removeUnusing(data, id) {
+  const currentIds = new Set(data.map(item => `${id}-${item.id}`));  
+  const allDivs = document.querySelectorAll(`div[id^="${id}-"]`); 
+  allDivs.forEach(div => {  
+    // If the div's id is not in the Set of current IDs, remove it  
+    if (!currentIds.has(div.id)) {  
+        div.remove();  
+    }  
+  });
+}

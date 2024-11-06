@@ -1,8 +1,10 @@
 const WebSocket = require('ws');
 const { Sequelize, Op } = require('sequelize');  
 const { Upcoming, Inplay, League, Team, Ended, PrematchOdds, InplayOdds, User, FavGames } = require("../models");
-const {isEmpty, analSoccerInplayResponse} = require("../utils/isEmpty")
+const {isEmpty, analSoccerInplayResponse} = require("../utils/isEmpty");
+const league = require('../models/league');
 
+const topMatches = ["World Cup 2026", "England Premier League", "UEFA Champions League", "UEFA Europa League", "UEFA Super Cup", "Spain La Liga"];
 const sendLiveEvent = async(ws) => {
   const isSendLive = ws.live == 'on';
   if(!isSendLive) {
@@ -55,6 +57,7 @@ const sendLiveEvent = async(ws) => {
 
     ws.send(JSON.stringify({
       type: "live",
+      page: ws.page,
       data
     }))
   }
@@ -86,7 +89,20 @@ const sendPrematchEvent = async(ws) => {
     if(detail_id != 0) {
       whereObj.id = detail_id;
     }
-
+    const tops = await Upcoming.findAll({
+      include: [
+        {
+            model: PrematchOdds,
+            attributes: ["data"],            
+        },
+      ],
+      where:{
+        ...whereObj,
+        league_name:{[Op.in]:topMatches}
+      },
+      limit: 10, // Limit to 30 records  
+      raw:true
+    })
     const data = await Upcoming.findAll({
       include: [
         {
@@ -99,6 +115,16 @@ const sendPrematchEvent = async(ws) => {
       raw:true
     });
     
+    tops.forEach(element => {
+      const obj = element['prematchOdd.data'];
+      try {
+        element.data = JSON.parse(obj);
+      }catch(e) {
+        element.data = {};
+      }
+      delete element["prematchOdd.data"];
+    });
+
     data.forEach(element => {
       const obj = element['prematchOdd.data'];
       try {
@@ -111,7 +137,9 @@ const sendPrematchEvent = async(ws) => {
 
     ws.send(JSON.stringify({
       type: "prematch",
-      data
+      page: ws.page,
+      data,
+      tops
     }))
   }
   catch(e) {
