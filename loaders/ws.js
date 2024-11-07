@@ -8,6 +8,8 @@ const topMatches = ["World Cup 2026", "England Premier League", "UEFA Champions 
 const highLightMatches = ["World Cup 2026", "England Premier League", "UEFA Champions League", "UEFA Europa League", "UEFA Super Cup", "Spain La Liga", "France Ligue 1", "Italy Serie A", "Germany Bundesliga I"];
 const highTeams = ["Real Madrid", "Barcelona", "Manchester City", "Man Utd", "Liverpool", "Arsenal", "Man City", "Tottenham", "Bayern Munich", "Borussia Dortmund", "Bayer Leverkusen", "PSG","Juventus","AC Milan","Inter Milan","Atletico Madrid"];
 
+const sportIds = [1, 13, 78, 2, 17, 12, 83, 92, 8, 36, 9, 90, 110, 151, 148, 18, 91, 16, 4, 14, 3, 15, 94, 19, 66, 75, 95, 107, 162];
+
 const sportsList = {
   1: {
       name: 'Soccer',
@@ -158,58 +160,15 @@ const sendLiveEvent = async(ws) => {
       ws.userCode = u.userCode;
     }
     
-    const whereObj = {};
-
+    let whereObj = {};
     if(ws.lsport != 0 && ws.lsport != undefined) {
       whereObj.sport_id = sid;
     }
 
-    const data = await Inplay.findAll({
-      include: [
-        {
-            model: InplayOdds,
-            attributes: ["data"],            
-        },
-      ],
-      where:{
-        ...whereObj,
-        [Op.or]: [  
-          {  
-            league_name: {  
-              [Op.in]: highLightMatches  
-            }  
-          },  
-          {  
-            home_name: {  // Checking for highTeams in home_team_name  
-              [Op.in]: highTeams  
-            }  
-          },  
-          {  
-            away_name: {  // Checking for highTeams in away_team_name  
-              [Op.in]: highTeams  
-            }  
-          }  
-        ]  
-      },
-      raw:true
-    });
-
-    for(let i = 0; i < data.length; i++) {
-      const element = data[i];
-      try {
-        const fav = await FavGames.findAll({where:{matchId: element.id, userCode: ws.userCode}});
-        const o = analSoccerInplayResponse(JSON.parse(element["inplayodd.data"]));
-        element.is_fav = isEmpty(fav) ?  0 : 1;
-        element.data = o.odd;
-        element.scores = o.current_score;
-        element.names = o.names;
-        element.passed_second = o.passed_second;
-      }catch(e) {
-        element.data = {};
-      }
-      delete element["inplayodd.data"];
-
-    }
+    let data = [];
+    if(ws.page == "home") {
+      data = await getLiveHomeData(whereObj, ws);
+    }   
 
     ws.send(JSON.stringify({
       type: "live",
@@ -223,10 +182,203 @@ const sendLiveEvent = async(ws) => {
 
 }
 
-const sendPrematchEvent = async(ws) => {
-  const today = new Date(); // current date      
+const getPrematchHomeData = async(whereObj, ws) => {
+  const today = new Date(); // current date        
   const seed = Number(`${today.getFullYear()}${(today.getMonth() + 1).toString().padStart(2, '0')}${today.getDate().toString().padStart(2, '0')}`);  
+  const tops = await Upcoming.findAll({
+    include: [
+      {
+          model: PrematchOdds,
+          attributes: ["data"],            
+      },
+    ],
+    where:{
+      ...whereObj,
+      [Op.or]: [  
+        {  
+          league_name: {  
+            [Op.in]: topMatches  
+          }  
+        },  
+        {  
+          home_name: {  // Checking for highTeams in home_team_name  
+            [Op.in]: highTeams  
+          }  
+        },  
+        {  
+          away_name: {  // Checking for highTeams in away_team_name  
+            [Op.in]: highTeams  
+          }  
+        }  
+      ]  
+    },
+    order: Sequelize.literal(`RAND(${seed})`),  
+    limit: 10, // Limit to 30 records  
+    raw:true
+  })
 
+  tops.forEach(element => {
+    const obj = element['prematchOdd.data'];
+    try {
+      element.data = JSON.parse(obj);
+    }catch(e) {
+      element.data = {};
+    }
+    delete element["prematchOdd.data"];
+  });
+
+  const data = await Upcoming.findAll({
+    include: [
+      {
+          model: PrematchOdds,
+          attributes: ["data"],            
+      },
+    ],
+    where: {
+      ...whereObj,
+      [Op.or]: [  
+        {  
+          league_name: {  
+            [Op.in]: highLightMatches  
+          }  
+        },  
+        {  
+          home_name: {  // Checking for highTeams in home_team_name  
+            [Op.in]: highTeams  
+          }  
+        },  
+        {  
+          away_name: {  // Checking for highTeams in away_team_name  
+            [Op.in]: highTeams  
+          }  
+        }  
+      ]  
+    },
+    raw:true
+  });   
+
+  for(let i = 0; i < data.length; i++) {
+    const element = data[i];
+    try {
+      const fav = await FavGames.findAll({where:{matchId: element.id, userCode: ws.userCode}});
+      element.is_fav = isEmpty(fav) ?  0 : 1;
+      element.data = JSON.parse(element["prematchOdd.data"]);
+    }catch(e) {
+      element.data = {};
+    }
+    delete element["prematchOdd.data"];
+  }
+
+  return {tops, data}
+}
+
+const getLiveHomeData = async(whereObj, ws) => {
+  whereObj = {
+    ...whereObj,
+    [Op.or]: [  
+      {  
+        league_name: {  
+          [Op.in]: highLightMatches  
+        }  
+      },  
+      {  
+        home_name: {  // Checking for highTeams in home_team_name  
+          [Op.in]: highTeams  
+        }  
+      },  
+      {  
+        away_name: {  // Checking for highTeams in away_team_name  
+          [Op.in]: highTeams  
+        }  
+      }  
+    ]  
+  }
+  const data = await Inplay.findAll({
+    include: [
+      {
+          model: InplayOdds,
+          attributes: ["data"],            
+      },
+    ],
+    where:whereObj,
+    raw:true
+  });
+  for(let i = 0; i < data.length; i++) {
+    const element = data[i];
+    try {
+      const fav = await FavGames.findAll({where:{matchId: element.id, userCode: ws.userCode}});
+      const o = analSoccerInplayResponse(JSON.parse(element["inplayodd.data"]));
+      element.is_fav = isEmpty(fav) ?  0 : 1;
+      element.data = o.odd;
+      element.scores = o.current_score;
+      element.names = o.names;
+      element.passed_second = o.passed_second;
+    }catch(e) {
+      element.data = {};
+    }
+    delete element["inplayodd.data"];
+
+  }
+  return data;
+}
+
+const getPrematchSportData = async(whereObj, ws) => {  
+  if(!isEmpty(ws.data2)) {
+    whereObj = {
+      ...whereObj,
+      [Op.or]: [  
+        {  
+          league_name: {  
+            [Op.substring]: ws.data2  
+          }  
+        },  
+        {  
+          home_name: {  // Checking for highTeams in home_team_name  
+            [Op.substring]: ws.data2  
+          }  
+        },  
+        {  
+          away_name: {  // Checking for highTeams in away_team_name  
+            [Op.substring]: ws.data2  
+          }  
+        }  
+      ]  
+    };
+  }
+
+  const findObj = {
+    include: [
+      {
+          model: PrematchOdds,
+          attributes: ["data"],            
+      },
+    ],
+    where: whereObj,    
+    raw:true
+  };
+
+  if(!isEmpty(ws.data1)) {
+    findObj.offset = (ws.data1 - 1) * 10;
+    findObj.limit = 10;
+  }
+
+  const data = await Upcoming.findAndCountAll(findObj);   
+
+  for(let i = 0; i < data.rows.length; i++) {
+    const element = data.rows[i];
+    try {
+      const fav = await FavGames.findAll({where:{matchId: element.id, userCode: ws.userCode}});
+      element.is_fav = isEmpty(fav) ?  0 : 1;
+      element.data = JSON.parse(element["prematchOdd.data"]);
+    }catch(e) {
+      element.data = {};
+    }
+    delete element["prematchOdd.data"];
+  }
+  return data;
+}
+
+const sendPrematchEvent = async(ws) => {
   const isSendPrematch = ws.prematch == 'on';
   if(!isSendPrematch) {
     return;
@@ -234,7 +386,7 @@ const sendPrematchEvent = async(ws) => {
   let sid = ws.psport;  //if not defined, we have to send soccer data
   try {
     const now = Date.now() / 1000;
-    const whereObj = {
+    let whereObj = {
       time: {
         [Op.gt]: now
       },
@@ -244,92 +396,15 @@ const sendPrematchEvent = async(ws) => {
     if(ws.psport != 0 && ws.psport != undefined) {
       whereObj.sport_id = sid;
     }
-
-    let tops = [];
-    if(ws.page == "home") {
-      tops = await Upcoming.findAll({
-        include: [
-          {
-              model: PrematchOdds,
-              attributes: ["data"],            
-          },
-        ],
-        where:{
-          ...whereObj,
-          [Op.or]: [  
-            {  
-              league_name: {  
-                [Op.in]: topMatches  
-              }  
-            },  
-            {  
-              home_name: {  // Checking for highTeams in home_team_name  
-                [Op.in]: highTeams  
-              }  
-            },  
-            {  
-              away_name: {  // Checking for highTeams in away_team_name  
-                [Op.in]: highTeams  
-              }  
-            }  
-          ]  
-        },
-        order: Sequelize.literal(`RAND(${seed})`),  
-        limit: 10, // Limit to 30 records  
-        raw:true
-      })
-
-      tops.forEach(element => {
-        const obj = element['prematchOdd.data'];
-        try {
-          element.data = JSON.parse(obj);
-        }catch(e) {
-          element.data = {};
-        }
-        delete element["prematchOdd.data"];
-      });
-    }
-
-    const data = await Upcoming.findAll({
-      include: [
-        {
-            model: PrematchOdds,
-            attributes: ["data"],            
-        },
-      ],
-      where: {
-        ...whereObj,
-        [Op.or]: [  
-          {  
-            league_name: {  
-              [Op.in]: highLightMatches  
-            }  
-          },  
-          {  
-            home_name: {  // Checking for highTeams in home_team_name  
-              [Op.in]: highTeams  
-            }  
-          },  
-          {  
-            away_name: {  // Checking for highTeams in away_team_name  
-              [Op.in]: highTeams  
-            }  
-          }  
-        ]  
-      },
-      raw:true
-    });    
     
-    for(let i = 0; i < data.length; i++) {
-      const element = data[i];
-      try {
-        const fav = await FavGames.findAll({where:{matchId: element.id, userCode: ws.userCode}});
-        element.is_fav = isEmpty(fav) ?  0 : 1;
-        element.data = JSON.parse(element["prematchOdd.data"]);
-      }catch(e) {
-        element.data = {};
-      }
-      delete element["prematchOdd.data"];
+    let tops = [], data;
+    if(ws.page == "home") {      
+      const o = await getPrematchHomeData(whereObj, ws);
+      tops = o.tops;
+      data = o.data;
+    }
+    if(ws.page == "sport") {
+      data = await getPrematchSportData(whereObj, ws);
     }
 
     ws.send(JSON.stringify({
@@ -413,9 +488,13 @@ module.exports = async () => {
             ws.token = o.token;
             ws.page = o.page;
             ws.live = o.live;
-            ws.lsport = o.lsport;
+            if(!isEmpty(o.lsport)) {
+              ws.lsport = o.lsport;
+            }
             ws.prematch = o.prematch;
-            ws.psport = o.psport;
+            if(!isEmpty(o.psport)) {
+              ws.psport = o.psport;
+            }
             ws.detail_id = o.detail_id;
             ws.data1 = o.data1;             
             ws.data2 = o.data2;             

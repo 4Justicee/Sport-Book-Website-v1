@@ -770,63 +770,75 @@ sportsSocket.onclose = function() {};
 sportsSocket.onmessage = function(event) {        
     const obj = JSON.parse(event.data);           
 
-    if(obj.type == 'live') {         
-      removeUnusing(obj.data,"tr");
+    if(obj.type == 'live') {        
+      
       sessionStorage.setItem('live_data', event.data);     
+      if(obj.page == "home") {
+        removeUnusing(obj.data,"tr");
 
-      const sport_id = obj.data.length > 0 ? obj.data[0].sport_id : 1;
-      
-      makeHeader(sport_id, obj.data.length);
-      
+        const sport_id = obj.data.length > 0 ? obj.data[0].sport_id : 1;        
+        makeHeader(sport_id, obj.data.length);
+        
+        for(let i = 0; i < obj.data.length; i++) {
+          const data = obj.data[i];            
+          const odds = data.data;           
+          const is_fav = data.is_fav;
 
-      for(let i = 0; i < obj.data.length; i++) {
-        const data = obj.data[i];            
-        const odds = data.data;           
-        const is_fav = data.is_fav;
-
-        if (!$('#detail_view_body').is(':empty')) {  
-          const gid = $('#detail_view_body').attr("gid");
-          if(gid == data.id) {
-            handleDetailLiveData(data);
+          if (!$('#detail_view_body').is(':empty')) {  
+            const gid = $('#detail_view_body').attr("gid");
+            if(gid == data.id) {
+              handleDetailLiveData(data);
+            }
           }
-        }
 
-        if(sport_id == 1) {
-          handleSoccerLive(odds, data, i, is_fav);  
-        }                                            
+          if(sport_id == 1) {
+            handleSoccerLive(odds, data, i, is_fav);  
+          }                                            
+        }
+      }
+      if(obj.page == "sport") {
+        $("#main_contents>div").fadeIn();
+        $("#content_view_body").fadeOut();
+        handleLiveSportsTable(obj.data)
       }
     }
 
     if(obj.type == 'prematch') {
       sessionStorage.setItem('prematch_data', event.data);
-      removeUnusing(obj.data,"trr");
+      removeUnusing(obj.data,"trr");  
 
-      if(obj.data.length == 0) {       
-        if($(`#prematch_data_view .nodata`).length > 0) {
-          return;
-        }
-        $(`#prematch_data_view`).append(`<div class="table__footer table__footer__nextgo nodata"><a><span>No prematch data.</span></a></div>`);
-        return;        
-      }
-
-      for(let i = 0; i < obj.data.length; i++) {
-        const data = obj.data[i];            
-        const sport_id = data.sport_id;
-
-        if (!$('#detail_view_body').is(':empty')) {  
-          const gid = $('#detail_view_body').attr("gid");
-          if(gid == data.id) {
-            handleDetailPrematchData(data);
-          }
-        }
-
-        if(sport_id == 1) {
-          handleSoccerPrematch(data, i);  
-        }                                            
-      }
-      if(obj.page == "home"){
+      if(obj.page == "home"){               
         removeUnusing(obj.tops, "trt");
         handleTopMatch(obj.tops);
+
+        if(obj.data.length == 0) {       
+          if($(`#prematch_data_view .nodata`).length > 0) {
+            return;
+          }
+          $(`#prematch_data_view`).append(`<div class="table__footer table__footer__nextgo nodata"><a><span>No prematch data.</span></a></div>`);
+          return;        
+        } 
+
+        for(let i = 0; i < obj.data.length; i++) {
+          const data = obj.data[i];            
+          const sport_id = data.sport_id;
+  
+          if (!$('#detail_view_body').is(':empty')) {  
+            const gid = $('#detail_view_body').attr("gid");
+            if(gid == data.id) {
+              handleDetailPrematchData(data);
+            }
+          }
+  
+          if(sport_id == 1) {
+            handleSoccerPrematch(data, i);  
+          }                                            
+        }
+      }
+      if(obj.page == "sport") {
+        $("#main_contents>div").fadeIn();
+        $("#content_view_body").fadeOut();
+        handlePrematchSportsTable(obj.data)
       }
     }
 
@@ -834,10 +846,28 @@ sportsSocket.onmessage = function(event) {
       fillLiveAccordion(obj.totalLive);
       fillPrematchAccordion(obj.totalPrematch);
     }
+  
 };  
 
 function removeUnusing(data, id) {
-  const currentIds = new Set(data.map(item => `${id}-${item.id}`));  
+  let currentIds = [];
+  if(data.rows != undefined) {
+    currentIds = new Set(data.rows.map(item => `${id}-${item.id}`));  
+  }
+  else {
+    currentIds = new Set(data.map(item => `${id}-${item.id}`));  
+  }
+  const allDivs = document.querySelectorAll(`div[id^="${id}-"]`); 
+  allDivs.forEach(div => {  
+    // If the div's id is not in the Set of current IDs, remove it  
+    if (!currentIds.has(div.id)) {  
+        div.remove();  
+    }  
+  });
+}
+
+function removeUnusingCount(data, id) {
+  const currentIds = new Set(data.map(item => `${id}-${item.sport_id}`));  
   const allDivs = document.querySelectorAll(`div[id^="${id}-"]`); 
   allDivs.forEach(div => {  
     // If the div's id is not in the Set of current IDs, remove it  
@@ -848,8 +878,7 @@ function removeUnusing(data, id) {
 }
 
 function fillLiveAccordion(data) {
-  $("#accordion_live").empty();
-
+  removeUnusingCount(data, "acl");
   for(let i = 0; i < data.length; i++) {
       const name = data[i].sport_name;
       const total_count = data[i].total_count; 
@@ -859,28 +888,32 @@ function fillLiveAccordion(data) {
       if(png == true) {
           elem = `<img src="/assets/img/sports/${icon}.png" width='20' style="filter:invert(1) brightness(0.6) !important;">`;
       }
-  
-      $("#accordion_live").append(`<div class="accordion-item">
-<h2 class="accordion-header" id="headingOne${i}">
-<button class="accordion-button " type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne${i}" aria-expanded="false" aria-controls="collapseOne${i}">
-<span class="d-flex align-items-center gap-2 left-chokoboko">
-  <span class="mt-1">${elem}</span>
-  <span class="score text-white">
-  ${name}
+      const a = $(`#accordion_live #acl-${data[i].sport_id}`);
+      if(a.length == 0) {
+        $("#accordion_live").append(`<div class="accordion-item select-sport" id='acl-${data[i].sport_id}'>
+  <h2 class="accordion-header" id="headingOne${i}">
+  <button class="accordion-button " type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne${i}" aria-expanded="false" aria-controls="collapseOne${i}">
+  <span class="d-flex align-items-center gap-2 left-chokoboko">
+    <span class="mt-1">${elem}</span>
+    <span class="score text-white">
+    ${name}
+    </span>
   </span>
-</span>
-<span class="d-flex align-items-center gap-1 icon-rightfs10">
-${total_count}
-</span>
-</button>
-</h2>
-</div>`);
+  <span class="d-flex align-items-center gap-1 icon-rightfs10">
+  ${total_count}
+  </span>
+  </button>
+  </h2>
+  </div>`);
+      }
+      else{
+        $(`#acl-${data[i].sport_id} .icon-rightfs10`).html(total_count);
+      }
   }        
 }
 
 function fillPrematchAccordion(data) {
-  $("#accordion_prematch").empty();
-
+  removeUnusingCount(data, "acp");
   for(let i = 0; i < data.length; i++) {
       const name = data[i].sport_name;
       const total_count = data[i].total_count;
@@ -893,21 +926,148 @@ function fillPrematchAccordion(data) {
           elem = `<img src="/assets/img/sports/${icon}.png" width='20' style="filter:invert(1) brightness(0.6) !important;">`;
       }
      
-
-      $("#accordion_prematch").append(`<div class="accordion-item">
-<h2 class="accordion-header" id="headingOne${i}">
-<button class="accordion-button " type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne${i}" aria-expanded="false" aria-controls="collapseOne${i}">
-<span class="d-flex align-items-center gap-2 left-chokoboko">
-  <span class="mt-1">${elem}</span>
-  <span class="score text-white">
-  ${name}
+      const a = $(`#accordion_prematch #acp-${data[i].sport_id}`);
+      if(a.length == 0) {
+        $("#accordion_prematch").append(`<div class="accordion-item select-sport" id='acp-${data[i].sport_id}'>
+  <h2 class="accordion-header" id="headingOne${i}">
+  <button class="accordion-button " type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne${i}" aria-expanded="false" aria-controls="collapseOne${i}">
+  <span class="d-flex align-items-center gap-2 left-chokoboko">
+    <span class="mt-1">${elem}</span>
+    <span class="score text-white">
+    ${name}
+    </span>
   </span>
-</span>
-<span class="d-flex align-items-center gap-1 icon-rightfs10">
-  ${total_count}
-</span>
-</button>
-</h2>
-</div>`);
+  <span class="d-flex align-items-center gap-1 icon-rightfs10">
+    ${total_count}
+  </span>
+  </button>
+  </h2>
+  </div>`);
+      }
+      else{
+        $(`#acp-${data[i].sport_id} .icon-rightfs10`).html(total_count);
+      }
   }     
+}
+
+function handlePrematchSportsTable(data) {
+  let elem = ``;
+  for(let i = 0; i < data.rows.length; i++) {
+    const o = data.rows[i];
+
+    const id = o.id;
+    const away_name = o.away_name;
+    const home_name = o.home_name;
+    const fav = o.is_fav;
+    const odds = o.data;
+    if(odds == null)
+        return;
+    const utcDate = new Date(o.time_str);  
+    const localTimeString = utcDate.toLocaleString(undefined, options);
+
+    let hwin = -1, draw = -1, awin = -1, overodd = -1, goal = -1, underodd = -1; 
+    let hid, did, aid, oid, uid, id1, id2;
+    let hodd1 = -1, hodd2 = -1, handi1 = -1, handi2 = -1;
+    if(odds.main != undefined) {
+      if(odds.main.sp.full_time_result != undefined) {
+        hwin = odds.main.sp.full_time_result.odds[0].odds;
+        hid = odds.main.sp.full_time_result.odds[0].id;
+        draw = odds.main.sp.full_time_result.odds[1].odds;
+        did = odds.main.sp.full_time_result.odds[1].id;
+        awin = odds.main.sp.full_time_result.odds[2].odds;
+        aid = odds.main.sp.full_time_result.odds[2].id;
+      }
+
+      if(odds.main.sp.goals_over_under != undefined) {
+        overodd = odds.main.sp.goals_over_under.odds[0].odds;
+        oid = odds.main.sp.goals_over_under.odds[0].id;
+        underodd = odds.main.sp.goals_over_under.odds[1].odds;
+        uid = odds.main.sp.goals_over_under.odds[1].id;
+        goal = odds.main.sp.goals_over_under.odds[0].name;
+      } 
+
+      if(odds.main.sp.asian_handicap != undefined) {
+        hodd1 = odds.main.sp.asian_handicap.odds[0].odds;
+        id1 = odds.main.sp.asian_handicap.odds[0].id;
+        hodd2 = odds.main.sp.asian_handicap.odds[1].odds;
+        id2 = odds.main.sp.asian_handicap.odds[1].id;
+
+        handi1 = odds.main.sp.asian_handicap.odds[0].handicap;
+        handi2 = odds.main.sp.asian_handicap.odds[1].handicap;
+      }
+    }
+    const starElem = (fav == 0) ? `<img class='star-off hand inplay_likestar' src="/assets/img/logo/star_off.png" tid="${id}" width='24' style='margin-left:1rem' d1="p"/>`:`<img class="hand inplay_removestar" tid="${id}" src="/assets/img/logo/star_on.png" width='22' style='margin-left:1rem'/>`;
+    const a = $(`#trr-${id}`);
+    if(a.length == 0) {
+      $("#searchView").append(`<div class="table__items b__bottom" id="trr-${id}">
+        <div class="t__items">
+          <div class="t__items__left t__items__left__nextogo">
+            <div class="t__items__icon">
+                <i class="icon-tennis"></i>
+            </div>
+            <div class="content">
+                <h6 class='home'>
+                    ${home_name}
+                </h6>
+                <span class="text away">
+                    ${away_name}
+                </span>
+            </div>
+          </div>
+        </div>
+        <div class="mart__point__two mart__pint__nextgo">
+          <div class="mart__point__left">
+              <a href="#box" class="point__box homewin bet-btn" groupNo="${id}0" id='idp-${id}-${hid}' mid="${id}" n="Fulltime Result" t="${home_name}" o="${hwin}" d3="${home_name} vs ${away_name}">
+                ${hwin == -1 ? `<i class="icon-lock"></i>`: `<span class="point__1">1</span><span>${hwin}</span>`}                                
+              </a>
+              <a href="#box" class="point__box draw bet-btn" groupNo="${id}0" id='idp-${id}-${did}' mid="${id}" n="Fulltime Result" t="Draw" o="${draw}" d3="${home_name} vs ${away_name}">
+                  ${draw == -1 ? `<i class="icon-lock"></i>`: `<span class="point__1">X</span><span>${draw}</span>`}                  
+              </a>
+              <a href="#box" class="point__box awaywin bet-btn" groupNo="${id}0" id='idp-${id}-${aid}' mid="${id}" n="Fulltime Result" t="${away_name}" o="${awin}" d3="${home_name} vs ${away_name}">
+                  ${awin == -1 ? `<i class="icon-lock"></i>`: `<span class="point__1">2</span><span>${awin}</span>`}                  
+              </a>
+              <a href="#box" class="point__box goalover bet-btn" groupNo="${id}1" id='idp-${id}-${oid}' mid="${id}" n="Match Goals" t="${home_name}" d1="${goal}" d2="Over" d3="${home_name} vs ${away_name}" o="${overodd}">
+                  ${goal == -1 ? `<i class="icon-lock"></i>`: `<span class="point__1">${goal}&nbsp;Over</span><span>${overodd}</span>`}                  
+              </a>
+              <a href="#box" class="point__box goalunder bet-btn" groupNo="${id}1" id='idp-${id}-${uid}' mid="${id}" n="Match Goals" t="${away_name}" d1="${goal}" d2="Under" o="${underodd}" d3="${home_name} vs ${away_name}">
+                  ${goal == -1 ? `<i class="icon-lock"></i>`: `<span class="point__1">${goal}&nbsp;Under</span><span>${underodd}</span>`}                  
+              </a>
+              <a href="#box" class="point__box hodd1 bet-btn" groupNo="${id}2" id='idp-${id}-${id1}' mid="${id}" n="Asian Handicap" t="${home_name}" d1="${handi1}" o="${hodd1}" d3="${home_name} vs ${away_name}">
+                  ${hodd1 == -1 ? `<i class="icon-lock"></i>`: `<span class="point__1">${handi1}</span><span>${hodd1}</span>`}                  
+              </a>
+              <a href="#box" class="point__box hodd2 bet-btn" groupNo="${id}2" id='idp-${id}-${id2}' mid="${id}" n="Asian Handicap" t="${away_name}" d1="${handi2}" o="${hodd2}" d3="${home_name} vs ${away_name}">
+                  ${hodd2 == -1 ? `<i class="icon-lock"></i>`: `<span class="point__1">${handi2}</span><span>${hodd2}</span>`}                  
+              </a>            
+          </div>
+          <div class='start__box'>${starElem}</div>
+          <div class="mart__point__right prematch_detail_view_btn hand" tid="${id}">
+              
+              <a href="#min" class="point__box-text point__box__nextto">
+              <span class='timestr'> ${localTimeString}</span>
+              <span class='icon'><i class="fas fa-angle-right"></i></span>
+              </a>
+          </div>
+        </div>
+      </div>`);
+    }
+    else {
+      $(`#trr-${id} .home`).html(home_name);
+      $(`#trr-${id} .away`).html(away_name);
+      $(`#trr-${id} .homewin`).html(hwin == -1 ? `<i class="icon-lock"></i>`: `<span class="point__1">1</span><span>${hwin}</span>`);
+      $(`#trr-${id} .draw`).html(draw == -1 ? `<i class="icon-lock"></i>`: `<span class="point__1">X</span><span>${draw}</span>`);
+      $(`#trr-${id} .awaywin`).html(awin == -1 ? `<i class="icon-lock"></i>`: `<span class="point__1">2</span><span>${awin}</span>`);
+  
+      $(`#trr-${id} .goalover`).html(goal == -1 ? `<i class="icon-lock"></i>`: `<span class="point__1">${goal}&nbsp;Over</span><span>${overodd}</span>`);
+      $(`#trr-${id} .goalunder`).html(goal == -1 ? `<i class="icon-lock"></i>`: `<span class="point__1">${goal}&nbsp;Under</span><span>${underodd}</span>`);
+      $(`#trr-${id} .timestr`).html(localTimeString);
+      $(`#trr-${id} .start__box`).html(starElem);
+      $(`#trr-${id} .hodd1`).html(hodd1 == -1 ? `<i class="icon-lock"></i>`: `<span class="point__1">${handi1}</span><span>${hodd1}</span>`);
+      $(`#trr-${id} .hodd2`).html(hodd2 == -1 ? `<i class="icon-lock"></i>`: `<span class="point__1">${handi2}</span><span>${hodd2}</span>`);
+    }
+  }
+
+}
+
+function handleLiveSportsTable(data) {
+  
 }

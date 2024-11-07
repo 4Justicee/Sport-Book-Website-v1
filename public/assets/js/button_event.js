@@ -1,4 +1,6 @@
 const topSports = [1, 3, 13, 91, 92, 18, 16]; //Top sports
+let searchKey = "";
+let pageNumber = 1;
 
 toastr.options = {  
 	"positionClass": "toast-bottom-left", // Position in the bottom-left corner  
@@ -1076,6 +1078,41 @@ $("#multiple_bets_view").on("click",".remove-bet-item", function(e) {
 	<div class='empty empty-box-2'>Click the odds to add a bet</div>`);
 	}
 });
+
+$("#accordion_prematch").on("click", ".select-sport", function(e) {
+	$(".select-sport").removeClass("selected");
+	$(this).addClass("selected");
+	const id = $(this).attr('id').substr(4);
+
+	sportsSocket.send(JSON.stringify({
+		token: token,
+		page:'sport', 
+		live:'off', 
+		prematch:'on', 
+		psport:id, 
+		detail_id:0, 
+		data1:pageNumber,
+		data2:searchKey
+	}));
+})
+
+$("#accordion_live").on("click", ".select-sport", function(e) {
+	$(".select-sport").removeClass("selected");
+	$(this).addClass("selected");
+	const id = $(this).attr('id').substr(4);
+
+	sportsSocket.send(JSON.stringify({
+		token: token,
+		page:'sport', 
+		live:'on', 
+		lsport:id, 
+		prematch:'off', 
+		detail_id:0, 
+		data1:pageNumber,
+		data2:searchKey
+	}));
+})
+
 
 $("#lightlighttab").click(function (e) {
   const psport = sessionStorage.getItem("current_prematch_sport");  

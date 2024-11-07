@@ -5610,5 +5610,8 @@ p {
 .empty-box-2 {
   text-align: center;font-size: 12px;
 }
+.select-sport.selected {
+  background:#14111169 !important;
+}
 /*Abstracts / reponsive*/
 /*CSS Table Of Content Ends End*//*# sourceMappingURL=main.css.map */
