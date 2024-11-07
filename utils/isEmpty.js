@@ -6,7 +6,7 @@ exports.isEmpty = (value) => {
         (typeof value === "string" && value.trim().length === 0)
     );
 };
-exports.calcLiveTime = (inputTimeString) => {
+function calcLiveTime (inputTimeString) {
     const year = parseInt(inputTimeString.substring(0, 4), 10);  
     const month = parseInt(inputTimeString.substring(4, 6), 10) - 1; // Subtract 1 because months are 0-indexed  
     const day = parseInt(inputTimeString.substring(6, 8), 10);  

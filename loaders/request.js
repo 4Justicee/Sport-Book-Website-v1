@@ -7,37 +7,7 @@ const { Upcoming, Inplay, League, Team, Ended, PrematchOdds, InplayOdds, sequeli
 
 // team stopped 2, 400
 const sportIds = [1, 13, 78, 2, 17, 12, 83, 92, 8, 36, 9, 90, 110, 151, 148, 18, 91, 16, 4, 14, 3, 15, 94, 19, 66, 75, 95, 107, 162];
-const names={
-    1:"Soccer", 
-    13:"Tennis",
-    78:"Handball",
-    2: "Horse Racing",
-    17:"Ice Hockey",
-    12:"American footbal",
-    83: "Futsal",
-    92: "Table Tennis",
-    8: "Rugby Union",
-    36: "Australian Rules",
-    9 :"Boxing",
-    90: "Floorball",
-    110: "Water Polo",
-    151: "E-Sports",
-    148: "Surfing",
-    18:"Basketball",
-    91:"Volleyball",
-    16:"Baseball",
-    4: "Greyhounds",
-    14:"Snooker",
-    3:"Cricket",
-    15:"Darts",
-    94:"Badminton",
-    19: "Rugby League",
-    66:"Bowls",
-    75:"Gaelic Sports",
-    95:"Beach Volleyball",
-    107: "Squash",
-    162: "MMA"
-}
+
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = 0;
 
 const upcomingEvent = async ()=>{

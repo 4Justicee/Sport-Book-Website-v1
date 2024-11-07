@@ -1,3 +1,257 @@
+const countryCodes = {
+  "Andorra": "ad",
+  "United Arab Emirates": "ae",
+  "Afghanistan": "af",
+  "Antigua and Barbuda": "ag",
+  "Anguilla": "ai",
+  "Albania": "al",
+  "Armenia": "am",
+  "Angola": "ao",
+  "Antarctica": "aq",
+  "Argentina": "ar",
+  "American Samoa": "as",
+  "Austria": "at",
+  "Australia": "au",
+  "Aruba": "aw",
+  "Åland Islands": "ax",
+  "Azerbaijan": "az",
+  "Bosnia & Herzegovina": "ba",
+  "Barbados": "bb",
+  "Bangladesh": "bd",
+  "Belgium": "be",
+  "Burkina Faso": "bf",
+  "Bulgaria": "bg",
+  "Bahrain": "bh",
+  "Burundi": "bi",
+  "Benin": "bj",
+  "Saint Barthélemy": "bl",
+  "Bermuda": "bm",
+  "Brunei": "bn",
+  "Bolivia": "bo",
+  "Caribbean Netherlands": "bq",
+  "Brazil": "br",
+  "Bahamas": "bs",
+  "Bhutan": "bt",
+  "Bouvet Island": "bv",
+  "Botswana": "bw",
+  "Belarus": "by",
+  "Belize": "bz",
+  "Canada": "ca",
+  "Cocos (Keeling) Islands": "cc",
+  "Congo - Kinshasa": "cd",
+  "Central African Republic": "cf",
+  "Congo - Brazzaville": "cg",
+  "Switzerland": "ch",
+  "Côte d’Ivoire": "ci",
+  "Cook Islands": "ck",
+  "Chile": "cl",
+  "Cameroon": "cm",
+  "China": "cn",
+  "Colombia": "co",
+  "Costa Rica": "cr",
+  "Cuba": "cu",
+  "Cape Verde": "cv",
+  "Curaçao": "cw",
+  "Christmas Island": "cx",
+  "Cyprus": "cy",
+  "Czech Republic": "cz",
+  "Germany": "de",
+  "Djibouti": "dj",
+  "Denmark": "dk",
+  "Dominica": "dm",
+  "Dominican Republic": "do",
+  "Algeria": "dz",
+  "Ecuador": "ec",
+  "Estonia": "ee",
+  "England": "gb",
+  "Egypt": "eg",
+  "Western Sahara": "eh",
+  "Eritrea": "er",
+  "Spain": "es",
+  "Ethiopia": "et",
+  "Finland": "fi",
+  "Fiji": "fj",
+  "Falkland Islands": "fk",
+  "Micronesia": "fm",
+  "Faroe Islands": "fo",
+  "France": "fr",
+  "Gabon": "ga",
+  "United Kingdom": "gb",
+  "Grenada": "gd",
+  "Georgia": "ge",
+  "French Guiana": "gf",
+  "Guernsey": "gg",
+  "Ghana": "gh",
+  "Gibraltar": "gi",
+  "Greenland": "gl",
+  "Gambia": "gm",
+  "Guinea": "gn",
+  "Guadeloupe": "gp",
+  "Equatorial Guinea": "gq",
+  "Greece": "gr",
+  "South Georgia & South Sandwich Islands": "gs",
+  "Guatemala": "gt",
+  "Guam": "gu",
+  "Guinea-Bissau": "gw",
+  "Guyana": "gy",
+  "Hong Kong SAR China": "hk",
+  "Heard & McDonald Islands": "hm",
+  "Honduras": "hn",
+  "Croatia": "hr",
+  "Haiti": "ht",
+  "Hungary": "hu",
+  "Indonesia": "id",
+  "Ireland": "ie",
+  "Israel": "il",
+  "Isle of Man": "im",
+  "India": "in",
+  "British Indian Ocean Territory": "io",
+  "Iraq": "iq",
+  "Iran": "ir",
+  "Iceland": "is",
+  "Italy": "it",
+  "Jersey": "je",
+  "Jamaica": "jm",
+  "Jordan": "jo",
+  "Japan": "jp",
+  "Kenya": "ke",
+  "Kyrgyzstan": "kg",
+  "Cambodia": "kh",
+  "Kiribati": "ki",
+  "Comoros": "km",
+  "Saint Kitts and Nevis": "kn",
+  "North Korea": "kp",
+  "South Korea": "kr",
+  "Kuwait": "kw",
+  "Cayman Islands": "ky",
+  "Kazakhstan": "kz",
+  "Laos": "la",
+  "Lebanon": "lb",
+  "Saint Lucia": "lc",
+  "Liechtenstein": "li",
+  "Sri Lanka": "lk",
+  "Liberia": "lr",
+  "Lesotho": "ls",
+  "Lithuania": "lt",
+  "Luxembourg": "lu",
+  "Latvia": "lv",
+  "Libya": "ly",
+  "Morocco": "ma",
+  "Monaco": "mc",
+  "Moldova": "md",
+  "Montenegro": "me",
+  "Saint Martin": "mf",
+  "Madagascar": "mg",
+  "Marshall Islands": "mh",
+  "North Macedonia": "mk",
+  "Mali": "ml",
+  "Myanmar (Burma)": "mm",
+  "Mongolia": "mn",
+  "Macau SAR China": "mo",
+  "Northern Mariana Islands": "mp",
+  "Martinique": "mq",
+  "Mauritania": "mr",
+  "Montserrat": "ms",
+  "Malta": "mt",
+  "Mauritius": "mu",
+  "Maldives": "mv",
+  "Malawi": "mw",
+  "Mexico": "mx",
+  "Malaysia": "my",
+  "Mozambique": "mz",
+  "Namibia": "na",
+  "New Caledonia": "nc",
+  "Niger": "ne",
+  "Norfolk Island": "nf",
+  "Nigeria": "ng",
+  "Nicaragua": "ni",
+  "Netherlands": "nl",
+  "Norway": "no",
+  "Nepal": "np",
+  "Nauru": "nr",
+  "Niue": "nu",
+  "New Zealand": "nz",
+  "Oman": "om",
+  "Panama": "pa",
+  "Peru": "pe",
+  "French Polynesia": "pf",
+  "Papua New Guinea": "pg",
+  "Philippines": "ph",
+  "Pakistan": "pk",
+  "Poland": "pl",
+  "Saint Pierre and Miquelon": "pm",
+  "Pitcairn Islands": "pn",
+  "Puerto Rico": "pr",
+  "Palestinian Territories": "ps",
+  "Portugal": "pt",
+  "Palau": "pw",
+  "Paraguay": "py",
+  "Qatar": "qa",
+  "Réunion": "re",
+  "Romania": "ro",
+  "Serbia": "rs",
+  "Russia": "ru",
+  "Rwanda": "rw",
+  "Saudi Arabia": "sa",
+  "Solomon Islands": "sb",
+  "Seychelles": "sc",
+  "Sudan": "sd",
+  "Sweden": "se",
+  "Singapore": "sg",
+  "Saint Helena": "sh",
+  "Slovenia": "si",
+  "Svalbard and Jan Mayen": "sj",
+  "Slovakia": "sk",
+  "Sierra Leone": "sl",
+  "San Marino": "sm",
+  "Senegal": "sn",
+  "Somalia": "so",
+  "Suriname": "sr",
+  "South Sudan": "ss",
+  "São Tomé and Príncipe": "st",
+  "El Salvador": "sv",
+  "Sint Maarten": "sx",
+  "Syria": "sy",
+  "Eswatini (Swaziland)": "sz",
+  "Turks and Caicos Islands": "tc",
+  "Chad": "td",
+  "French Southern Territories": "tf",
+  "Togo": "tg",
+  "Thailand": "th",
+  "Tajikistan": "tj",
+  "Tokelau": "tk",
+  "Timor-Leste": "tl",
+  "Turkmenistan": "tm",
+  "Tunisia": "tn",
+  "Tonga": "to",
+  "Turkey": "tr",
+  "Trinidad and Tobago": "tt",
+  "Tuvalu": "tv",
+  "Taiwan": "tw",
+  "Tanzania": "tz",
+  "Ukraine": "ua",
+  "Uganda": "ug",
+  "U.S. Outlying Islands": "um",
+  "United States": "us",
+  "Uruguay": "uy",
+  "Uzbekistan": "uz",
+  "Vatican City": "va",
+  "St. Vincent & Grenadines": "vc",
+  "Venezuela": "ve",
+  "British Virgin Islands": "vg",
+  "U.S. Virgin Islands": "vi",
+  "Vietnam": "vn",
+  "Vanuatu": "vu",
+  "Wallis and Futuna": "wf",
+  "Samoa": "ws",
+  "Kosovo": "xk",
+  "Yemen": "ye",
+  "Mayotte": "yt",
+  "South Africa": "za",
+  "Zambia": "zm",
+  "Zimbabwe": "zw"
+  };
+
 function handleSoccerLive(odds, data, idx, fav = 0) {
   const o1x2 = get1X2(odds, data.home_name, data.away_name);
   const go = getMatchGoals(odds);
@@ -7,7 +261,7 @@ function handleSoccerLive(odds, data, idx, fav = 0) {
   const scores = (data['ss'] == null) ? "0-0" : data['ss'];
   const id = data.id;
   const simpleObj = JSON.stringify({h: data.home_name, a: data.away_name, t: time_str, scores, odd: o1x2});
-  const starElem = (fav == 0) ? `<img class='star-off hand inplay_likestar' src="/assets/img/logo/star_off.png" tid="${id}" data='${simpleObj}' width='24'/>`:`<img class="hand inplay_removestar" tid="${id}" src="/assets/img/logo/star_on.png" width='22'/>`;
+  const starElem = (fav == 0) ? `<img class='star-off hand inplay_likestar' src="/assets/img/logo/star_off.png" tid="${id}" data='${simpleObj}' width='24' d1="l"/>`:`<img class="hand inplay_removestar" tid="${id}" src="/assets/img/logo/star_on.png" width='22'/>`;
   
   const a = $(`#tr-${id}`);
   if(a.length == 0) {                             
@@ -91,16 +345,22 @@ function handleSoccerLive(odds, data, idx, fav = 0) {
   }   
 }
 
-function makeHeader(sport_id) {
+function makeHeader(sport_id, dataLen) {
+  if(dataLen == 0) {
+    if($(`#live_data_view .nodata`).length > 0) {
+      return;
+    }
+    $(`#live_data_view`).append(`<div class="table__footer table__footer__nextgo nodata"><a><span>No live highlights</span></a></div>`);
+    return;
+  }
   if(sport_id == 1) {
     const check = $(`#live_data_view .table__footer`);
     if(check.length == 0) {
       $(`#live_data_view`).append(`<div class="table__items table__pointnone__items"><div class="t__items"><div class="t__items__left"></div></div><div class="cart__point"></div><div class="mart__point__items"><a href="#0box" class="point__box bg__none">1</a><a href="#0box" class="point__box bg__none">X</a><a href="#0box" class="point__box bg__none">2</a></div><div class="mart__point__items"><a href="#0box" class="point__box bg__none">Over</a><a href="#0box" class="point__box bg__none">Under</a></div><div class="mart__point__items"><a href="#0box" class="point__box bg__none">Handicap</a><a href="#0box" class="point__box bg__none"></a></div><div class="mart__point__right" style="min-width: 65px;"></div></div>`);
-
       $(`#live_data_view`).append(`<div class="table__footer table__footer__nextgo"><a id="show_all_live" class="lobby hand"><span>Show more</span><span class="icons"><i class="fas fa-chevron-down"></i></span></a></div>`);
     }
   }
-}
+ }
 
 const options = {   
   month: '2-digit',   
@@ -113,6 +373,7 @@ function handleSoccerPrematch(data, idx) {
   const id = data.id;
   const away_name = data.away_name;
   const home_name = data.home_name;
+  const fav = data.is_fav;
   const odds = data.data;
   if(odds == null)
       return;
@@ -150,6 +411,8 @@ function handleSoccerPrematch(data, idx) {
       handi2 = odds.main.sp.asian_handicap.odds[1].handicap;
     }
   }
+  const starElem = (fav == 0) ? `<img class='star-off hand inplay_likestar' src="/assets/img/logo/star_off.png" tid="${id}" width='24' style='margin-left:1rem' d1="p"/>`:`<img class="hand inplay_removestar" tid="${id}" src="/assets/img/logo/star_on.png" width='22' style='margin-left:1rem'/>`;
+
   const a = $(`#trr-${id}`);
   if(a.length == 0) {               
     $(`#prematch_data_view`).append(`<div class="table__items b__bottom" id="trr-${id}">
@@ -190,9 +453,11 @@ function handleSoccerPrematch(data, idx) {
             </a>
             <a href="#box" class="point__box hodd2 bet-btn" groupNo="${id}2" id='idp-${id}-${id2}' mid="${id}" n="Asian Handicap" t="${away_name}" d1="${handi2}" o="${hodd2}" d3="${home_name} vs ${away_name}">
                 ${hodd2 == -1 ? `<i class="icon-lock"></i>`: `<span class="point__1">${handi2}</span><span>${hodd2}</span>`}                  
-            </a>
+            </a>            
         </div>
+        <div class='start__box'>${starElem}</div>
         <div class="mart__point__right prematch_detail_view_btn hand" tid="${id}">
+            
             <a href="#min" class="point__box-text point__box__nextto">
             <span class='timestr'> ${localTimeString}</span>
             <span class='icon'><i class="fas fa-angle-right"></i></span>
@@ -211,7 +476,7 @@ function handleSoccerPrematch(data, idx) {
     $(`#trr-${id} .goalover`).html(goal == -1 ? `<i class="icon-lock"></i>`: `<span class="point__1">${goal}&nbsp;Over</span><span>${overodd}</span>`);
     $(`#trr-${id} .goalunder`).html(goal == -1 ? `<i class="icon-lock"></i>`: `<span class="point__1">${goal}&nbsp;Under</span><span>${underodd}</span>`);
     $(`#trr-${id} .timestr`).html(localTimeString);
-
+    $(`#trr-${id} .start__box`).html(starElem);
     $(`#trr-${id} .hodd1`).html(hodd1 == -1 ? `<i class="icon-lock"></i>`: `<span class="point__1">${handi1}</span><span>${hodd1}</span>`);
     $(`#trr-${id} .hodd2`).html(hodd2 == -1 ? `<i class="icon-lock"></i>`: `<span class="point__1">${handi2}</span><span>${hodd2}</span>`);
   }
@@ -237,8 +502,7 @@ function handleTopMatch(data) {
     }
     // Convert it to a Date object  
 	let dateObj = new Date(d.time_str);  
-	let options = {  
-		weekday: 'long',   // long name of the day  
+	let options = {  		
 		year: 'numeric',   // numeric year  
 		month: 'long',     // long name of month  
 		day: 'numeric',    // numeric day of the month  
@@ -249,7 +513,8 @@ function handleTopMatch(data) {
 
 	// Format the date to the local timezone  
 	let formattedDate = dateObj.toLocaleString('en-US', options);  
-
+  let home_flag = countryCodes[d.home_name] != undefined ? `<div class='flag flag-${countryCodes[d.home_name]}'></div>` : `<img src="/assets/img/logo/favicon.png" alt="flag">`;
+  let away_flag = countryCodes[d.away_name] != undefined ? `<div class='flag flag-${countryCodes[d.away_name]}'></div>` : `<img src="/assets/img/logo/favicon.png" alt="flag">`;
     const a = $(`#topMatches #trt-${d.id}`);
     if(a.length == 0) {
       $("#topMatches").append(`<a href="#0" class="match__fixing__items" id='trt-${d.id}'>
@@ -268,21 +533,17 @@ function handleTopMatch(data) {
         </div>
         <div class="match__vs">
             <div class="match__vs__left">
-                <span>
+                <span style="white-space: nowrap;">
                     ${d.home_name}
                 </span>
-                <span class="flag">
-                    <img src="assets/img/matchfixing/arjentina.png" alt="flag">
-                </span>
+                ${home_flag}
             </div>
             <span class="vs">
                 vs
             </span>
             <div class="match__vs__left">
-                <span class="flag">
-                    <img src="assets/img/matchfixing/france.png" alt="flag">
-                </span>
-                <span>
+                ${away_flag}
+                <span style="white-space: nowrap;">
                     ${d.away_name}
                 </span>
             </div>
@@ -294,15 +555,15 @@ function handleTopMatch(data) {
             </span>
         </div>
         <ul class="match__point">
-            <li class='bet-btn' groupNo="${d.id}" id='idp-${d.id}-${hid}-t' mid="${d.id}" n="Fulltime Result" t="${d.home_name}" o="${hwin}" d3="${d.home_name} vs ${d.away_name}">
+            <li class='bet-btn' groupNo="${d.id}" id='idt-${d.id}-${hid}' mid="${d.id}" n="Fulltime Result" t="${d.home_name}" o="${hwin}" d3="${d.home_name} vs ${d.away_name}">
                 <span>1</span>
                 <span class='homewin1'>${hwin}</span>
             </li>
-            <li class='bet-btn' groupNo="${d.id}" id='idp-${d.id}-${did}-t' mid="${d.id}" n="Fulltime Result" t="Draw" o="${draw}" d3="${d.home_name} vs ${d.away_name}">
+            <li class='bet-btn' groupNo="${d.id}" id='idt-${d.id}-${did}' mid="${d.id}" n="Fulltime Result" t="Draw" o="${draw}" d3="${d.home_name} vs ${d.away_name}">
                 <span>x</span>
                 <span class='draw1'>${draw}</span>
             </li>
-            <li class='bet-btn' groupNo="${d.id}" id='idp-${d.id}-${aid}-t' mid="${d.id}" n="Fulltime Result" t="${d.away_name}" o="${awin}" d3="${d.home_name} vs ${d.away_name}">
+            <li class='bet-btn' groupNo="${d.id}" id='idt-${d.id}-${aid}' mid="${d.id}" n="Fulltime Result" t="${d.away_name}" o="${awin}" d3="${d.home_name} vs ${d.away_name}">
                 <span>2</span>
                 <span class='awaywin1'>${awin}</span>
             </li>
@@ -315,12 +576,11 @@ function handleTopMatch(data) {
       $(`#trt-${d.id} .draw1`).html(draw == -1 ? `<i class="icon-lock"></i>`: `${draw}`);
       $(`#trt-${d.id} .awaywin1`).html(awin == -1 ? `<i class="icon-lock"></i>`: `${awin}`);
     }
-    $("#topMatches").addClass("top__bottom__space");
   }
   if(nNewAdd == 1) {
     $("#topMatches").owlCarousel({
       loop: true,
-      margin: 9,
+      margin: 16,
       smartSpeed: 2500,
       autoplayTimeout: 3000,
       autoplay: false,
@@ -355,10 +615,143 @@ function handleTopMatch(data) {
         },
       },
     });
+    $("#topMatches").addClass("top__bottom__space");
   }
 }
 
+function handleDetailLiveData(o) {
+  const id = o.id;
+  for(let i = 0; i < o.data.length; i++) {
+		const item = o.data[i];
+		const odds = item.odds;
+
+		let bettingItem = '';
+		if(odds.length == 3) {
+			for(let j = 0; j < odds.length; j++) {
+				const n = odds[j].name;
+				const h = odds[j].header;
+				const v = odds[j].odds;
+				const oid = odds[j].id;
+				const t = h == undefined ? n : n+", "+h;
+        const elem = $(`#idl-${id}-${oid}-l`);
+        if(v == NaN) {
+          elem.html(`<span><i class="icon-lock"></i></span><span><i class="icon-lock"></i></span>`);
+        }
+        else {
+          elem.html(`<span>${t}</span><span>${v}</span>`);
+        }	
+
+			}			
+		}
+		else {
+			for(let j = 0; j < odds.length; j++) {
+				const n = odds[j].name;
+				const h = odds[j].header;
+				const v = odds[j].odds;
+				const t = h == undefined ? n : n+", "+h;
+				const oid = odds[j].id;
+				let n1 = "";
+				if(odds.length == 2) {
+					n1 = j == 0 ? o.home_name : o.away_name;
+				}
+        const elem = $(`#idl-${id}-${oid}-l`);
+        if(v == NaN) {
+          elem.html(`<span><i class="icon-lock"></i></span><span><i class="icon-lock"></i></span>`);
+        }
+        else {
+          elem.html(`<span>${t}</span><span>${v}</span>`);
+        }	        
+			}
+		}
+	}
+}
+
+function handleDetailPrematchData(o) {
+  const sid = o.sport_id;
+  const id = o.id;
+	const bettings = ["main", "asian_lines", "goals", "half","minutes", "others", "specials"];
+	let modeSelect = [];
+	const func = (keys, odd_data, home_name, away_name, id, i, item) => {
+		for(let j = 0; j < keys.length; j++) {
+			const key = keys[j];
+			const bet_name = odd_data[key].name;
+			const odds = odd_data[key].odds;
+			if(odds.length == 0)
+				continue;
+				if(odds.length == 3) {
+				for(let k = 0; k < odds.length; k++) {
+					const odd = odds[k].odds;
+					const header = odds[k].header;
+					const name = odds[k].name;
+					const oid = odds[k].id;
+					const handi = odds[k].handicap;
+					const n = name == undefined ? handi : name;
+					const t = header == undefined ? n : n+", "+header;
+          const elem = $(`#idr-${id}-${oid}`);
+          if(odd == NaN) {
+            elem.html(`<span><i class="icon-lock"></i></span><span><i class="icon-lock"></i></span>`);
+          }
+          else {
+            elem.html(`<span>${t}</span><span>${odd}</span>`);
+          }					
+				}
+			}
+			else {
+				for(let k = 0; k < odds.length; k++) {
+					const odd = odds[k].odds;
+					const header = odds[k].header;
+					const name = odds[k].name;
+					const oid = odds[k].id;
+					const handi = odds[k].handicap;
+					const n = name == undefined ? handi : name;
+					const t = header == undefined ? n : n+", "+header;
+
+					let n1 = "";
+					if(odds.length == 2) {
+						n1 = j == 0 ? o.home_name : o.away_name;
+					}
+          const elem = $(`#idr-${id}-${oid}`);
+          if(odd == NaN) {
+            elem.html(`<span><i class="icon-lock"></i></span><span><i class="icon-lock"></i></span>`);
+          }
+          else {
+            elem.html(`<span>${t}</span><span>${odd}</span>`);
+          }
+				}
+			}		
+		}
+	}	
+	
+	if(prematchDetailMode == 'all') {
+		modeSelect = modeSelect.concat(bettings);
+	}
+	else {
+		modeSelect = [prematchDetailMode];
+	}
+
+	for(let i = 0; i < modeSelect.length; i++) {
+		const item = modeSelect[i];
+		if(o.data[item] == undefined)
+			continue;
+		const odd_data = o.data[item].sp;
+		if(Array.isArray(o.data[item])) {
+			for(let j = 0; j < o.data[item].length; j++) {
+				const sp = o.data[item][j].sp;
+				const keys = Object.keys(sp);		
+				func(keys, sp, o.home_name, o.away_name, id, i, item);	
+			}
+		}
+		else {
+			const keys = Object.keys(odd_data);		
+			func(keys, odd_data, o.home_name, o.away_name, id, i, item);
+		}				
+	}	
+}
+
 sportsSocket.onopen = function() {
+  sessionStorage.setItem("current_live_sport", 1);
+  sessionStorage.setItem("current_prematch_sport", 1);
+  
   sportsSocket.send(JSON.stringify({
     token: token,
     page:'home', 
@@ -382,25 +775,51 @@ sportsSocket.onmessage = function(event) {
       sessionStorage.setItem('live_data', event.data);     
 
       const sport_id = obj.data.length > 0 ? obj.data[0].sport_id : 1;
-      makeHeader(sport_id);
+      
+      makeHeader(sport_id, obj.data.length);
+      
 
       for(let i = 0; i < obj.data.length; i++) {
-          const data = obj.data[i];            
-          const odds = data.data;           
-          const is_fav = data.is_fav;
-  
-          if(sport_id == 1) {
-            handleSoccerLive(odds, data, i, is_fav);  
-          }                                            
+        const data = obj.data[i];            
+        const odds = data.data;           
+        const is_fav = data.is_fav;
+
+        if (!$('#detail_view_body').is(':empty')) {  
+          const gid = $('#detail_view_body').attr("gid");
+          if(gid == data.id) {
+            handleDetailLiveData(data);
+          }
+        }
+
+        if(sport_id == 1) {
+          handleSoccerLive(odds, data, i, is_fav);  
+        }                                            
       }
     }
 
     if(obj.type == 'prematch') {
       sessionStorage.setItem('prematch_data', event.data);
       removeUnusing(obj.data,"trr");
+
+      if(obj.data.length == 0) {       
+        if($(`#prematch_data_view .nodata`).length > 0) {
+          return;
+        }
+        $(`#prematch_data_view`).append(`<div class="table__footer table__footer__nextgo nodata"><a><span>No prematch data.</span></a></div>`);
+        return;        
+      }
+
       for(let i = 0; i < obj.data.length; i++) {
         const data = obj.data[i];            
         const sport_id = data.sport_id;
+
+        if (!$('#detail_view_body').is(':empty')) {  
+          const gid = $('#detail_view_body').attr("gid");
+          if(gid == data.id) {
+            handleDetailPrematchData(data);
+          }
+        }
+
         if(sport_id == 1) {
           handleSoccerPrematch(data, i);  
         }                                            
@@ -409,6 +828,11 @@ sportsSocket.onmessage = function(event) {
         removeUnusing(obj.tops, "trt");
         handleTopMatch(obj.tops);
       }
+    }
+
+    if(obj.type == "game_count") {
+      fillLiveAccordion(obj.totalLive);
+      fillPrematchAccordion(obj.totalPrematch);
     }
 };  
 
@@ -421,4 +845,69 @@ function removeUnusing(data, id) {
         div.remove();  
     }  
   });
+}
+
+function fillLiveAccordion(data) {
+  $("#accordion_live").empty();
+
+  for(let i = 0; i < data.length; i++) {
+      const name = data[i].sport_name;
+      const total_count = data[i].total_count; 
+      const icon = data[i].icon;
+      const png = data[i].png;
+      let elem = `<i class="icon-${icon}"></i>`;
+      if(png == true) {
+          elem = `<img src="/assets/img/sports/${icon}.png" width='20' style="filter:invert(1) brightness(0.6) !important;">`;
+      }
+  
+      $("#accordion_live").append(`<div class="accordion-item">
+<h2 class="accordion-header" id="headingOne${i}">
+<button class="accordion-button " type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne${i}" aria-expanded="false" aria-controls="collapseOne${i}">
+<span class="d-flex align-items-center gap-2 left-chokoboko">
+  <span class="mt-1">${elem}</span>
+  <span class="score text-white">
+  ${name}
+  </span>
+</span>
+<span class="d-flex align-items-center gap-1 icon-rightfs10">
+${total_count}
+</span>
+</button>
+</h2>
+</div>`);
+  }        
+}
+
+function fillPrematchAccordion(data) {
+  $("#accordion_prematch").empty();
+
+  for(let i = 0; i < data.length; i++) {
+      const name = data[i].sport_name;
+      const total_count = data[i].total_count;
+      const sport_id = data[i].sport_id;      
+      const icon = data[i].icon;
+      const png = data[i].png;
+      
+      let elem = `<i class="icon-${icon}"></i>`;
+      if(png == true) {
+          elem = `<img src="/assets/img/sports/${icon}.png" width='20' style="filter:invert(1) brightness(0.6) !important;">`;
+      }
+     
+
+      $("#accordion_prematch").append(`<div class="accordion-item">
+<h2 class="accordion-header" id="headingOne${i}">
+<button class="accordion-button " type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne${i}" aria-expanded="false" aria-controls="collapseOne${i}">
+<span class="d-flex align-items-center gap-2 left-chokoboko">
+  <span class="mt-1">${elem}</span>
+  <span class="score text-white">
+  ${name}
+  </span>
+</span>
+<span class="d-flex align-items-center gap-1 icon-rightfs10">
+  ${total_count}
+</span>
+</button>
+</h2>
+</div>`);
+  }     
 }

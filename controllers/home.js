@@ -89,7 +89,7 @@ exports.playDemo = async (req, res) => {
 
 exports.registerFavorite = async (req, res) => {
     try {
-        const {type, tid, token, data} = req.body;
+        const {type, tid, token, data, d1} = req.body;
         const u = await User.findOne({where:{token}});
 
         FavGames.create({

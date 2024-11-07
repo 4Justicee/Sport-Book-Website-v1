@@ -62,6 +62,10 @@ $("#main_contents").delegate("#show_all_live","click", function(e) {
 
 $("#main_contents").delegate(".inplay_removestar","click", function(e) {	
 	const tid = $(this).attr("tid");
+	$(this).attr("src","/assets/img/logo/star_off.png");
+	$(this).removeClass("inplay_removestar").addClass("inplay_likestar");
+	$(this).addClass("star-off");
+
 	$.ajax({  
 		url: '/api/remove_fav',  
 		type: 'POST',  
@@ -81,14 +85,21 @@ $("#main_contents").delegate(".inplay_removestar","click", function(e) {
 $("#main_contents").delegate(".inplay_likestar","click", function(e) {	
 	const tid = $(this).attr("tid");
 	const data = $(this).attr("data");
+	const d1 = $(this).attr("d1");
+
+	$(this).attr("src","/assets/img/logo/star_on.png");
+	$(this).removeClass("inplay_likestar").addClass("inplay_removestar");
+	$(this).removeClass("star-off");
+
 	$.ajax({  
 		url: '/api/register_fav',  
 		type: 'POST',  
 		data: {
 			tid,
-			type: 'inplay',
+			type: d1 == "l" ? 'inplay' : 'upcoming',
 			token,
 			data,
+			d1,
 		},  
 		success: function(response) {  
 			// Use the callback to pass the data to the DataTable  
@@ -130,19 +141,8 @@ $("#main_contents").delegate(".inplay_detail_view_btn","click", function(e) {
 		return;
 	}
 
-	sportsSocket.send(JSON.stringify({
-		token: token,
-		page:'home', 
-		live:'on', 
-		lsport:0, 
-		prematch:'off', 
-		psport:0, 
-		detail_id:id, 
-		data1:"",
-		data2:""
-	}));
 	
-	$("#main_contents>div").remove();
+	$("#main_contents>div").fadeOut();//css("display","none");
 
 	let order = true;
 	if(o.home_name != names.names1) {
@@ -190,7 +190,7 @@ $("#main_contents").delegate(".inplay_detail_view_btn","click", function(e) {
 				const oid = odds[j].id;
 				const t = h == undefined ? n : n+", "+h;
 				bettingItem += `<div class="col-md-4 col-sm-4">
-					<div style='display:flex; justify-content:space-between; padding: 10px' class='bet-btn' id='idl-${id}-${oid}' groupNo="${i}" mid="${id}" t="${item.name}" d1="${n}" d2="${h}" o="${v}" d3="${o.home_name} vs ${o.away_name}">
+					<div style='display:flex; justify-content:space-between; padding: 10px' class='bet-btn' id='idl-${id}-${oid}-l' groupNo="${i}" mid="${id}" t="${item.name}" d1="${n}" d2="${h}" o="${v}" d3="${o.home_name} vs ${o.away_name}">
 						<span>${v == "NaN" ? '<i class="icon-lock"></i>':t}</span>
 						<span>${v == "NaN" ? '<i class="icon-lock"></i>':v}</span>
 					</div>
@@ -209,7 +209,7 @@ $("#main_contents").delegate(".inplay_detail_view_btn","click", function(e) {
 					n1 = j == 0 ? o.home_name : o.away_name;
 				}
 				bettingItem += `<div class="col-md-6 col-sm-6">
-					<div style='display:flex; justify-content:space-between; padding: 10px' class='bet-btn' id='idl-${id}-${oid}' groupNo="${i}" t="${item.name}" mid="${id}" n="${n1}" d1="${n}" d2="${h}" o="${v}" d3="${o.home_name} vs ${o.away_name}">
+					<div style='display:flex; justify-content:space-between; padding: 10px' class='bet-btn' id='idl-${id}-${oid}-l' groupNo="${i}" t="${item.name}" mid="${id}" n="${n1}" d1="${n}" d2="${h}" o="${v}" d3="${o.home_name} vs ${o.away_name}">
 						<span>${v == "NaN" ? '<i class="icon-lock"></i>':t}</span>
 						<span>${v == "NaN" ? '<i class="icon-lock"></i>':v}</span>
 					</div>
@@ -254,13 +254,14 @@ $("#main_contents").delegate(".inplay_detail_view_btn","click", function(e) {
 	// Convert to local time and format  
 	const localeDateString = `Live | ${pass_time_str}`//date.toLocaleString('en-US', options);  
 	
-
-	$("#main_contents").prepend(`<div class="main__body__wrap left__right__space mt__30" id="detail-${id}">                                                       
+	
+	$("#detail_view_body").append(`
 		<div class="live__heightlight mb__30">
-			<div class="section__title">
+			<div class="section__title" style="display:flex; justify-content:space-between">
 				<h5>
 					${title}
 				</h5>
+				<img class='hand returnFromDetail' src="/assets/img/logo/return.png" width='24' style="filter: invert(1) brightness(0.6) !important;"/>
 			</div>
 			<div class='b__bottom' style='margin-left:2rem; padding:10px 0px; justify-content:space-between; display:flex'>
 				<div style='color:#09ff8d; font-weight:bold'>${localeDateString}</div>
@@ -286,19 +287,28 @@ $("#main_contents").delegate(".inplay_detail_view_btn","click", function(e) {
 					</div>
 				</div>
 			</div>
-		</div>                                                  
-	</div>`);
+		</div>`);
+	$("#detail_view_body").attr("gid", id);
+	$("#detail_view_body").fadeIn();//.css("display", "block");
+});
+
+$("#main_contents").on("click", ".returnFromDetail", function(e) {
+	$("#main_contents>div").fadeIn();
+
+	$("#detail_view_body").removeAttr("gid");
+	$("#detail_view_body").empty();
+	$("#detail_view_body").fadeOut();
 });
 
 $("#main_contents").delegate(".prematch_detail_view_btn","click", function(e) {
-	$("#main_contents>div").remove();
+	$("#main_contents>div").fadeOut();
 	const id = $(this).attr("tid");	
 	processPrematchDetail(id);	
 });
 
 $("#main_contents").on("click", "#all-odds-view", function(e) {
 	const id = $(this).attr("did");
-	$("#main_contents>div").remove();
+	//$("#main_contents>div").fadeOut();
 
 
 	prematchDetailMode = 'all';
@@ -307,7 +317,7 @@ $("#main_contents").on("click", "#all-odds-view", function(e) {
 
 $("#main_contents").on("click", "#main-odd-view", function(e) {
 	const id = $(this).attr("did");
-	$("#main_contents>div").remove();
+	//$("#main_contents>div").fadeOut();
 
 	prematchDetailMode = 'main';
 	processPrematchDetail(id);
@@ -315,7 +325,7 @@ $("#main_contents").on("click", "#main-odd-view", function(e) {
 
 $("#main_contents").on("click", "#asian-lines-odd-view", function(e) {
 	const id = $(this).attr("did");
-	$("#main_contents>div").remove();
+	//$("#main_contents>div").fadeOut();
 	
 	prematchDetailMode = 'asian_lines';
 	processPrematchDetail(id);
@@ -323,35 +333,35 @@ $("#main_contents").on("click", "#asian-lines-odd-view", function(e) {
 
 $("#main_contents").on("click", "#goals-odd-view", function(e) {
 	const id = $(this).attr("did");
-	$("#main_contents>div").remove();
+	//$("#main_contents>div").fadeOut();
 	prematchDetailMode = 'goals';
 	processPrematchDetail(id);
 });
 
 $("#main_contents").on("click", "#half-odd-view", function(e) {
 	const id = $(this).attr("did");
-	$("#main_contents>div").remove();
+	//$("#main_contents>div").fadeOut();
 	prematchDetailMode = 'half';
 	processPrematchDetail(id);
 });
 
 $("#main_contents").on("click", "#minutes-odd-view", function(e) {
 	const id = $(this).attr("did");
-	$("#main_contents>div").remove();
+	//$("#main_contents>div").fadeOut();
 	prematchDetailMode = 'minutes';
 	processPrematchDetail(id);
 });
 
 $("#main_contents").on("click", "#others-odd-view", function(e) {
 	const id = $(this).attr("did");
-	$("#main_contents>div").remove();
+	//$("#main_contents>div").fadeOut();
 	prematchDetailMode = 'others';
 	processPrematchDetail(id);
 });
 
 $("#main_contents").on("click", "#specials-odd-view", function(e) {
 	const id = $(this).attr("did");
-	$("#main_contents>div").remove();
+	//$("#main_contents>div").fadeOut();
 	prematchDetailMode = 'specials';
 	processPrematchDetail(id);
 });
@@ -413,6 +423,7 @@ $("#main_contents").delegate(".bet-btn", "click", function(e){
 	}
 	const divGroup = $(`div[groupNo="${nGroup}"]`)
 	const aGroup = $(`a[groupNo="${nGroup}"]`);
+	const liGroup = $(`li[groupNo="${nGroup}"]`);
 
 	for(let i = 0; i < divGroup.length; i++) {
 		const id = divGroup[i].id;
@@ -424,8 +435,14 @@ $("#main_contents").delegate(".bet-btn", "click", function(e){
 		removeBetsByIdFromPanel(id);
 	}
 
+	for(let i = 0; i < liGroup.length; i++) {
+		const id = liGroup[i].id;
+		removeBetsByIdFromPanel(id);
+	}
+
 	divGroup.removeClass("selected") //need to modify
 	aGroup.removeClass("selected")	//need to modify
+	liGroup.removeClass("selected")	//need to modify
 
 	$(this).addClass("selected");
 
@@ -595,17 +612,6 @@ $("#main_contents").delegate(".bet-btn", "click", function(e){
 
 function processPrematchDetail(id) {
 	//only request current information
-	sportsSocket.send(JSON.stringify({
-		token: token,
-		page:'home', 
-		live:'off', 
-		lsport:0, 
-		prematch:'on', 
-		psport:0, 
-		detail_id:id, 
-		data1:"",
-		data2:""
-	}));
 
 	const data = JSON.parse(sessionStorage.getItem('prematch_data'));
 	let o = null;
@@ -746,13 +752,14 @@ function processPrematchDetail(id) {
 
 	// Format the date to the local timezone  
 	let formattedDate = dateObj.toLocaleString('en-US', options);  
-
-	$("#main_contents").prepend(`<div class="main__body__wrap left__right__space mt__30" id="detail-${id}">                                                       
+	$("#detail_view_body").empty();
+	$("#detail_view_body").prepend(`                                                     
 		<div class="live__heightlight mb__30">
-			<div class="section__title">
+			<div class="section__title" style="display:flex; justify-content:space-between">
 				<h5>
 					${title}
 				</h5>
+				<img class='hand returnFromDetail' src="/assets/img/logo/return.png" width='24' style="filter: invert(1) brightness(0.6) !important;"/>
 			</div>			
 			<div class='b__bottom' style='margin-left:2rem; padding:10px 0px; justify-content:space-between; display:flex'>
 				<div style='color:#09ff8d; font-weight:bold'>${formattedDate}</div>				
@@ -814,8 +821,9 @@ function processPrematchDetail(id) {
 					</div>
 				</div>
 			</div>
-		</div>                                                  
-	</div>`);
+		</div>`);
+	$("#detail_view_body").attr("gid", id);
+	$("#detail_view_body").fadeIn();//.css("display", "block");
 }	
 
 function calcTotalOdd() {
@@ -1005,8 +1013,9 @@ $("#multiple_bets_view").on("click",".btn-bet", function(e) {
 $("#single_bets_view").on("click",".remove-bet-item", function(e) {	
 	var items = $(this).closest('.multiple__items');  
 	var elem_id = $(this).attr("elem")
-
 	items.remove();
+
+	$('li.selected#'+elem_id).removeClass();
 	$("#"+elem_id).removeClass("selected")	
 
 	const multis = $("#multiple_bets_view .remove-bet-item");
@@ -1069,115 +1078,255 @@ $("#multiple_bets_view").on("click",".remove-bet-item", function(e) {
 });
 
 $("#lightlighttab").click(function (e) {
-	sportsSocket.send(JSON.stringify({
-		sid: 1,
-		type: "live",
-		allow: "both"
-	}))
+  const psport = sessionStorage.getItem("current_prematch_sport");  
+
+  sportsSocket.send(JSON.stringify({
+    token: token,
+    page:'home', 
+    live:'on', 
+    lsport:1, 
+    prematch:'on', 
+    psport:psport, 
+    detail_id:0, 
+    data1:"",
+    data2:""
+  }));
+
+  sessionStorage.setItem("current_live_sport", 1);
 });
 
 $("#lightlighttab2tennis").click(function (e) {
-	sportsSocket.send(JSON.stringify({
-		sid: 13,
-		type: "live",
-		allow: "both"
-	}))
+  const psport = sessionStorage.getItem("current_prematch_sport");  
+  
+  sportsSocket.send(JSON.stringify({
+    token: token,
+    page:'home', 
+    live:'on', 
+    lsport:13, 
+    prematch:'on', 
+    psport:psport, 
+    detail_id:0, 
+    data1:"",
+    data2:""
+  }));
+
+  sessionStorage.setItem("current_live_sport", 13);
 });
 
 $("#lightlighttab3basket").click(function (e) {
+	const psport = sessionStorage.getItem("current_prematch_sport");  
+  
 	sportsSocket.send(JSON.stringify({
-		sid: 18,
-		type: "live",
-		allow: "both"
-	}))
+	  token: token,
+	  page:'home', 
+	  live:'on', 
+	  lsport:18, 
+	  prematch:'on', 
+	  psport:psport, 
+	  detail_id:0, 
+	  data1:"",
+	  data2:""
+	}));
+
+	sessionStorage.setItem("current_live_sport", 18);
 });
 
 $("#lightlighttabvolly").click(function (e) {
+	const psport = sessionStorage.getItem("current_prematch_sport");  
+  
 	sportsSocket.send(JSON.stringify({
-		sid: 91,
-		type: "live",
-		allow: "both"
-	}))
+		token: token,
+		page:'home', 
+		live:'on', 
+		lsport:91, 
+		prematch:'on', 
+		psport:psport, 
+		detail_id:0, 
+		data1:"",
+		data2:""
+	}));
+
+	sessionStorage.setItem("current_live_sport", 91);
 });
 
 $("#lightlighttab5cricket").click(function (e) {
+	const psport = sessionStorage.getItem("current_prematch_sport");  
+  
 	sportsSocket.send(JSON.stringify({
-		sid: 3,
-		type: "live",
-		allow: "both"
-	}))
+		token: token,
+		page:'home', 
+		live:'on', 
+		lsport:3, 
+		prematch:'on', 
+		psport:psport, 
+		detail_id:0, 
+		data1:"",
+		data2:""
+	}));
+
+	sessionStorage.setItem("current_live_sport", 3);
 });
 
 $("#lightlighttab6ttenis").click(function (e) {
+	const psport = sessionStorage.getItem("current_prematch_sport");  
+  
 	sportsSocket.send(JSON.stringify({
-		sid: 92,
-		type: "live",
-		allow: "both"
-	}))
+		token: token,
+		page:'home', 
+		live:'on', 
+		lsport:92, 
+		prematch:'on', 
+		psport:psport, 
+		detail_id:0, 
+		data1:"",
+		data2:""
+	}));
+
+	sessionStorage.setItem("current_live_sport", 92);
 });
 
 $("#lightlight7baseball").click(function (e) {
+	const psport = sessionStorage.getItem("current_prematch_sport");  
+  
 	sportsSocket.send(JSON.stringify({
-		sid: 16,
-		type: "live",
-		allow: "both"
-	}))
+		token: token,
+		page:'home', 
+		live:'on', 
+		lsport:16, 
+		prematch:'on', 
+		psport:psport, 
+		detail_id:0, 
+		data1:"",
+		data2:""
+	}));
+
+	sessionStorage.setItem("current_live_sport", 16);
 });
 
 $("#nextgofootball").click(function (e) {
+	const lsport = sessionStorage.getItem("current_live_sport");  
+  
 	sportsSocket.send(JSON.stringify({
-		sid: 1,
-		type: "prematch",
-		allow: "both"
-	}))
+		token: token,
+		page:'home', 
+		live:'on', 
+		lsport:lsport, 
+		prematch:'on', 
+		psport:1, 
+		detail_id:0, 
+		data1:"",
+		data2:""
+	}));
+
+	sessionStorage.setItem("current_prematch_sport", 1);
 });
 
 $("#nextgotennis").click(function (e) {
+	const lsport = sessionStorage.getItem("current_live_sport");  
+  
 	sportsSocket.send(JSON.stringify({
-		sid: 13,
-		type: "prematch",
-		allow: "both"
-	}))
+		token: token,
+		page:'home', 
+		live:'on', 
+		lsport:lsport, 
+		prematch:'on', 
+		psport:13, 
+		detail_id:0, 
+		data1:"",
+		data2:""
+	}));
+
+	sessionStorage.setItem("current_prematch_sport", 13);
 });
 
 $("#nextgobasketball").click(function (e) {
+	const lsport = sessionStorage.getItem("current_live_sport");  
+  
 	sportsSocket.send(JSON.stringify({
-		sid: 18,
-		type: "prematch",
-		allow: "both"
-	}))
+		token: token,
+		page:'home', 
+		live:'on', 
+		lsport:lsport, 
+		prematch:'on', 
+		psport:18, 
+		detail_id:0, 
+		data1:"",
+		data2:""
+	}));
+
+	sessionStorage.setItem("current_prematch_sport", 18);
 });
 
 $("#nextgovolleyball").click(function (e) {
+	const lsport = sessionStorage.getItem("current_live_sport");  
+  
 	sportsSocket.send(JSON.stringify({
-		sid: 91,
-		type: "prematch",
-		allow: "both"
-	}))
+		token: token,
+		page:'home', 
+		live:'on', 
+		lsport:lsport, 
+		prematch:'on', 
+		psport:91, 
+		detail_id:0, 
+		data1:"",
+		data2:""
+	}));
+
+	sessionStorage.setItem("current_prematch_sport", 91);
 });
 
 $("#nextgocricket").click(function (e) {
+	const lsport = sessionStorage.getItem("current_live_sport");  
+  
 	sportsSocket.send(JSON.stringify({
-		sid: 3,
-		type: "prematch",
-		allow: "both"
-	}))
+		token: token,
+		page:'home', 
+		live:'on', 
+		lsport:lsport, 
+		prematch:'on', 
+		psport:3, 
+		detail_id:0, 
+		data1:"",
+		data2:""
+	}));
+
+	sessionStorage.setItem("current_prematch_sport", 3);
 });
 
 $("#nextgottennis").click(function (e) {
+	const lsport = sessionStorage.getItem("current_live_sport");  
+  
 	sportsSocket.send(JSON.stringify({
-		sid: 92,
-		type: "prematch",
-		allow: "both"
-	}))
+		token: token,
+		page:'home', 
+		live:'on', 
+		lsport:lsport, 
+		prematch:'on', 
+		psport:92, 
+		detail_id:0, 
+		data1:"",
+		data2:""
+	}));
+
+	sessionStorage.setItem("current_prematch_sport", 92);
 });
 
 $("#nextgobaseball").click(function (e) {
+	const lsport = sessionStorage.getItem("current_live_sport");  
+  
 	sportsSocket.send(JSON.stringify({
-		sid: 16,
-		type: "prematch",
-		allow: "both"
-	}))
+		token: token,
+		page:'home', 
+		live:'on', 
+		lsport:lsport, 
+		prematch:'on', 
+		psport:16, 
+		detail_id:0, 
+		data1:"",
+		data2:""
+	}));
+
+	sessionStorage.setItem("current_prematch_sport", 16);
 });
 
 $("#main-tab-home").click(function(e) {
