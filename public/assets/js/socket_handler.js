@@ -326,7 +326,7 @@ function handleSoccerLive(odds, data, idx, fav = 0) {
               <a class="point__box bg__none">
                   <span class='star_elem'>${starElem}</span>
                   &nbsp;&nbsp;&nbsp;&nbsp;
-                  <span class='hand inplay_detail_view_btn' tid="${id}"><i class="fas fa-angle-right" ></i></span>
+                  <span class='hand inplay_detail_view_btn' tid="${id}" from="home"><i class="fas fa-angle-right" ></i></span>
               </a>
           </div>
       </div>`)
@@ -788,7 +788,7 @@ sportsSocket.onmessage = function(event) {
           const odds = data.data;           
           const is_fav = data.is_fav;
 
-          if (!$('#detail_view_body').is(':empty')) {  
+          if ($('#detail_view_body').children().length != 0) {  
             const gid = $('#detail_view_body').attr("gid");
             if(gid == data.id) {
               handleDetailLiveData(data);
@@ -803,19 +803,20 @@ sportsSocket.onmessage = function(event) {
       if(obj.page == "sport") {
         sessionStorage.setItem('sport_live_data', JSON.stringify(obj.data.rows));
 
-        const visible = $('#detail_view_body').is(':visible');
-        if($('#detail_view_body').is(':visible')) {
+        if($('#detail_view_body').children().length != 0) {
           const gid = $('#detail_view_body').attr("gid");
-          for(let i = 0; i < obj.data.rows.length; i++) {
-            if(obj.data.rows[i].id == gid) {
-              handleDetailLiveData(data);
+          for(let i = 0; i < obj.data.length; i++) {
+            if(obj.data[i].id == gid) {
+              handleDetailLiveData(obj.data[i]);
             }
           }
         }
         else {
           $("#main_contents>div").css("display","none");
-          $("#content_view_body").css("display","block");          
-          handleLiveSportsTable(obj.data)
+          $("#content_view_body").css("display","block");
+          
+            handleLiveSportsTable(obj.data, obj.current_page)
+          
         }
       }
     }
@@ -840,7 +841,7 @@ sportsSocket.onmessage = function(event) {
           const data = obj.data[i];            
           const sport_id = data.sport_id;
   
-          if (!$('#detail_view_body').is(':empty')) {  
+          if ($('#detail_view_body').children().length != 0) {  
             const gid = $('#detail_view_body').attr("gid");
             if(gid == data.id) {
               handleDetailPrematchData(data);
@@ -855,19 +856,18 @@ sportsSocket.onmessage = function(event) {
       if(obj.page == "sport") {
         sessionStorage.setItem('sport_prematch_data', JSON.stringify(obj.data.rows));
 
-        const visible = $('#detail_view_body').is(':visible');
-        if($('#detail_view_body').is(':visible')) {
+        if($('#detail_view_body').children().length != 0) {
           const gid = $('#detail_view_body').attr("gid");
           for(let i = 0; i < obj.data.rows.length; i++) {
             if(obj.data.rows[i].id == gid) {
-              handleDetailPrematchData(data);
+              handleDetailPrematchData(obj.data.rows[i]);
             }
           }
         }
         else {
           $("#main_contents>div").css("display","none");
           $("#content_view_body").css("display","block");          
-          handlePrematchSportsTable(obj.data)
+          handlePrematchSportsTable(obj.data, obj.current_page)
         }
       }
     }
@@ -980,7 +980,7 @@ function fillPrematchAccordion(data) {
   }     
 }
 
-function handlePrematchSportsTable(data) {  
+function handlePrematchSportsTable(data, current_page) {  
   for(let i = 0; i < data.rows.length; i++) {
     const o = data.rows[i];
 
@@ -1095,7 +1095,6 @@ function handlePrematchSportsTable(data) {
     }
   }
   
-  const current_page = data.current_page;
   const p_type = sessionStorage.getItem("current_paging");
   const p_count = sessionStorage.getItem("page_data_count");
 
@@ -1144,6 +1143,147 @@ function handlePrematchSportsTable(data) {
   }
 }
 
-function handleLiveSportsTable(data) {
-  
+function handleLiveSportsTable(bigdata, current_page) {
+  for(let kk = 0; kk < bigdata.rows.length; kk++) {
+    const data = bigdata.rows[kk];            
+    const odds = data.data;           
+    const fav = data.is_fav; 
+    const o1x2 = get1X2(odds, data.home_name, data.away_name);
+    const go = getMatchGoals(odds);
+    const handis = getHandicaps(odds, data.home_name, data.away_name);
+    const elapse = data.updated_at - data.time < 0 ? 0 : data.updated_at - data.time;
+    const time_str = formatSeconds(elapse);
+    const scores = (data['ss'] == null) ? "0-0" : data['ss'];
+    const id = data.id;
+    const simpleObj = JSON.stringify({h: data.home_name, a: data.away_name, t: time_str, scores, odd: o1x2});
+    const starElem = (fav == 0) ? `<img class='star-off hand inplay_likestar' src="${starOffCode}" tid="${id}" data='${simpleObj}' width='24' d1="l"/>`:`<img class="hand inplay_removestar" tid="${id}" src="${starOnCode}" width='22'/>`;
+    
+    const a = $(`#tr-${id}`);
+    if(a.length == 0) {                             
+        $(`#searchView`).append(`
+        <div class="table__items b__bottom" id="tr-${id}">
+            <div class="t__items">
+                <div class="t__items__left">
+                    <h6 class='home_name'>
+                        ${data.home_name}
+                    </h6>
+                    <span class="text away_name">
+                        ${data.away_name}
+                    </span>            
+                    <p>
+                        <a href="#0">
+                            Live
+                        </a>
+                        <span class='time-view'>
+                        ${time_str}
+                        </span>
+                    </p>
+                </div>
+            </div>
+            <div class="cart__point">
+                <span class='scores'>
+                ${scores}                 
+                </span>
+            </div>
+            <div class="mart__point__items">        
+                <a class="point__box full1 bet-btn" groupNo="${kk}0" id='idl-${id}-${o1x2.hid}' mid="${id}" n="Fulltime Result" t="${data.home_name}" d3="${data.home_name} vs ${data.away_name}" o="${o1x2.hwin}">
+                    ${o1x2.hwin == -1 ? `<i class="icon-lock"></i>` : o1x2.hwin}
+                </a>
+                <a class="point__box fullx bet-btn" groupNo="${kk}0" id='idl-${id}-${o1x2.did}' mid="${id}" n="Fulltime Result" t="Draw" o="${o1x2.draw}" d3="${data.home_name} vs ${data.away_name}">
+                    ${o1x2.draw == -1 ? `<i class="icon-lock"></i>` : o1x2.draw}
+                </a>
+                <a class="point__box full2 bet-btn" groupNo="${kk}0" id='idl-${id}-${o1x2.aid}' mid="${id}" n="Fulltime Result" t="${data.away_name}" o="${o1x2.awin}" d3="${data.home_name} vs ${data.away_name}">
+                    ${o1x2.awin == -1 ? `<i class="icon-lock"></i>` : o1x2.awin}
+                </a>
+        
+                <a class="point__box overgoal bet-btn" groupNo="${kk}1" id='idl-${id}-${go.oid}' mid="${id}" n="Match Goals" t="${data.home_name}" d1="${go.goal}" d2="Over" d3="${data.home_name} vs ${data.away_name}" o="${go.overodd}">
+                ${go.goal == -1 ? `<i class="icon-lock"></i>`: `<span class='point__box_addinfo goal'>${go.goal}</span>
+                    <span class='overodd'>${go.overodd}</span>`}
+                </a>
+                <a class="point__box undergoal bet-btn" groupNo="${kk}1" id='idl-${id}-${go.uid}' mid="${id}" n="Match Goals" t="${data.away_name}" d1="${go.goal}" d2="Under" o="${go.underodd}" d3="${data.home_name} vs ${data.away_name}">
+                    ${go.goal == -1 ? `<i class="icon-lock"></i>`: `<span class='point__box_addinfo goal'>${go.goal}</span>
+                    <span class='underodd'>${go.underodd}</span>`}
+                </a>
+        
+                <a class="point__box handi1 bet-btn" groupNo="${kk}2" id='idl-${id}-${handis.id1}' mid="${id}" n="Asian Handicap" t="${data.home_name}" d1="${handis.h_hand}" o="${handis.h_odd}" d3="${data.home_name} vs ${data.away_name}"> 
+                    ${handis.h_hand == -1 ? `<i class="icon-lock"></i>`: `<span class='point__box_addinfo handivalue1'>${handis.h_hand}</span><span class='handi1odd'>${handis.h_odd}</span>`}
+
+                </a>
+                <a class="point__box handi2 bet-btn" groupNo="${kk}2" id='idl-${id}-${handis.id2}' mid="${id}" n="Asian Handicap" t="${data.away_name}" d1="${handis.a_hand}" o="${handis.a_odd}" d3="${data.home_name} vs ${data.away_name}">    
+                    ${handis.a_hand == -1 ? `<i class="icon-lock"></i>`: `<span class='point__box_addinfo handivalue2'>${handis.a_hand}</span><span class='handi2odd'>${handis.a_odd}</span>`}
+                </a>
+            </div>
+            <div class="mart__point__right">        
+                <a class="point__box bg__none">
+                    <span class='star_elem'>${starElem}</span>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    <span class='hand inplay_detail_view_btn' tid="${id}" from="sport"><i class="fas fa-angle-right" ></i></span>
+                </a>
+            </div>
+        </div>`)
+    }
+    else {                   
+        $(`#tr-${id} .home_name`).html(data.home_name);
+        $(`#tr-${id} .away_name`).html(data.away_name);
+        $(`#tr-${id} .time_view`).html(time_str);
+        $(`#tr-${id} .scores`).html(scores);
+        $(`#tr-${id} .full1`).html(o1x2.hwin == -1 ? `<i class="icon-lock"></i>` : o1x2.hwin);
+        $(`#tr-${id} .fullx`).html(o1x2.draw == -1 ? `<i class="icon-lock"></i>` : o1x2.draw);
+        $(`#tr-${id} .full2`).html(o1x2.awin == -1 ? `<i class="icon-lock"></i>` : o1x2.awin);
+
+        $(`#tr-${id} .overgoal`).html(go.goal == -1 ? `<i class="icon-lock"></i>`: `<span class='point__box_addinfo goal'>${go.goal}</span><span class='overodd'>${go.overodd}</span>`);
+        $(`#tr-${id} .undergoal`).html(go.goal == -1 ? `<i class="icon-lock"></i>`: `<span class='point__box_addinfo goal'>${go.goal}</span><span class='underodd'>${go.underodd}</span>`);
+
+        $(`#tr-${id} .handi1`).html(handis.h_hand == -1 ? `<i class="icon-lock"></i>`: `<span class='point__box_addinfo handivalue1'>${handis.h_hand}</span><span class='handi1odd'>${handis.h_odd}</span>`);
+        $(`#tr-${id} .handi2`).html(handis.a_hand == -1 ? `<i class="icon-lock"></i>`: `<span class='point__box_addinfo handivalue2'>${handis.a_hand}</span><span class='handi2odd'>${handis.a_odd}</span>`);
+        $(`#tr-${id} .star_elem`).html(starElem);
+    }   
+}
+   
+  const p_type = sessionStorage.getItem("current_paging");
+  const p_count = sessionStorage.getItem("page_data_count");
+
+  if(p_count != bigdata.count || p_type != "live" || $("#paging").is(':empty')) {
+    sessionStorage.setItem("current_paging", "live");
+    sessionStorage.setItem("page_data_count", bigdata.count);
+
+    $("#paging").paging(bigdata.count, {
+      format: '[< ncnnn! >]',
+      perpage: 10,
+      lapping: 0,
+      page: current_page,
+      onSelect: function (page) {
+        const sid = sessionStorage.getItem("current_live_sport");
+        var element = $(`#paging a[data-page="${page}"]`).last();  
+        const span = element.find('span');
+        $(".page-link").removeClass("selected")
+        span.addClass('selected');
+
+        sportsSocket.send(JSON.stringify({
+          token: token,
+          page:'sport', 
+          live:'on', 
+          prematch:'off', 
+          lsport:sid, 
+          detail_id:0, 
+          data1:page,
+          data2:searchKey
+        }));
+      },
+      onFormat: function (type) {
+        switch (type) {
+        case 'block': // n and c
+          return '<a class="page-item" href="#"><span style="background:#202a39" class="text-white page-link">' + this.value + '</span></a>';
+        case 'next': // >
+          return '<a class="page-item" href="#"><span style="background:#202a39" class="text-white page-link">&raquo;<span></a>';
+        case 'prev': // <
+          return '<a class="page-item" href="#"><span style="background:#202a39" class="text-white page-link">&laquo;<span></a>';
+        case 'first': // [
+          return '<a class="page-item" href="#"><span style="background:#202a39" class="text-white page-link">First<span></a>';
+        case 'last': // ]
+          return '<a class="page-item" href="#"><span style="background:#202a39" class="text-white page-link">Last<span></a>';
+        }
+      }
+    });
+  }
 }

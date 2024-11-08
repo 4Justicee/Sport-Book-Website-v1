@@ -114,14 +114,16 @@ $("#main_contents").delegate(".inplay_likestar","click", function(e) {
 
 $("#main_contents").delegate(".inplay_detail_view_btn","click", function(e) {	
 	const id = $(this).attr("tid");
-	
-	sessionStorage.setItem('goback', "home");
+	const from = $(this).attr("from");
+	sessionStorage.setItem('goback', from);
 
-	const data = JSON.parse(sessionStorage.getItem('live_data'));
+	const d = JSON.parse(from == "home" ? sessionStorage.getItem('live_data') : sessionStorage.getItem('sport_live_data'));
+	const data = (from == "home") ? d.data : d;
+
 	let o = null;
-	for(i = 0; i < data.data.length; i++) {
-		if(data.data[i].id == id) {
-			o = data.data[i];
+	for(i = 0; i < data.length; i++) {
+		if(data[i].id == id) {
+			o = data[i];
 			break;
 		}
 	}

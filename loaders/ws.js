@@ -175,6 +175,7 @@ const sendLiveEvent = async(ws) => {
     ws.send(JSON.stringify({
       type: "live",
       page: ws.page,
+      current_page: ws.data1,
       data
     }))
   }
@@ -421,8 +422,8 @@ const getLiveSportData = async(whereObj, ws) => {
   }
 
   const data = await Inplay.findAndCountAll(findObj);
-  for(let i = 0; i < data.length; i++) {
-    const element = data[i];
+  for(let i = 0; i < data.rows.length; i++) {
+    const element = data.rows[i];
     try {
       const fav = await FavGames.findAll({where:{matchId: element.id, userCode: ws.userCode}});
       const o = analSoccerInplayResponse(JSON.parse(element["inplayodd.data"]));
@@ -548,6 +549,7 @@ module.exports = async () => {
           // Handle messages received from the client
           ws.on('message', (message) => {                           
             const o = JSON.parse(message);
+            console.log(o)
             ws.token = o.token;
             ws.page = o.page;
             ws.live = o.live;
