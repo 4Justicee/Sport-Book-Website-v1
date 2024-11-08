@@ -5613,5 +5613,8 @@ p {
 .select-sport.selected {
   background:#14111169 !important;
 }
+.page-link.selected{
+  background: #456799 !important;
+}
 /*Abstracts / reponsive*/
 /*CSS Table Of Content Ends End*//*# sourceMappingURL=main.css.map */

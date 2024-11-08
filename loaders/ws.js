@@ -410,6 +410,7 @@ const sendPrematchEvent = async(ws) => {
     ws.send(JSON.stringify({
       type: "prematch",
       page: ws.page,
+      current_page: ws.data1,      
       data,
       tops
     }))
@@ -496,6 +497,7 @@ module.exports = async () => {
               ws.psport = o.psport;
             }
             ws.detail_id = o.detail_id;
+           
             ws.data1 = o.data1;             
             ws.data2 = o.data2;             
           });

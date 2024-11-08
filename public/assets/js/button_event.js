@@ -64,7 +64,7 @@ $("#main_contents").delegate("#show_all_live","click", function(e) {
 
 $("#main_contents").delegate(".inplay_removestar","click", function(e) {	
 	const tid = $(this).attr("tid");
-	$(this).attr("src","/assets/img/logo/star_off.png");
+	$(this).attr("src",starOffCode);
 	$(this).removeClass("inplay_removestar").addClass("inplay_likestar");
 	$(this).addClass("star-off");
 
@@ -89,7 +89,7 @@ $("#main_contents").delegate(".inplay_likestar","click", function(e) {
 	const data = $(this).attr("data");
 	const d1 = $(this).attr("d1");
 
-	$(this).attr("src","/assets/img/logo/star_on.png");
+	$(this).attr("src",starOnCode);
 	$(this).removeClass("inplay_likestar").addClass("inplay_removestar");
 	$(this).removeClass("star-off");
 
@@ -306,6 +306,12 @@ $("#main_contents").delegate(".prematch_detail_view_btn","click", function(e) {
 	$("#main_contents>div").fadeOut();
 	const id = $(this).attr("tid");	
 	processPrematchDetail(id);	
+});
+
+$("#main_contents").delegate(".sprematch_detail_view_btn","click", function(e) {
+	$("#main_contents>div").fadeOut();
+	const id = $(this).attr("tid");	
+	processPrematchDetail(id, 1);	
 });
 
 $("#main_contents").on("click", "#all-odds-view", function(e) {
@@ -612,14 +618,14 @@ $("#main_contents").delegate(".bet-btn", "click", function(e){
 	calcTotalOdd();
 });
 
-function processPrematchDetail(id) {
+function processPrematchDetail(id, selector = 0) {
 	//only request current information
-
-	const data = JSON.parse(sessionStorage.getItem('prematch_data'));
+	const d = JSON.parse(selector == 0 ? sessionStorage.getItem('home_prematch_data') : sessionStorage.getItem('sport_prematch_data'));
+	const data = (selector == 0) ? d.data : d;
 	let o = null;
-	for(i = 0; i < data.data.length; i++) {
-		if(data.data[i].id == id) {
-			o = data.data[i];
+	for(i = 0; i < data.length; i++) {
+		if(data[i].id == id) {
+			o = data[i];
 			break;
 		}
 	}
@@ -1084,6 +1090,8 @@ $("#accordion_prematch").on("click", ".select-sport", function(e) {
 	$(this).addClass("selected");
 	const id = $(this).attr('id').substr(4);
 
+	sessionStorage.setItem("current_prematch_sport", id);
+	
 	sportsSocket.send(JSON.stringify({
 		token: token,
 		page:'sport', 
@@ -1100,6 +1108,8 @@ $("#accordion_live").on("click", ".select-sport", function(e) {
 	$(".select-sport").removeClass("selected");
 	$(this).addClass("selected");
 	const id = $(this).attr('id').substr(4);
+
+	sessionStorage.setItem("current_live_sport", id);
 
 	sportsSocket.send(JSON.stringify({
 		token: token,

@@ -262,8 +262,7 @@ $(document).ready(function () {
 	//preloader
 
 	//--Nice Select--//
-	$('select').niceSelect();
-
+	$('select').niceSelect();	
 
     //
     /*sportsSocket.send(JSON.stringify(
