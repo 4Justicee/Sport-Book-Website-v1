@@ -115,6 +115,7 @@ $("#main_contents").delegate(".inplay_likestar","click", function(e) {
 $("#main_contents").delegate(".inplay_detail_view_btn","click", function(e) {	
 	const id = $(this).attr("tid");
 	
+	sessionStorage.setItem('goback', "home");
 
 	const data = JSON.parse(sessionStorage.getItem('live_data'));
 	let o = null;
@@ -292,11 +293,18 @@ $("#main_contents").delegate(".inplay_detail_view_btn","click", function(e) {
 		</div>`);
 	$("#detail_view_body").attr("gid", id);
 	$("#detail_view_body").fadeIn();//.css("display", "block");
+
 });
 
 $("#main_contents").on("click", ".returnFromDetail", function(e) {
-	$("#main_contents>div").fadeIn();
-
+	const backPage = sessionStorage.getItem("goback");
+	if(backPage == "home") {
+		$("#topMatches").fadeIn();
+		$("#highLightMatches").fadeIn();
+	}
+	else {
+		$("#content_view_body").fadeIn();
+	}
 	$("#detail_view_body").removeAttr("gid");
 	$("#detail_view_body").empty();
 	$("#detail_view_body").fadeOut();
@@ -304,14 +312,18 @@ $("#main_contents").on("click", ".returnFromDetail", function(e) {
 
 $("#main_contents").delegate(".prematch_detail_view_btn","click", function(e) {
 	$("#main_contents>div").fadeOut();
+	sessionStorage.setItem('goback', "home")
+
 	const id = $(this).attr("tid");	
 	processPrematchDetail(id);	
 });
 
 $("#main_contents").delegate(".sprematch_detail_view_btn","click", function(e) {
 	$("#main_contents>div").fadeOut();
+	sessionStorage.setItem('goback', "sport")
+
 	const id = $(this).attr("tid");	
-	processPrematchDetail(id, 1);	
+	processPrematchDetail(id);	
 });
 
 $("#main_contents").on("click", "#all-odds-view", function(e) {
@@ -618,10 +630,11 @@ $("#main_contents").delegate(".bet-btn", "click", function(e){
 	calcTotalOdd();
 });
 
-function processPrematchDetail(id, selector = 0) {
+function processPrematchDetail(id) {
 	//only request current information
-	const d = JSON.parse(selector == 0 ? sessionStorage.getItem('home_prematch_data') : sessionStorage.getItem('sport_prematch_data'));
-	const data = (selector == 0) ? d.data : d;
+	const goback = sessionStorage.getItem("goback");
+	const d = JSON.parse(goback == "home" ? sessionStorage.getItem('home_prematch_data') : sessionStorage.getItem('sport_prematch_data'));
+	const data = (goback == "home") ? d.data : d;
 	let o = null;
 	for(i = 0; i < data.length; i++) {
 		if(data[i].id == id) {

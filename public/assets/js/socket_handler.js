@@ -801,9 +801,22 @@ sportsSocket.onmessage = function(event) {
         }
       }
       if(obj.page == "sport") {
-        $("#main_contents>div").fadeIn();
-        $("#content_view_body").fadeOut();
-        handleLiveSportsTable(obj.data)
+        sessionStorage.setItem('sport_live_data', JSON.stringify(obj.data.rows));
+
+        const visible = $('#detail_view_body').is(':visible');
+        if($('#detail_view_body').is(':visible')) {
+          const gid = $('#detail_view_body').attr("gid");
+          for(let i = 0; i < obj.data.rows.length; i++) {
+            if(obj.data.rows[i].id == gid) {
+              handleDetailLiveData(data);
+            }
+          }
+        }
+        else {
+          $("#main_contents>div").css("display","none");
+          $("#content_view_body").css("display","block");          
+          handleLiveSportsTable(obj.data)
+        }
       }
     }
 
@@ -842,10 +855,20 @@ sportsSocket.onmessage = function(event) {
       if(obj.page == "sport") {
         sessionStorage.setItem('sport_prematch_data', JSON.stringify(obj.data.rows));
 
-        $("#content_view_body").css("display","block");
         const visible = $('#detail_view_body').is(':visible');
-        //$("#main_contents>div").css("display","none");
-        handlePrematchSportsTable(obj.data)
+        if($('#detail_view_body').is(':visible')) {
+          const gid = $('#detail_view_body').attr("gid");
+          for(let i = 0; i < obj.data.rows.length; i++) {
+            if(obj.data.rows[i].id == gid) {
+              handleDetailPrematchData(data);
+            }
+          }
+        }
+        else {
+          $("#main_contents>div").css("display","none");
+          $("#content_view_body").css("display","block");          
+          handlePrematchSportsTable(obj.data)
+        }
       }
     }
 
