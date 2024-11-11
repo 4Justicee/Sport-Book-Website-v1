@@ -267,7 +267,7 @@ function handleSoccerLive(odds, data, idx, fav = 0) {
   const simpleObj = JSON.stringify({h: data.home_name, a: data.away_name, t: time_str, scores, odd: o1x2});
   const starElem = (fav == 0) ? `<img class='star-off hand inplay_likestar' src="${starOffCode}" tid="${id}" data='${simpleObj}' width='24' d1="l"/>`:`<img class="hand inplay_removestar" tid="${id}" src="${starOnCode}" width='22'/>`;
   
-  const a = $(`#tr-${id}`);
+  const a = $(`#live_data_view #tr-${id}`);
   if(a.length == 0) {                             
       $(`#live_data_view .table__items:nth-child(${idx+1})`).after(`
       <div class="table__items b__bottom" id="tr-${id}" style="display:${idx > 5?'none':'flex'}">
@@ -332,20 +332,20 @@ function handleSoccerLive(odds, data, idx, fav = 0) {
       </div>`)
   }
   else {                   
-      $(`#tr-${id} .home_name`).html(data.home_name);
-      $(`#tr-${id} .away_name`).html(data.away_name);
-      $(`#tr-${id} .time_view`).html(time_str);
-      $(`#tr-${id} .scores`).html(scores);
-      $(`#tr-${id} .full1`).html(o1x2.hwin == -1 ? `<i class="icon-lock"></i>` : o1x2.hwin);
-      $(`#tr-${id} .fullx`).html(o1x2.draw == -1 ? `<i class="icon-lock"></i>` : o1x2.draw);
-      $(`#tr-${id} .full2`).html(o1x2.awin == -1 ? `<i class="icon-lock"></i>` : o1x2.awin);
+      $(`#live_data_view #tr-${id} .home_name`).html(data.home_name);
+      $(`#live_data_view #tr-${id} .away_name`).html(data.away_name);
+      $(`#live_data_view #tr-${id} .time_view`).html(time_str);
+      $(`#live_data_view #tr-${id} .scores`).html(scores);
+      $(`#live_data_view #tr-${id} .full1`).html(o1x2.hwin == -1 ? `<i class="icon-lock"></i>` : o1x2.hwin);
+      $(`#live_data_view #tr-${id} .fullx`).html(o1x2.draw == -1 ? `<i class="icon-lock"></i>` : o1x2.draw);
+      $(`#live_data_view #tr-${id} .full2`).html(o1x2.awin == -1 ? `<i class="icon-lock"></i>` : o1x2.awin);
 
-      $(`#tr-${id} .overgoal`).html(go.goal == -1 ? `<i class="icon-lock"></i>`: `<span class='point__box_addinfo goal'>${go.goal}</span><span class='overodd'>${go.overodd}</span>`);
-      $(`#tr-${id} .undergoal`).html(go.goal == -1 ? `<i class="icon-lock"></i>`: `<span class='point__box_addinfo goal'>${go.goal}</span><span class='underodd'>${go.underodd}</span>`);
+      $(`#live_data_view #tr-${id} .overgoal`).html(go.goal == -1 ? `<i class="icon-lock"></i>`: `<span class='point__box_addinfo goal'>${go.goal}</span><span class='overodd'>${go.overodd}</span>`);
+      $(`#live_data_view #tr-${id} .undergoal`).html(go.goal == -1 ? `<i class="icon-lock"></i>`: `<span class='point__box_addinfo goal'>${go.goal}</span><span class='underodd'>${go.underodd}</span>`);
 
-      $(`#tr-${id} .handi1`).html(handis.h_hand == -1 ? `<i class="icon-lock"></i>`: `<span class='point__box_addinfo handivalue1'>${handis.h_hand}</span><span class='handi1odd'>${handis.h_odd}</span>`);
-      $(`#tr-${id} .handi2`).html(handis.a_hand == -1 ? `<i class="icon-lock"></i>`: `<span class='point__box_addinfo handivalue2'>${handis.a_hand}</span><span class='handi2odd'>${handis.a_odd}</span>`);
-      $(`#tr-${id} .star_elem`).html(starElem);
+      $(`#live_data_view #tr-${id} .handi1`).html(handis.h_hand == -1 ? `<i class="icon-lock"></i>`: `<span class='point__box_addinfo handivalue1'>${handis.h_hand}</span><span class='handi1odd'>${handis.h_odd}</span>`);
+      $(`#live_data_view #tr-${id} .handi2`).html(handis.a_hand == -1 ? `<i class="icon-lock"></i>`: `<span class='point__box_addinfo handivalue2'>${handis.a_hand}</span><span class='handi2odd'>${handis.a_odd}</span>`);
+      $(`#live_data_view #tr-${id} .star_elem`).html(starElem);
   }   
 }
 
@@ -417,7 +417,7 @@ function handleSoccerPrematch(data, idx) {
   }
   const starElem = (fav == 0) ? `<img class='star-off hand inplay_likestar' src="${starOffCode}" tid="${id}" width='24' style='margin-left:1rem' d1="p"/>`:`<img class="hand inplay_removestar" tid="${id}" src="${starOnCode}" width='22' style='margin-left:1rem'/>`;
 
-  const a = $(`#trr-${id}`);
+  const a = $(`#prematch_data_view #trr-${id}`);
   if(a.length == 0) {               
     $(`#prematch_data_view`).append(`<div class="table__items b__bottom" id="trr-${id}">
       <div class="t__items">
@@ -471,18 +471,18 @@ function handleSoccerPrematch(data, idx) {
     </div>`);
   }
   else {
-    $(`#trr-${id} .home`).html(home_name);
-    $(`#trr-${id} .away`).html(away_name);
-    $(`#trr-${id} .homewin`).html(hwin == -1 ? `<i class="icon-lock"></i>`: `<span class="point__1">1</span><span>${hwin}</span>`);
-    $(`#trr-${id} .draw`).html(draw == -1 ? `<i class="icon-lock"></i>`: `<span class="point__1">X</span><span>${draw}</span>`);
-    $(`#trr-${id} .awaywin`).html(awin == -1 ? `<i class="icon-lock"></i>`: `<span class="point__1">2</span><span>${awin}</span>`);
+    $(`#prematch_data_view #trr-${id} .home`).html(home_name);
+    $(`#prematch_data_view #trr-${id} .away`).html(away_name);
+    $(`#prematch_data_view #trr-${id} .homewin`).html(hwin == -1 ? `<i class="icon-lock"></i>`: `<span class="point__1">1</span><span>${hwin}</span>`);
+    $(`#prematch_data_view #trr-${id} .draw`).html(draw == -1 ? `<i class="icon-lock"></i>`: `<span class="point__1">X</span><span>${draw}</span>`);
+    $(`#prematch_data_view #trr-${id} .awaywin`).html(awin == -1 ? `<i class="icon-lock"></i>`: `<span class="point__1">2</span><span>${awin}</span>`);
 
-    $(`#trr-${id} .goalover`).html(goal == -1 ? `<i class="icon-lock"></i>`: `<span class="point__1">${goal}&nbsp;Over</span><span>${overodd}</span>`);
-    $(`#trr-${id} .goalunder`).html(goal == -1 ? `<i class="icon-lock"></i>`: `<span class="point__1">${goal}&nbsp;Under</span><span>${underodd}</span>`);
-    $(`#trr-${id} .timestr`).html(localTimeString);
-    $(`#trr-${id} .start__box`).html(starElem);
-    $(`#trr-${id} .hodd1`).html(hodd1 == -1 ? `<i class="icon-lock"></i>`: `<span class="point__1">${handi1}</span><span>${hodd1}</span>`);
-    $(`#trr-${id} .hodd2`).html(hodd2 == -1 ? `<i class="icon-lock"></i>`: `<span class="point__1">${handi2}</span><span>${hodd2}</span>`);
+    $(`#prematch_data_view #trr-${id} .goalover`).html(goal == -1 ? `<i class="icon-lock"></i>`: `<span class="point__1">${goal}&nbsp;Over</span><span>${overodd}</span>`);
+    $(`#prematch_data_view #trr-${id} .goalunder`).html(goal == -1 ? `<i class="icon-lock"></i>`: `<span class="point__1">${goal}&nbsp;Under</span><span>${underodd}</span>`);
+    $(`#prematch_data_view #trr-${id} .timestr`).html(localTimeString);
+    $(`#prematch_data_view #trr-${id} .start__box`).html(starElem);
+    $(`#prematch_data_view #trr-${id} .hodd1`).html(hodd1 == -1 ? `<i class="icon-lock"></i>`: `<span class="point__1">${handi1}</span><span>${hodd1}</span>`);
+    $(`#prematch_data_view #trr-${id} .hodd2`).html(hodd2 == -1 ? `<i class="icon-lock"></i>`: `<span class="point__1">${handi2}</span><span>${hodd2}</span>`);
   }
 }
 
@@ -989,15 +989,14 @@ function handlePrematchSportsTable(data, current_page) {
     const home_name = o.home_name;
     const fav = o.is_fav;
     const odds = o.data;
-    if(odds == null)
-        return;
+
     const utcDate = new Date(o.time_str);  
     const localTimeString = utcDate.toLocaleString(undefined, options);
 
     let hwin = -1, draw = -1, awin = -1, overodd = -1, goal = -1, underodd = -1; 
     let hid, did, aid, oid, uid, id1, id2;
     let hodd1 = -1, hodd2 = -1, handi1 = -1, handi2 = -1;
-    if(odds.main != undefined) {
+    if(odds!=null && odds.main != undefined) {
       if(odds.main.sp.full_time_result != undefined) {
         hwin = odds.main.sp.full_time_result.odds[0].odds;
         hid = odds.main.sp.full_time_result.odds[0].id;
@@ -1026,7 +1025,7 @@ function handlePrematchSportsTable(data, current_page) {
       }
     }
     const starElem = (fav == 0) ? `<img class='star-off hand inplay_likestar' src="${starOffCode}" tid="${id}" width='24' style='margin-left:1rem' d1="p"/>`:`<img class="hand inplay_removestar" tid="${id}" src="${starOnCode}" width='22' style='margin-left:1rem'/>`;
-    const a = $(`#trr-${id}`);
+    const a = $(`#searchView #trr-${id}`);
     if(a.length == 0) {
       $("#searchView").append(`<div class="table__items b__bottom" id="trr-${id}">
         <div class="t__items">
@@ -1080,40 +1079,48 @@ function handlePrematchSportsTable(data, current_page) {
       </div>`);
     }
     else {
-      $(`#trr-${id} .home`).html(home_name);
-      $(`#trr-${id} .away`).html(away_name);
-      $(`#trr-${id} .homewin`).html(hwin == -1 ? `<i class="icon-lock"></i>`: `<span class="point__1">1</span><span>${hwin}</span>`);
-      $(`#trr-${id} .draw`).html(draw == -1 ? `<i class="icon-lock"></i>`: `<span class="point__1">X</span><span>${draw}</span>`);
-      $(`#trr-${id} .awaywin`).html(awin == -1 ? `<i class="icon-lock"></i>`: `<span class="point__1">2</span><span>${awin}</span>`);
+      $(`#searchView #trr-${id} .home`).html(home_name);
+      $(`#searchView #trr-${id} .away`).html(away_name);
+      $(`#searchView #trr-${id} .homewin`).html(hwin == -1 ? `<i class="icon-lock"></i>`: `<span class="point__1">1</span><span>${hwin}</span>`);
+      $(`#searchView #trr-${id} .draw`).html(draw == -1 ? `<i class="icon-lock"></i>`: `<span class="point__1">X</span><span>${draw}</span>`);
+      $(`#searchView #trr-${id} .awaywin`).html(awin == -1 ? `<i class="icon-lock"></i>`: `<span class="point__1">2</span><span>${awin}</span>`);
   
-      $(`#trr-${id} .goalover`).html(goal == -1 ? `<i class="icon-lock"></i>`: `<span class="point__1">${goal}&nbsp;Over</span><span>${overodd}</span>`);
-      $(`#trr-${id} .goalunder`).html(goal == -1 ? `<i class="icon-lock"></i>`: `<span class="point__1">${goal}&nbsp;Under</span><span>${underodd}</span>`);
-      $(`#trr-${id} .timestr`).html(localTimeString);
-      $(`#trr-${id} .start__box`).html(starElem);
-      $(`#trr-${id} .hodd1`).html(hodd1 == -1 ? `<i class="icon-lock"></i>`: `<span class="point__1">${handi1}</span><span>${hodd1}</span>`);
-      $(`#trr-${id} .hodd2`).html(hodd2 == -1 ? `<i class="icon-lock"></i>`: `<span class="point__1">${handi2}</span><span>${hodd2}</span>`);
+      $(`#searchView #trr-${id} .goalover`).html(goal == -1 ? `<i class="icon-lock"></i>`: `<span class="point__1">${goal}&nbsp;Over</span><span>${overodd}</span>`);
+      $(`#searchView#trr-${id} .goalunder`).html(goal == -1 ? `<i class="icon-lock"></i>`: `<span class="point__1">${goal}&nbsp;Under</span><span>${underodd}</span>`);
+      $(`#searchView #trr-${id} .timestr`).html(localTimeString);
+      $(`#searchView #trr-${id} .start__box`).html(starElem);
+      $(`#searchView #trr-${id} .hodd1`).html(hodd1 == -1 ? `<i class="icon-lock"></i>`: `<span class="point__1">${handi1}</span><span>${hodd1}</span>`);
+      $(`#searchView #trr-${id} .hodd2`).html(hodd2 == -1 ? `<i class="icon-lock"></i>`: `<span class="point__1">${handi2}</span><span>${hodd2}</span>`);
     }
   }
   
   const p_type = sessionStorage.getItem("current_paging");
   const p_count = sessionStorage.getItem("page_data_count");
 
-  if(p_count != data.count || p_type != "prematch" || $("#paging").is(':empty')) {
+  if(p_count != data.count || p_type != "prematch" || $("#paging").children().length == 0) {
     sessionStorage.setItem("current_paging", "prematch");
     sessionStorage.setItem("page_data_count", data.count);
+    const dataCount = Math.ceil(data.count / 10);
+    const f = ['c','cn','cnn','cnnn'];
 
+    let format = dataCount >= 5 ? 'nncnn': f[dataCount - 1];
     $("#paging").paging(data.count, {
-      format: '[< ncnnn! >]',
+      format: `[< ${format}! >]`,
       perpage: 10,
       lapping: 0,
       page: current_page,
       onSelect: function (page) {
-        const sid = sessionStorage.getItem("current_live_sport");
-        var element = $(`#paging a[data-page="${page}"]`).last();  
-        const span = element.find('span');
+        const sid = sessionStorage.getItem("current_prematch_sport"); 
         $(".page-link").removeClass("selected")
-        span.addClass('selected');
-
+        var elements = $(`#paging a[data-page="${page}"]`);  
+        for(let i = 0;i < elements.length; i++) {
+          const span = $(elements[i]).find('span');
+          if(span.html().trim() == page) {
+            span.addClass('selected');
+            break;
+          }
+        }
+        $("#searchView").empty();
         sportsSocket.send(JSON.stringify({
           token: token,
           page:'sport', 
@@ -1158,7 +1165,7 @@ function handleLiveSportsTable(bigdata, current_page) {
     const simpleObj = JSON.stringify({h: data.home_name, a: data.away_name, t: time_str, scores, odd: o1x2});
     const starElem = (fav == 0) ? `<img class='star-off hand inplay_likestar' src="${starOffCode}" tid="${id}" data='${simpleObj}' width='24' d1="l"/>`:`<img class="hand inplay_removestar" tid="${id}" src="${starOnCode}" width='22'/>`;
     
-    const a = $(`#tr-${id}`);
+    const a = $(`#searchView #tr-${id}`);
     if(a.length == 0) {                             
         $(`#searchView`).append(`
         <div class="table__items b__bottom" id="tr-${id}">
@@ -1223,41 +1230,53 @@ function handleLiveSportsTable(bigdata, current_page) {
         </div>`)
     }
     else {                   
-        $(`#tr-${id} .home_name`).html(data.home_name);
-        $(`#tr-${id} .away_name`).html(data.away_name);
-        $(`#tr-${id} .time_view`).html(time_str);
-        $(`#tr-${id} .scores`).html(scores);
-        $(`#tr-${id} .full1`).html(o1x2.hwin == -1 ? `<i class="icon-lock"></i>` : o1x2.hwin);
-        $(`#tr-${id} .fullx`).html(o1x2.draw == -1 ? `<i class="icon-lock"></i>` : o1x2.draw);
-        $(`#tr-${id} .full2`).html(o1x2.awin == -1 ? `<i class="icon-lock"></i>` : o1x2.awin);
+        $(`#searchView #tr-${id} .home_name`).html(data.home_name);
+        $(`#searchView #tr-${id} .away_name`).html(data.away_name);
+        $(`#searchView #tr-${id} .time_view`).html(time_str);
+        $(`#searchView #tr-${id} .scores`).html(scores);
+        $(`#searchView #tr-${id} .full1`).html(o1x2.hwin == -1 ? `<i class="icon-lock"></i>` : o1x2.hwin);
+        $(`#searchView #tr-${id} .fullx`).html(o1x2.draw == -1 ? `<i class="icon-lock"></i>` : o1x2.draw);
+        $(`#searchView #tr-${id} .full2`).html(o1x2.awin == -1 ? `<i class="icon-lock"></i>` : o1x2.awin);
 
-        $(`#tr-${id} .overgoal`).html(go.goal == -1 ? `<i class="icon-lock"></i>`: `<span class='point__box_addinfo goal'>${go.goal}</span><span class='overodd'>${go.overodd}</span>`);
-        $(`#tr-${id} .undergoal`).html(go.goal == -1 ? `<i class="icon-lock"></i>`: `<span class='point__box_addinfo goal'>${go.goal}</span><span class='underodd'>${go.underodd}</span>`);
+        $(`#searchView #tr-${id} .overgoal`).html(go.goal == -1 ? `<i class="icon-lock"></i>`: `<span class='point__box_addinfo goal'>${go.goal}</span><span class='overodd'>${go.overodd}</span>`);
+        $(`#searchView #tr-${id} .undergoal`).html(go.goal == -1 ? `<i class="icon-lock"></i>`: `<span class='point__box_addinfo goal'>${go.goal}</span><span class='underodd'>${go.underodd}</span>`);
 
-        $(`#tr-${id} .handi1`).html(handis.h_hand == -1 ? `<i class="icon-lock"></i>`: `<span class='point__box_addinfo handivalue1'>${handis.h_hand}</span><span class='handi1odd'>${handis.h_odd}</span>`);
-        $(`#tr-${id} .handi2`).html(handis.a_hand == -1 ? `<i class="icon-lock"></i>`: `<span class='point__box_addinfo handivalue2'>${handis.a_hand}</span><span class='handi2odd'>${handis.a_odd}</span>`);
-        $(`#tr-${id} .star_elem`).html(starElem);
+        $(`#searchView #tr-${id} .handi1`).html(handis.h_hand == -1 ? `<i class="icon-lock"></i>`: `<span class='point__box_addinfo handivalue1'>${handis.h_hand}</span><span class='handi1odd'>${handis.h_odd}</span>`);
+        $(`#searchView #tr-${id} .handi2`).html(handis.a_hand == -1 ? `<i class="icon-lock"></i>`: `<span class='point__box_addinfo handivalue2'>${handis.a_hand}</span><span class='handi2odd'>${handis.a_odd}</span>`);
+        $(`#searchView #tr-${id} .star_elem`).html(starElem);
     }   
 }
    
   const p_type = sessionStorage.getItem("current_paging");
   const p_count = sessionStorage.getItem("page_data_count");
 
-  if(p_count != bigdata.count || p_type != "live" || $("#paging").is(':empty')) {
+  if(p_count != bigdata.count || p_type != "live" || $("#paging").children().length == 0) {
     sessionStorage.setItem("current_paging", "live");
     sessionStorage.setItem("page_data_count", bigdata.count);
+    const dataCount = Math.ceil(bigdata.count / 10);
+    const f = ['c','cn','cnn','cnnn'];
 
+    let format = dataCount >= 5 ? 'nncnn': f[dataCount - 1];
     $("#paging").paging(bigdata.count, {
-      format: '[< ncnnn! >]',
+      format: `[< ${format}! >]`,
       perpage: 10,
       lapping: 0,
       page: current_page,
-      onSelect: function (page) {
+      onSelect: function (page) {        
         const sid = sessionStorage.getItem("current_live_sport");
-        var element = $(`#paging a[data-page="${page}"]`).last();  
-        const span = element.find('span');
         $(".page-link").removeClass("selected")
-        span.addClass('selected');
+
+        var elements = $(`#paging a[data-page="${page}"]`);  
+        for(let i = 0;i < elements.length; i++) {
+          const span = $(elements[i]).find('span');
+          if(span.html().trim() == page) {
+            span.addClass('selected');
+            break;
+          }
+        }
+        
+        $("#searchView").empty();
+        
 
         sportsSocket.send(JSON.stringify({
           token: token,
@@ -1284,6 +1303,6 @@ function handleLiveSportsTable(bigdata, current_page) {
           return '<a class="page-item" href="#"><span style="background:#202a39" class="text-white page-link">Last<span></a>';
         }
       }
-    });
+    })
   }
 }

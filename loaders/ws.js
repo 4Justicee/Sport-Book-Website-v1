@@ -212,7 +212,10 @@ const getPrematchHomeData = async(whereObj, ws) => {
           away_name: {  // Checking for highTeams in away_team_name  
             [Op.in]: highTeams  
           }  
-        }  
+        },
+        {
+          is_top: 1
+        }
       ]  
     },
     order: Sequelize.literal(`RAND(${seed})`),  
@@ -254,7 +257,10 @@ const getPrematchHomeData = async(whereObj, ws) => {
           away_name: {  // Checking for highTeams in away_team_name  
             [Op.in]: highTeams  
           }  
-        }  
+        },
+        {
+          is_hightlight:1
+        }
       ]  
     },
     raw:true
@@ -293,7 +299,10 @@ const getLiveHomeData = async(whereObj, ws) => {
         away_name: {  // Checking for highTeams in away_team_name  
           [Op.in]: highTeams  
         }  
-      }  
+      },
+      {
+        is_hightlight: 1
+      } 
     ]  
   }
   const data = await Inplay.findAll({
@@ -492,12 +501,15 @@ const sendMatchList = async(ws) => {
     group: ['sport_id'],  // Grouping by the sport_id column  
     raw:true
   })
+  const now = Date.now() / 1000;
   const totalPrematch = await Upcoming.findAll({  
     attributes: [  
       'sport_id',  
       [Sequelize.fn('COUNT', Sequelize.col('sport_id')), 'total_count']  // "AS" count alias  
     ],  
-    where:{time_status: 0},
+    where:{time_status: 0, time: {
+      [Op.gt]: now
+    }},
     group: ['sport_id'],  // Grouping by the sport_id column  
     raw:true
   })

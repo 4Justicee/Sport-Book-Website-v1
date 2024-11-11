@@ -313,19 +313,19 @@ $("#main_contents").on("click", ".returnFromDetail", function(e) {
 });
 
 $("#main_contents").delegate(".prematch_detail_view_btn","click", function(e) {
-	$("#main_contents>div").fadeOut();
+	//$("#main_contents>div").fadeOut();
 	sessionStorage.setItem('goback', "home")
 
 	const id = $(this).attr("tid");	
-	processPrematchDetail(id);	
+	processPrematchDetail(id, 1);	
 });
 
 $("#main_contents").delegate(".sprematch_detail_view_btn","click", function(e) {
-	$("#main_contents>div").fadeOut();
+	
 	sessionStorage.setItem('goback', "sport")
 
 	const id = $(this).attr("tid");	
-	processPrematchDetail(id);	
+	processPrematchDetail(id, 1);	
 });
 
 $("#main_contents").on("click", "#all-odds-view", function(e) {
@@ -632,7 +632,7 @@ $("#main_contents").delegate(".bet-btn", "click", function(e){
 	calcTotalOdd();
 });
 
-function processPrematchDetail(id) {
+function processPrematchDetail(id, first = 0) {
 	//only request current information
 	const goback = sessionStorage.getItem("goback");
 	const d = JSON.parse(goback == "home" ? sessionStorage.getItem('home_prematch_data') : sessionStorage.getItem('sport_prematch_data'));
@@ -644,10 +644,12 @@ function processPrematchDetail(id) {
 			break;
 		}
 	}
-	if(o == null) {
+	if(o == null || o.data == null) {
 		toastr.error("Invalid match");
 		return;
 	}
+
+	first == 1 && $("#main_contents>div").fadeOut();
 
 	const sid = o.sport_id;
 	const sports_name = sport_names[sid];
@@ -1106,7 +1108,9 @@ $("#accordion_prematch").on("click", ".select-sport", function(e) {
 	const id = $(this).attr('id').substr(4);
 
 	sessionStorage.setItem("current_prematch_sport", id);
-	
+	$("#searchView").empty();
+	$("#paging").empty();
+
 	sportsSocket.send(JSON.stringify({
 		token: token,
 		page:'sport', 
@@ -1123,7 +1127,9 @@ $("#accordion_live").on("click", ".select-sport", function(e) {
 	$(".select-sport").removeClass("selected");
 	$(this).addClass("selected");
 	const id = $(this).attr('id').substr(4);
-
+	$("#searchView").empty();
+	$("#paging").empty();
+	
 	sessionStorage.setItem("current_live_sport", id);
 
 	sportsSocket.send(JSON.stringify({
@@ -1940,6 +1946,9 @@ $("#remove_all_bets").click(function(e) {
 })
 })
 
+$(".fav_matches").click(function(e) {
+	
+})
 
 function showConfirmAlert(title, callback) {
 	Swal.fire({

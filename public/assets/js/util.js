@@ -60,7 +60,7 @@ function getHandicaps(odds, home, away) {
 	let h_hand = -1, a_hand = -1, h_odd = -1, a_odd = -1;
 	let id1=-1, id2 = -1;
 	for(let j = 0; j < odds.length; j++) {
-		if(odds[j].name.search("Asian Handicap") != -1) {
+		if(odds[j].name != undefined && odds[j].name.search("Asian Handicap") != -1) {
 			const os = odds[j].odds;
 			for(let k = 0; k < os.length; k++) {
 				if(os[k].header == home) {

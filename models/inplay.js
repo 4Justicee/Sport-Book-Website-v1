@@ -111,6 +111,16 @@ module.exports = (sequelize, Sequelize) => {
                 allowNull: true,
                 defaultValue: 0,
             },
+            is_top: {
+                type: Sequelize.TINYINT,
+                allowNull: true,
+                defaultValue: 0,
+            },
+            is_hightlight: {
+                type: Sequelize.TINYINT,
+                allowNull: true,
+                defaultValue: 0,
+            },
         },
         {
                timestamps: true,

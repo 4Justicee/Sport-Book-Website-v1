@@ -64,8 +64,8 @@ $(document).ready(function () {
 	//Sponsor Carousel
 	$(".footer__sponsor").owlCarousel({
 		loop: true,
-		margin: 9,
-		smartSpeed: 2500,
+		margin: 10,
+		smartSpeed: 1000,
 		autoplayTimeout: 3000,
 		autoplay: false,
 		nav: false,

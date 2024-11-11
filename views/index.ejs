@@ -109,7 +109,7 @@
                                                     </div>
                                                     <div class="star__wrap" >
                                                         <span class="hand"><img src="assets/img/leftmenu/start.png" alt="img"></span>
-                                                        <span class="hand">Favorites</span>
+                                                        <span class="hand fav_matches">Favorites</span>
                                                     </div>
                                                     <div class="prematch__wrap">
                                                         <div class="nav" id="nav-tabpre" role="tablist">
@@ -1100,7 +1100,7 @@
                                                 </div>
                                                 <div class="star__wrap">
                                                     <span><img src="assets/img/leftmenu/start.png" alt="img"></span>
-                                                    <span>Favorites</span>
+                                                    <span class="hand fav_matches">Favorites</span>
                                                 </div>
                                                 <div class="prematch__wrap">
                                                     <div class="nav" id="nav-tabpreevent" role="tablist">
@@ -1467,19 +1467,7 @@
     <script>
         const token = "<%=token%>";
         const sportsSocket = new WebSocket('ws://127.0.0.1:9990');       
-        const ss = new WebSocket('wss://cq9games.cwsn.ai');  
-        console.log(ss);
-        ss.onopen = function() {
-        console.log('connected');
-        };
-
-        ss.onerror = function(error) {
-            console.log(error);
-        };
-        ss.onclose = function() {};
-        ss.onmessage = function(event) {        
-            
-        };  
+    
     </script>
     <script src="/js/jquery.paging.min.js"></script>
 
@@ -1495,7 +1483,7 @@
 
 
 
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>  
+    <script src="/assets/sweetalert2/sweetalert2.all.min.js"></script>  
 <script>     
     
 

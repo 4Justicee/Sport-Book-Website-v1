@@ -16,7 +16,7 @@ router.post("/api/remove_fav", homeController.removeFavorite);
 router.post("/api/gameurl", homeController.getGameLaunchUrl);
 router.post("/api/place_single_bet", homeController.placeSingleBet);
 router.post("/api/place_multiple_bet", homeController.placeMultipleBet);
-router.get("/sports", homeController.mainPage);
+//router.get("/sports", homeController.mainPage);
 router.get("/503", homeController.gameMaintenance);
 
 module.exports = router;
